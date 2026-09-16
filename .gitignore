@@ -28,3 +28,6 @@ next-env.d.ts
 # python
 __pycache__/
 *.pyc
+
+# scripts/fill_audit.* output — regenerate with `npm run audit:fill`
+/.fill-audit/

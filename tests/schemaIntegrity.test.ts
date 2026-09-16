@@ -198,7 +198,11 @@ describe("filterSchemaForSet", () => {
 // read "31 ________ 26", because listing_expiry_date_month was never created
 // as a key, and 291/292 had the same hole in both of their dates.
 describe("split date blanks", () => {
-  const PART = /^(.*?)_(d|dd|mm|mmmm|yy|yyyy)$/;
+  // The suffix vocabulary is PropTx's and OREA's, not ours, and it is wider
+  // than it first looks: d/dd, m/mm/mmmm, y/yy/yyyy all appear. The first
+  // version of this test only matched the two-letter forms and so walked
+  // straight past Form 371's txtExpiringDate_m.
+  const PART = /^(.*?)_(d|dd|m|mm|mmmm|y|yy|yyyy)$/;
 
   test("a date is either fully mapped or not mapped at all", () => {
     for (const formId of ALL_FORM_IDS) {
@@ -222,6 +226,58 @@ describe("split date blanks", () => {
           [],
           `${formId}: ${base} would print partially filled — ${blank.join(", ")} has no intake key`
         );
+      }
+    }
+  });
+});
+
+// A question is worth asking only if its answer reaches a box on a form in
+// the set being filled. The intake was asking 32 questions in the
+// lease-landlord set alone whose every target was a lease-tenant form — the
+// realtor typed the landlord's mailing address, the key deposit and the
+// co-op brokerage into a set that prints none of them, and the extraction
+// tool offered all 32 to the model, so we paid tokens for answers we threw
+// away. Found by scripts/fill_audit.py; kept honest here.
+describe("questions reach a box in every set that asks them", () => {
+  // A date's targets sit on its computed parts, not on the date itself.
+  const DERIVED = /^(.*)_(day|month|year|day_num|month_num|year_full|long|words)$/;
+
+  // Deliberately answerable with nowhere to print. condo_apt_unit_no exists
+  // so the model has a correct home for a suite number instead of putting it
+  // on the condominium legal-description line — see lib/claude.ts and
+  // scripts/extraction_eval.ts. Anything else here is an open question, not
+  // a design decision: see ISSUES.md.
+  const NO_BOX_BY_DESIGN = new Set(["condo_apt_unit_no", "property_address_oneline"]);
+
+  test("no set offers a question none of its forms can print", () => {
+    const keys = new Set(schema.groups.flatMap((g) => g.fields.map((f) => f.key)));
+    const extra = new Map<string, Set<FormId>>();
+    for (const group of schema.groups) {
+      for (const field of group.fields) {
+        const m = DERIVED.exec(field.key);
+        const parent = field.derived_from ?? (m && keys.has(m[1]) ? m[1] : null);
+        if (!parent) continue;
+        const bucket = extra.get(parent) ?? new Set<FormId>();
+        for (const f of Object.keys(field.targets) as FormId[]) bucket.add(f);
+        extra.set(parent, bucket);
+      }
+    }
+
+    for (const setId of FORM_SET_IDS) {
+      const inSet = new Set<FormId>(FORM_SETS[setId].formIds);
+      for (const group of filterSchemaForSet(schema, setId).groups) {
+        for (const field of group.fields) {
+          if (NO_BOX_BY_DESIGN.has(field.key)) continue;
+          const reach = new Set<FormId>([
+            ...(Object.keys(field.targets) as FormId[]),
+            ...(extra.get(field.key) ?? []),
+          ]);
+          const lands = [...reach].some((f) => inSet.has(f));
+          assert.ok(
+            lands,
+            `${setId} asks "${field.key}" but none of its forms (${[...inSet].join(", ")}) has a box for it`
+          );
+        }
       }
     }
   });

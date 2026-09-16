@@ -9,7 +9,9 @@
     "lint": "next lint",
     "test": "tsx --test tests/*.test.ts",
     "test:py": "python -m unittest discover -s pdf-service -p \"test_*.py\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "audit:fill": "tsx scripts/fill_audit.ts && python scripts/fill_audit.py",
+    "check": "npm run typecheck && npm test && npm run test:py && npm run audit:fill"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.125.0",

@@ -25,8 +25,7 @@ export function getIntakeFormSchema(): IntakeFormSchema {
 }
 
 // Partial so a form added to FormId without a schema fails with a clear error
-// rather than a confusing ENOENT. Every form in a set has an entry; 291 and
-// 292 map to empty arrays because they carry no fillable fields.
+// rather than a confusing ENOENT. Every form in a set has an entry.
 const RAW_SCHEMA_FILES: Partial<Record<FormId, string>> = {
   "2229e": "2229e_raw.json",
   form_400: "form_400_raw.json",
@@ -50,8 +49,8 @@ const RAW_SCHEMA_FILES: Partial<Record<FormId, string>> = {
   // Attached to every set.
   form_reco: "form_reco_raw.json",
 
-  // Empty arrays on purpose — these two are grid-style PropTx sheets with no
-  // fillable fields, delivered as blanks. See lib/formTypes.ts.
+  // Real fillable exports since 2026-09-16 (897 and 901 fields). They were
+  // flat sheets with no AcroForm when this map was written.
   form_291: "form_291_raw.json",
   form_292: "form_292_raw.json",
 };

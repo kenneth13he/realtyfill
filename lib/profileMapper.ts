@@ -72,6 +72,14 @@ export function withComputedValues(answers: Record<string, string>): Record<stri
   for (const [key, target] of [
     ["purchase_price_amount", "purchase_price_words"],
     ["purchase_deposit_amount", "purchase_deposit_words"],
+    // Was computed only by lib/useDerivedIntakeAnswers, which runs in the
+    // browser. Answers can reach generation without either page having
+    // rendered — the extraction endpoint writes straight to Postgres — and
+    // Form 400's written-out rent then printed blank.
+    ["monthly_rent_amount", "monthly_rent_words"],
+    // 271/272 print the list price in words beside the digits, the same way
+    // 101 prints the purchase price.
+    ["listing_price", "listing_price_words"],
   ] as const) {
     if (answers[key] && !out[target]) out[target] = numberToWords(answers[key]);
   }

@@ -88,6 +88,40 @@ code ("Toronto C01") because OREA forms give one address line; 291/292 print
 AREA, MUNICIPALITY and COMMUNITY as separate columns, so a computed
 `property_municipality_only` strips it.
 
+**There is now an offline audit of the whole fill path: `npm run audit:fill`.**
+It answers every question in every set with a distinct token, maps them onto
+all 21 form instances, fills each one for real, then reads every box back out
+of the produced PDF and checks the value that landed there belongs to the
+intake key that claimed it. It costs nothing to run — no model call — and it
+is the only check that sees what the realtor sees, because every other check
+in the repo stops at "the fill call didn't raise".
+
+It found, in one pass:
+
+- **Form 371's expiry date printed with a blank month** — the third instance
+  of the same bug as 271/272 and 291/292. It had been missed because PropTx
+  also spells the parts `_d`/`_m`/`_y`, and the split-date test only matched
+  the doubled forms.
+- **`monthly_rent_words` was computed only in the browser hook**, so a deal
+  whose answers arrived from the extractor and went straight to generate
+  printed Form 400's written-out rent blank. Its two siblings were already
+  computed server-side. Moved to `withComputedValues` and hidden — it was
+  also being offered to the model, which is not a thing to ask a model.
+- **54 questions were asked, extracted and thrown away**: 32 in the
+  lease-landlord set alone, whose every target was a lease-tenant form. The
+  realtor typed the landlord's mailing address, the key deposit and the
+  co-op brokerage into a set that prints none of them, and we paid extraction
+  tokens for all of it. lease_landlord is now 64 questions instead of 96.
+- **Boxes with no question behind them** that turned out to have answers
+  already: Form 244's "do not present offers until" date, the co-op
+  brokerage address on 320/371, the buyer's address on 371, the list price in
+  words on 271/272, and on Form 101 the irrevocability party, the deposit
+  timing and the municipality. Three of those are named `hid*`, which is
+  WEBForms naming and not a hidden field — they print, confirmed by render.
+
+`tests/schemaIntegrity.test.ts` now asserts that no set offers a question none
+of its forms can print, so the dead-question class cannot come back silently.
+
 scripts/add_form_fields.py, add_box_fields.py and add_underscore_fields.py
 stay in the repo: they are what makes a flat PDF usable, and the next form
 that arrives flat will need them.

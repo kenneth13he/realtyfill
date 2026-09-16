@@ -15,7 +15,7 @@ Owners follow the standing split: **Kenneth** frontend (`components/`, `app/`
 pages), **Chris** infra and backend (`app/api/`, `lib/`, `supabase/`, config,
 deploy).
 
-Last reviewed: September 16, 2026 (real fillable templates for all ten forms + RECO; PropTx 291/292 page 1 mapped).
+Last reviewed: September 16, 2026 (offline fill audit — `npm run audit:fill`).
 
 Legend: **P0** blocks launch · **P1** before real client data · **P2** before
 it costs money or embarrasses us · **P3** polish
@@ -192,7 +192,25 @@ realtor finishes those pages in WEBForms.
 ### 15. Second landlord / seller name — nowhere to put it
 292 prints two LANDLORD NAME boxes (`txtseller1`, `txtseller2`) and the
 intake has only `landlord_full_name`. A co-owned unit fills one and leaves
-the other blank. Same shape on 291 for a second seller.
+the other blank. Same shape on 291, 203, 271, 272 and 401 for a second
+seller, and on 303/320/371 (`txtbuyer2`) for a second buyer.
+
+### 16. Form 101's acknowledgement block is half-addressed — Chris
+Page 5 prints an Address for Service and a Tel. No. for each side, plus name,
+address, email, phone and fax for each side's lawyer. Only the seller's phone
+has an intake answer (`seller_contact`). Eleven lawyer boxes and three
+address boxes have no question behind them.
+
+Lawyer details are known at the agreement stage and a realtor would expect
+them filled. **Decide:** add a lawyers section to the intake, or accept that
+the block is completed by hand.
+
+### 17. Listing/co-op brokerage street address — partly unmapped
+`coop_brokerage_address` now reaches 320 and 371 as well as 324/372. There is
+no equivalent question for the *listing* brokerage, so `txtl_brkaddr` on 271,
+272 and 320 stays blank — even though Settings already stores a
+`brokerage_address` per user. Both forms also print city / province / postal
+as separate boxes and the intake holds the address as one line.
 
 ---
 

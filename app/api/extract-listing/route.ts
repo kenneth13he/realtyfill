@@ -189,7 +189,7 @@ const FIELD_HINTS: Record<string, FieldSpec> = {
 // under `heat_responsibility` (a radio code). Both halves of that mapping
 // matter to buildFieldSchema below: the stored keys must NOT also be offered
 // as their own fields, or the model fills both and they disagree.
-const ANSWER_KEY_OVERRIDES: Record<string, string> = {
+export const ANSWER_KEY_OVERRIDES: Record<string, string> = {
   onsite_laundry_included: "onsite_laundry",
   electricity_included: "electricity_responsibility",
   heat_included: "heat_responsibility",

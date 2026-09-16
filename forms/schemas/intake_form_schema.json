@@ -16,7 +16,10 @@
             "2229e": [
               "txtbuyer1FName"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "tenant1_last_name",
@@ -29,7 +32,10 @@
             "2229e": [
               "txtbuyer1LName"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "tenant1_full_name",
@@ -71,7 +77,10 @@
             "2229e": [
               "txtbuyer2FName"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "tenant2_last_name",
@@ -84,7 +93,10 @@
             "2229e": [
               "txtbuyer2LName"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "tenant2_full_name",
@@ -154,7 +166,10 @@
             "form_400": [
               "txtguarsig"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "landlord_address_unit",
@@ -165,7 +180,10 @@
             "2229e": [
               "txtSellUnit"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "landlord_address_street_number",
@@ -178,7 +196,10 @@
             "form_400": [
               "txtS_streetnum"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "landlord_address_street_name",
@@ -191,7 +212,10 @@
             "form_400": [
               "txtS_street"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "landlord_address_po_box",
@@ -201,7 +225,10 @@
             "2229e": [
               "txts_POBox"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "landlord_address_city",
@@ -214,7 +241,10 @@
             "form_400": [
               "txtS_city"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "landlord_address_province",
@@ -228,7 +258,10 @@
             "form_400": [
               "txtS_state"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "landlord_address_postal_code",
@@ -241,7 +274,10 @@
             "form_400": [
               "txtS_zipcode"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         }
       ],
       "sets": [
@@ -461,7 +497,11 @@
             ]
           },
           "hidden": true,
-          "note": "property_city with any trailing TRREB district code stripped. 291/292 print AREA, MUNICIPALITY and COMMUNITY as separate columns, so the code belongs in mls_area, not in the municipality box."
+          "note": "property_city with any trailing TRREB district code stripped. 291/292 print AREA, MUNICIPALITY and COMMUNITY as separate columns, so the code belongs in mls_area, not in the municipality box.",
+          "sets": [
+            "lease_landlord",
+            "sale_seller"
+          ]
         },
         {
           "key": "property_province",
@@ -571,7 +611,10 @@
             "2229e": [
               "chkOpt_Condo"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "property_parking_info",
@@ -584,7 +627,10 @@
             "form_400": [
               "txtp_ParkingSpaces"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "property_address_oneline",
@@ -636,7 +682,12 @@
             "form_400": [
               "txtp_rentwords"
             ]
-          }
+          },
+          "hidden": true,
+          "note": "Computed by withComputedValues from monthly_rent_amount. Was visible and extractable, which meant the model was asked to write an amount out in words and the realtor could type a third version.",
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "rent_due_day",
@@ -653,7 +704,10 @@
             "form_410": [
               "txtdueday"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "rent_payment_method",
@@ -663,7 +717,10 @@
             "2229e": [
               "txtRentMethod"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "rent_deposit_required",
@@ -683,7 +740,10 @@
             "2229e": [
               "chkOpt_RentDeposit"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "rent_deposit_amount",
@@ -694,7 +754,10 @@
             "2229e": [
               "txtrentDeposit"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "key_deposit_required",
@@ -714,7 +777,10 @@
             "2229e": [
               "chkOpt_KeyDeposit"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "key_deposit_amount",
@@ -725,7 +791,10 @@
             "2229e": [
               "txtKeyDeposit"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "key_deposit_details",
@@ -736,7 +805,10 @@
             "2229e": [
               "txtKeyDepositAddDetails"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "deposit_holder",
@@ -746,7 +818,10 @@
             "form_400": [
               "txtpayableto"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "deposit_amount_400",
@@ -757,7 +832,10 @@
               "txtp_Deposit",
               "txtp_depo_writ"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         }
       ],
       "sets": [
@@ -1249,7 +1327,11 @@
             "form_801": [
               "txts_broker"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant",
+            "sale_buyer"
+          ]
         },
         {
           "key": "coop_brokerage_agent_name",
@@ -1279,7 +1361,11 @@
             "form_801": [
               "txts_brkagent"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant",
+            "sale_buyer"
+          ]
         },
         {
           "key": "coop_brokerage_phone",
@@ -1305,7 +1391,11 @@
             "form_371": [
               "txts_brkphone"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant",
+            "sale_buyer"
+          ]
         },
         {
           "key": "coop_brokerage_address",
@@ -1318,8 +1408,18 @@
             ],
             "form_372": [
               "txts_brkaddr"
+            ],
+            "form_320": [
+              "txts_brkaddr"
+            ],
+            "form_371": [
+              "txts_brkaddr"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant",
+            "sale_buyer"
+          ]
         },
         {
           "key": "commission_terms",
@@ -1333,7 +1433,10 @@
             "form_372": [
               "txtPaidComm1"
             ]
-          }
+          },
+          "sets": [
+            "lease_tenant"
+          ]
         },
         {
           "key": "holdover_days",
@@ -1696,7 +1799,10 @@
             "form_801": [
               "txtbuyer1"
             ]
-          }
+          },
+          "sets": [
+            "sale_buyer"
+          ]
         },
         {
           "key": "seller_full_name",
@@ -1728,27 +1834,57 @@
         },
         {
           "key": "seller_contact",
-          "label": "Seller - Contact (phone / email)",
+          "label": "Seller - phone",
           "type": "text",
-          "targets": {}
+          "targets": {
+            "form_101": [
+              "txtSellPh"
+            ]
+          },
+          "note": "Form 101 page 5, the (Tel. No.) under the seller's Address for Service. Was labelled 'phone / email'; the box is a telephone number, and the address lines beside it have no intake answer yet.",
+          "sets": [
+            "sale_buyer"
+          ]
         },
         {
           "key": "buyer_address",
           "label": "Buyer - Address",
           "type": "text",
-          "targets": {}
+          "targets": {
+            "form_371": [
+              "txtb_street"
+            ]
+          },
+          "note": "371 splits this into txtb_streetnum and txtb_street; the intake asks for one line, so it goes in the street box and the number box stays blank.",
+          "sets": [
+            "sale_buyer"
+          ]
         },
         {
           "key": "buyer_municipality",
           "label": "Buyer - Municipality",
           "type": "text",
-          "targets": {}
+          "targets": {
+            "form_371": [
+              "txtb_city"
+            ]
+          },
+          "sets": [
+            "sale_buyer"
+          ]
         },
         {
           "key": "buyer_postal_code",
           "label": "Buyer - Postal Code",
           "type": "text",
-          "targets": {}
+          "targets": {
+            "form_371": [
+              "txtb_zipcode"
+            ]
+          },
+          "sets": [
+            "sale_buyer"
+          ]
         }
       ]
     },
@@ -1807,8 +1943,12 @@
           "key": "purchase_deposit_timing",
           "label": "Deposit submitted",
           "type": "text",
-          "targets": {},
-          "note": "Herewith / Upon Acceptance / as otherwise described."
+          "targets": {
+            "form_101": [
+              "hidhereupon"
+            ]
+          },
+          "note": "hidhereupon, the blank after 'DEPOSIT: Buyer submits'. Prints on page 1, verified by render."
         },
         {
           "key": "purchase_deposit_holder",
@@ -1918,7 +2058,12 @@
           "key": "irrevocable_by",
           "label": "Offer irrevocable by (Seller/Buyer)",
           "type": "text",
-          "targets": {}
+          "targets": {
+            "form_101": [
+              "hidirrev_v_p"
+            ]
+          },
+          "note": "hidirrev_v_p. The hid prefix is WEBForms naming, not a hidden field - it prints on page 1, verified by render."
         },
         {
           "key": "irrevocable_until_time",
@@ -2046,7 +2191,12 @@
           "key": "condo_municipality",
           "label": "Municipality",
           "type": "text",
-          "targets": {}
+          "targets": {
+            "form_101": [
+              "hidInThe"
+            ]
+          },
+          "note": "The blank after 'in the' on page 1. WEBForms splits that one blank into two boxes, hidInThe then txtInThe2; the municipality goes in the first. Verified by filling both with distinguishable text and reading the render - it was the only line on page 1 still printing empty."
         },
         {
           "key": "condo_corporation_name",
@@ -2224,6 +2374,18 @@
           "hidden": true
         },
         {
+          "key": "buyer_authority_expiry_date_month",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_371": [
+              "txtExpiringDate_m"
+            ]
+          },
+          "hidden": true,
+          "note": "The box is 211pt wide, the same class as txtCommencingDate_m which takes the month name, so this is the word and not a number."
+        },
+        {
           "key": "buyer_authority_expiry_date_year",
           "label": "",
           "type": "text",
@@ -2272,6 +2434,21 @@
               "txtp_listprice"
             ]
           }
+        },
+        {
+          "key": "listing_price_words",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_271": [
+              "txtp_listpricewords"
+            ],
+            "form_272": [
+              "txtp_listpricewords"
+            ]
+          },
+          "hidden": true,
+          "note": "Computed by withComputedValues from listing_price, like purchase_price_words."
         },
         {
           "key": "listing_commission",
@@ -2589,7 +2766,10 @@
               "txtabbrev"
             ]
           },
-          "note": "292 only. 291 carries the street type in hidp_uploadstreettype, a hidden upload field with no printed box."
+          "note": "292 only. 291 carries the street type in hidp_uploadstreettype, a hidden upload field with no printed box.",
+          "sets": [
+            "lease_landlord"
+          ]
         },
         {
           "key": "mls_building_name",
@@ -2906,21 +3086,33 @@
           "key": "offer_conveyance_date_day",
           "label": "",
           "type": "text",
-          "targets": {},
+          "targets": {
+            "form_244": [
+              "txtNoPresentation_d"
+            ]
+          },
           "hidden": true
         },
         {
           "key": "offer_conveyance_date_month",
           "label": "",
           "type": "text",
-          "targets": {},
+          "targets": {
+            "form_244": [
+              "txtNoPresentation_m"
+            ]
+          },
           "hidden": true
         },
         {
           "key": "offer_conveyance_date_year",
           "label": "",
           "type": "text",
-          "targets": {},
+          "targets": {
+            "form_244": [
+              "txtNoPresentation_y"
+            ]
+          },
           "hidden": true
         },
         {
@@ -2971,33 +3163,6 @@
             ]
           },
           "note": "The blank in the 'Schedule ____' heading. A schedule exists to be attached to and identified by another agreement, so generating one with a nameless heading left the realtor writing it in by hand every time."
-        },
-        {
-          "key": "schedule_date",
-          "label": "Date on the schedule",
-          "type": "date",
-          "targets": {}
-        },
-        {
-          "key": "schedule_date_day",
-          "label": "",
-          "type": "text",
-          "targets": {},
-          "hidden": true
-        },
-        {
-          "key": "schedule_date_month",
-          "label": "",
-          "type": "text",
-          "targets": {},
-          "hidden": true
-        },
-        {
-          "key": "schedule_date_year",
-          "label": "",
-          "type": "text",
-          "targets": {},
-          "hidden": true
         }
       ]
     },
