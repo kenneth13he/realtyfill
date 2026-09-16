@@ -56,18 +56,37 @@ const rand = rng(SEED);
 const pick = <T,>(xs: T[]): T => xs[Math.floor(rand() * xs.length)];
 const int = (lo: number, hi: number) => lo + Math.floor(rand() * (hi - lo + 1));
 
-// Deliberately awkward but legitimate: apostrophes, accents and hyphens are
-// ordinary in Ontario names and are exactly what breaks a naive pipeline.
+// Deliberately awkward but legitimate. Apostrophes, accents and hyphens are
+// ordinary in Ontario names and are exactly what breaks a naive pipeline —
+// and the lengths are real ones, because a value that fits a nonsense fixture
+// and not a real brokerage name teaches nothing. "Royal LePage Signature
+// Realty, Brokerage" is 39 characters and several boxes hold 30.
 const FIRST = ["Siobhán", "O'Brien", "Jean-Luc", "María", "Kwame", "Anaïs", "Dmitri", "Leilani", "Søren", "Nguyễn"];
 const LAST = ["Côté", "O'Sullivan", "Fitzgerald-Ng", "Müller", "Okonkwo", "D'Angelo", "Björnsson", "Rajagopalan"];
-const STREET = ["College St", "Bathurst Street", "Rue Saint-Denis", "O'Connor Drive", "Queen's Park Cres W"];
-const CITY = ["Toronto C01", "Mississauga", "Stoney Creek", "St. Catharines", "Niagara-on-the-Lake"];
-const WORDS = ["parking", "locker", "balcony", "storage", "concierge", "utilities", "appliances"];
+const STREET = ["College Street", "Bathurst Street", "Queen's Park Crescent West", "O'Connor Drive", "Rue Saint-Denis"];
+const CITY = ["Toronto", "Mississauga", "Stoney Creek", "St. Catharines", "Niagara-on-the-Lake"];
+const BROKERAGE = [
+  "Royal LePage Signature Realty, Brokerage",
+  "RE/MAX Hallmark Realty Ltd., Brokerage",
+  "Forest Hill Real Estate Inc., Brokerage",
+  "eXp Realty, Brokerage",
+];
+const CONDO_CORP = [
+  "Toronto Standard Condominium Corporation No. 2145",
+  "Peel Condominium Corporation No. 311",
+  "York Region Standard Condominium Corporation No. 1024",
+];
+const COMMISSION = ["Half month's rent plus HST", "2.5% of the sale price plus HST", "One month's rent + HST"];
+const FREE_TEXT = [
+  "Tenant occupied; 60 days notice required for showings.",
+  "All appliances included. Parking space P2-118 and locker L-44 included.",
+  "Seller to provide a current status certificate at their own expense.",
+];
 
 const name = () => `${pick(FIRST)} ${pick(LAST)}`;
-const sentence = (n = 8) => Array.from({ length: n }, () => pick(WORDS)).join(" ");
 
 function valueFor(field: { key: string; type: string; options?: { value: string }[] }): string {
+  const k = field.key;
   switch (field.type) {
     case "radio":
       return pick(field.options ?? [{ value: "/1" }]).value;
@@ -79,23 +98,45 @@ function valueFor(field: { key: string; type: string; options?: { value: string 
     case "date":
       return `${int(2026, 2028)}-${String(int(1, 12)).padStart(2, "0")}-${String(int(1, 28)).padStart(2, "0")}`;
     case "currency":
-      return String(int(1, 4000) * 1000 + int(0, 99) / 100).slice(0, 12);
+      return `${int(1, 4000) * 1000}.00`;
     case "number":
       return String(int(1, 180));
     case "long_text":
-      return sentence(14);
+      return pick(FREE_TEXT);
     default:
-      if (/full_name|_name$|representative|agent/.test(field.key)) return name();
-      if (/street_name/.test(field.key)) return pick(STREET);
-      if (/street_number/.test(field.key)) return String(int(1, 9999));
-      if (/city|municipal/.test(field.key)) return pick(CITY);
-      if (/postal/.test(field.key)) return `M${int(1, 9)}${pick(["T", "V", "X"])} ${int(1, 9)}${pick(["P", "Z"])}${int(1, 9)}`;
-      if (/province/.test(field.key)) return "Ontario";
-      if (/phone/.test(field.key)) return `416-${int(200, 999)}-${int(1000, 9999)}`;
-      if (/email/.test(field.key)) return `test${int(1, 999)}@example.com`;
-      if (/time/.test(field.key)) return `${int(1, 12)}:${pick(["00", "30"])}`;
-      if (/year/.test(field.key)) return String(int(2020, 2028));
-      return sentence(int(2, 5));
+      if (/province/.test(k)) return "ON";
+      if (/postal/.test(k)) return `M${int(1, 9)}${pick(["T", "V", "X"])} ${int(1, 9)}${pick(["P", "Z"])}${int(1, 9)}`;
+      if (/phone|fax/.test(k)) return `416-${int(200, 999)}-${int(1000, 9999)}`;
+      if (/email/.test(k)) return `agent${int(1, 999)}@example.com`;
+      if (/brokerage_name/.test(k)) return pick(BROKERAGE);
+      if (/corporation_name|condo_property_name|building_name/.test(k)) return pick(CONDO_CORP);
+      if (/commission|commission_terms/.test(k)) return pick(COMMISSION);
+      if (/street_name/.test(k)) return pick(STREET);
+      if (/street_number/.test(k)) return String(int(1, 4999));
+      if (/city|municipal|community|^mls_area$/.test(k)) return pick(CITY);
+      if (/unit_number|apt|level|locker|parking_space/.test(k)) return String(int(1, 3000));
+      if (/full_name|_name$|representative|agent|holder|landlord|tenant|buyer|seller|client/.test(k)) return name();
+      if (/time/.test(k)) return `${int(1, 12)}:${pick(["00", "30"])} p.m.`;
+      if (/year/.test(k)) return String(int(2020, 2028));
+      if (/letter/.test(k)) return pick(["A", "B", "C"]);
+      if (/days/.test(k)) return String(int(30, 90));
+      if (/mls_number|pin|roll/.test(k)) return `${pick(["C", "W", "E", "N"])}${int(10000000, 99999999)}`;
+      if (/pets/.test(k)) return pick(["None", "1 cat", "1 small dog"]);
+      if (/zoning/.test(k)) return pick(["CR 3.0", "R4", "RA1"]);
+      if (/plan_no|corp_number|registry_office/.test(k)) return pick(["TSCC 2145", "PCC 311", "YRSCC 1024"]);
+      if (/abbreviation/.test(k)) return pick(["St", "Ave", "Rd", "Cres"]);
+      if (/remarks|occupation|use|premises/.test(k)) return pick(["Immediate", "Residence", "Tenant occupied"]);
+      if (/schedules_attached|schedule/.test(k)) return pick(["A", "A and B"]);
+      if (/timing|hereupon/.test(k)) return pick(["Upon Acceptance", "Herewith"]);
+      if (/irrevocable_by/.test(k)) return pick(["Buyer", "Seller"]);
+      if (/po_box/.test(k)) return `PO Box ${int(1, 999)}`;
+      if (/_id$|licence|license/.test(k)) return `LBR${int(1000, 9999)}`;
+      if (/reason|vacating/.test(k)) return pick(["Relocating", "Buying a home"]);
+      // Anything left is deliberately SHORT. A fixture that drops a sentence
+      // into every unmatched box produces a page of clipping reports that are
+      // all the fixture's own fault, and buries the boxes that genuinely
+      // cannot hold a realistic value.
+      return pick(["Yes", "N/A", "Included", "Standard"]);
   }
 }
 
@@ -191,7 +232,22 @@ async function runSet(page: Page, setId: FormSetId) {
     for (let i = 0; i < (await boxes.count()); i++) await boxes.nth(i).check({ force: true }).catch(() => {});
     const gen = page.locator("button", { hasText: /^generate/i }).first();
     if ((await gen.count()) === 0) { say(where, "no generate button"); return; }
+    if (!(await gen.isEnabled())) { say(where, "generate button is disabled"); return; }
+
+    // Capture the API's own answer. Without this a failed generate shows up
+    // only as every download 404ing afterwards, which says nothing about why.
+    const responded = page
+      .waitForResponse((r) => r.url().includes("/generate") && r.request().method() === "POST", { timeout: 120_000 })
+      .catch(() => null);
     await gen.click();
+    const res = await responded;
+    if (!res) {
+      say(where, "generate was clicked but no POST to /generate was made");
+    } else if (!res.ok()) {
+      const body = await res.text().catch(() => "");
+      say(where, `generate returned ${res.status()}: ${body.slice(0, 400)}`);
+      return;
+    }
     await page.locator("text=/generated pdfs/i").first().waitFor({ timeout: 120_000 }).catch(() => {});
 
     // 6. Download each PDF and compare it against what the mapper says the
