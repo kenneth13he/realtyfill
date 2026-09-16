@@ -45,6 +45,12 @@ def fill_pdf_bytes(pdf_bytes: bytes, fields: list[dict]) -> bytes:
     if errors:
         raise FillValidationError(errors)
 
+    # Nothing to write: return the document unchanged rather than round-
+    # tripping it through the writer. This is the blank-only path (291/292),
+    # where "filling" means handing the realtor the blank sheet.
+    if not fields_by_page:
+        return pdf_bytes
+
     writer = PdfWriter(clone_from=reader)
     for page, field_values in fields_by_page.items():
         writer.update_page_form_field_values(writer.pages[page - 1], field_values, auto_regenerate=False)

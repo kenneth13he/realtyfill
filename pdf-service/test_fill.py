@@ -7,6 +7,7 @@
 
 import base64
 import io
+import pathlib
 import sys
 import unittest
 from pathlib import Path
@@ -98,6 +99,33 @@ class ServiceEndpointTest(unittest.TestCase):
         self.assertEqual(r.status_code, 422)
         # lib/pdfFill.ts joins this list into its thrown error message.
         self.assertIsInstance(r.json()["detail"], list)
+
+
+class BlankOnlyFormTest(unittest.TestCase):
+    """PropTx 291/292 have no AcroForm at all — they are delivered as blanks.
+
+    Without handling, reader.get_fields() returns None (not {}) and the whole
+    generate request for the sale-seller and lease-landlord sets died on
+    `None.items()`. Caught by generating a real bundle, not by any unit test
+    that existed at the time.
+    """
+
+    BLANKS = [
+        pathlib.Path(__file__).resolve().parent.parent / "forms" / "blank_templates" / "sale_seller_condo" / "form_291_blank.pdf",
+        pathlib.Path(__file__).resolve().parent.parent / "forms" / "blank_templates" / "lease_landlord_condo" / "form_292_blank.pdf",
+    ]
+
+    def test_a_field_less_pdf_passes_through_unchanged(self):
+        for path in self.BLANKS:
+            with self.subTest(form=path.name):
+                original = path.read_bytes()
+                self.assertEqual(fill_pdf_bytes(original, []), original)
+
+    def test_a_field_less_pdf_rejects_a_field_it_does_not_have(self):
+        for path in self.BLANKS:
+            with self.subTest(form=path.name):
+                with self.assertRaises(FillValidationError):
+                    fill_pdf_bytes(path.read_bytes(), [{"field_id": "anything", "page": 1, "value": "x"}])
 
 
 if __name__ == "__main__":

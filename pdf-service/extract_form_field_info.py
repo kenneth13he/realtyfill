@@ -45,7 +45,11 @@ def make_field_dict(field, field_id):
 
 
 def get_field_info(reader: PdfReader):
-    fields = reader.get_fields()
+    # A PDF with no /AcroForm at all returns None here, not an empty dict.
+    # That is a real case, not a corrupt file: PropTx's 291/292 are delivered
+    # as blanks and carry no fields, and without this the whole generate
+    # request for their sets died on `None.items()`.
+    fields = reader.get_fields() or {}
 
     field_info_by_id = {}
     possible_radio_names = set()
