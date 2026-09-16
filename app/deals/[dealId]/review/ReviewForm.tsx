@@ -13,6 +13,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Spinner from "@/components/Spinner";
+import { useToast } from "@/components/Toaster";
 import { FORM_LABELS, FormId, IntakeFormSchema } from "@/lib/formTypes";
 import { useDerivedIntakeAnswers } from "@/lib/useDerivedIntakeAnswers";
 import IntakeFieldsEditor from "@/components/IntakeFieldsEditor";
@@ -45,6 +46,7 @@ export default function ReviewForm({
   const [updateError, setUpdateError] = useState<string | null>(null);
   const [updateFlagged, setUpdateFlagged] = useState<Record<string, string>>({});
   const [changedKeys, setChangedKeys] = useState<Set<string>>(new Set());
+  const toast = useToast();
 
   useDerivedIntakeAnswers(answers, setAnswers);
 
@@ -109,7 +111,11 @@ export default function ReviewForm({
     });
   }
 
-  async function handleGenerate() {
+  // `announce` separates the two ways this runs. Clicking "Generate" is an
+  // explicit act and deserves a confirmation; the same function also runs as
+  // a silent regeneration after an autosave, and toasting on every debounced
+  // keystroke would turn the corner of the screen into a strobe.
+  async function handleGenerate({ announce = false }: { announce?: boolean } = {}) {
     setGenerating(true);
     setError(null);
     setResults([]);
@@ -123,6 +129,10 @@ export default function ReviewForm({
       if (!res.ok) throw new Error(body.error ?? "Failed to generate");
       setResults(body.results);
       setHasGenerated(true);
+      if (announce) {
+        const n = body.results.length;
+        toast.success(n === 1 ? "1 form generated." : `${n} forms generated.`);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -155,7 +165,12 @@ export default function ReviewForm({
         await handleGenerate();
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save changes");
+      // Toast rather than the inline box. This runs 800ms after the user
+      // stopped typing, with no submit button in focus and quite possibly
+      // several screens away from where the inline error renders — so an
+      // inline message here can fail silently in practice. Losing edits
+      // quietly is the one failure on this page that must not be missable.
+      toast.error(err instanceof Error ? err.message : "Failed to save changes");
     } finally {
       setAutosaving(false);
     }
@@ -251,7 +266,7 @@ export default function ReviewForm({
         {liveStatus}
       </p>
 
-      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
+      <div className="rf-panel p-5">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-semibold text-[var(--color-text)]">Answers on file</h2>
           <div className="flex items-center gap-3">
@@ -308,14 +323,14 @@ export default function ReviewForm({
                         className={
                           "flex justify-between gap-3 border-b py-1.5 text-sm" +
                           (wasChanged
-                            ? " -mx-2 rounded-md border-transparent bg-amber-50 px-2 ring-1 ring-inset ring-amber-300"
+                            ? " -mx-2 rounded-md border-transparent bg-[var(--color-warn-bg)] px-2 ring-1 ring-inset ring-[var(--color-warn-border)]"
                             : " border-[var(--color-border)]/60")
                         }
                       >
                         <dt className="text-[var(--color-text-muted)]">
                           {field.label}
                           {wasChanged && (
-                            <span className="ml-1.5 rounded-full bg-amber-200 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-900">
+                            <span className="ml-1.5 rounded-full bg-[var(--color-warn-border)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--color-warn-text)]">
                               Updated
                             </span>
                           )}
@@ -331,7 +346,7 @@ export default function ReviewForm({
         )}
       </div>
 
-      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
+      <div className="rf-panel p-5">
         <h2 className="text-base font-semibold text-[var(--color-text)]">Select forms to generate</h2>
         <div className="mt-3 flex flex-col gap-2">
           {formIds.map((formId) => (
@@ -350,9 +365,9 @@ export default function ReviewForm({
           ))}
         </div>
         <button
-          onClick={handleGenerate}
+          onClick={() => handleGenerate({ announce: true })}
           disabled={generating || selected.size === 0 || !hasAnswers}
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-accent)] px-4 py-3 text-base font-semibold text-white outline-none transition-colors hover:bg-[var(--color-accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
+          className="mt-4 flex w-full items-center justify-center gap-2 rf-btn px-4 py-3 text-base sm:w-auto"
         >
           {generating && <Spinner className="h-5 w-5" />}
           {generating ? "Generating…" : "Generate selected forms"}
@@ -388,7 +403,7 @@ export default function ReviewForm({
       {/* Shown before the first generate too, not just after — pasting the
           details in is often the first thing you'd want to do on a new deal,
           and hiding this until after a generate made that non-obvious. */}
-      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
+      <div className="rf-panel p-5">
           <h2 className="text-base font-semibold text-[var(--color-text)]">Update with more info</h2>
           <p className="mt-1 text-sm text-[var(--color-text-muted)]">
             Paste any new or corrected details (an email, a note, an updated listing) and matching fields are filled
@@ -400,13 +415,13 @@ export default function ReviewForm({
             onChange={(e) => setUpdateText(e.target.value)}
             rows={3}
             placeholder="Paste additional or corrected info here…"
-            className="mt-3 w-full rounded-md border border-[var(--color-border)] bg-white px-3 py-2 text-sm text-[var(--color-text)] shadow-sm outline-none transition-colors focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20"
+            className="mt-3 rf-field"
           />
           <button
             type="button"
             onClick={handleUpdateAndRegenerate}
             disabled={updating || generating || !updateText.trim()}
-            className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--color-accent)] px-4 py-3 text-base font-semibold text-white outline-none transition-colors hover:bg-[var(--color-accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
+            className="mt-3 flex w-full items-center justify-center gap-2 rf-btn px-4 py-3 text-base sm:w-auto"
           >
             {updating && <Spinner className="h-5 w-5" />}
             {updating ? "Updating…" : hasGenerated ? "Update & regenerate forms" : "Add this info"}
@@ -422,24 +437,24 @@ export default function ReviewForm({
               meant. Each one is now the field's real label plus a button
               that opens the editor and puts the cursor in it. */}
           {Object.keys(updateFlagged).length > 0 && (
-            <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3">
-              <p className="text-sm font-medium text-amber-900">
+            <div className="mt-3 rounded-lg border border-[var(--color-warn-border)] bg-[var(--color-warn-bg)] p-3">
+              <p className="text-sm font-medium text-[var(--color-warn-text)]">
                 {Object.keys(updateFlagged).length === 1
                   ? "One field needs your call"
                   : `${Object.keys(updateFlagged).length} fields need your call`}
               </p>
-              <p className="mt-0.5 text-xs text-amber-800">
+              <p className="mt-0.5 text-xs text-[var(--color-warn-text)]">
                 These were left as they were, rather than guessed at.
               </p>
               <ul className="mt-2 flex flex-col gap-2">
                 {Object.entries(updateFlagged).map(([key, reason]) => (
                   <li key={key} className="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-sm">
-                    <span className="font-medium text-amber-900">{fieldLabels[key] ?? key}</span>
-                    <span className="text-xs text-amber-800">— {reason}</span>
+                    <span className="font-medium text-[var(--color-warn-text)]">{fieldLabels[key] ?? key}</span>
+                    <span className="text-xs text-[var(--color-warn-text)]">— {reason}</span>
                     <button
                       type="button"
                       onClick={() => revealField(key)}
-                      className="rounded border border-amber-300 bg-white px-2 py-0.5 text-xs font-medium text-amber-900 transition-colors hover:bg-amber-100"
+                      className="rounded border border-[var(--color-warn-border)] bg-[var(--color-surface)] px-2 py-0.5 text-xs font-medium text-[var(--color-warn-text)] transition-colors hover:bg-[var(--color-warn-border)]"
                     >
                       Go to field
                     </button>
@@ -447,7 +462,7 @@ export default function ReviewForm({
                       type="button"
                       onClick={() => dismissFlag(key)}
                       aria-label={`Dismiss ${fieldLabels[key] ?? key}`}
-                      className="text-xs text-amber-700 underline transition-colors hover:text-amber-900"
+                      className="text-xs text-[var(--color-warn-text)] underline transition-colors hover:text-[var(--color-warn-text)]"
                     >
                       Dismiss
                     </button>
@@ -459,9 +474,9 @@ export default function ReviewForm({
       </div>
 
       {results.length > 0 && (
-        <div className="rounded-xl border border-green-200 bg-green-50 p-5">
-          <h2 className="text-base font-semibold text-green-900">Generated PDFs</h2>
-          <p className="mt-1 text-sm text-green-800">
+        <div className="rounded-xl border border-[var(--color-ok-border)] bg-[var(--color-ok-bg)] p-5">
+          <h2 className="text-base font-semibold text-[var(--color-ok-text)]">Generated PDFs</h2>
+          <p className="mt-1 text-sm text-[var(--color-ok-text)]">
             Click a form to preview it. You can edit fields directly in the viewer below — use its own toolbar
             (not a button here) to save, since that&apos;s what actually captures your edits.
           </p>
@@ -469,21 +484,21 @@ export default function ReviewForm({
             {results.map((r) => {
               const isOpen = previewing === r.form;
               return (
-                <li key={r.form} className="rounded-lg border border-green-200 bg-white">
+                <li key={r.form} className="rounded-lg border border-[var(--color-ok-border)] bg-[var(--color-surface)]">
                   <div className="flex items-center justify-between gap-2 px-3 py-2.5">
                     <button
                       type="button"
                       onClick={() => setPreviewing((prev) => (prev === r.form ? null : r.form))}
                       aria-expanded={isOpen}
-                      className="flex min-w-0 flex-1 items-center gap-2 rounded text-left outline-none focus-visible:ring-2 focus-visible:ring-green-700 focus-visible:ring-offset-2"
+                      className="flex min-w-0 flex-1 items-center gap-2 rounded text-left outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ok-text)] focus-visible:ring-offset-2"
                     >
-                      <span aria-hidden className="text-green-700">
+                      <span aria-hidden className="text-[var(--color-ok-text)]">
                         {isOpen ? "▲" : "▼"}
                       </span>
-                      <span className="flex flex-wrap items-center gap-2 text-sm font-medium text-green-900">
+                      <span className="flex flex-wrap items-center gap-2 text-sm font-medium text-[var(--color-ok-text)]">
                         {FORM_LABELS[r.form]}
                         {affectedForms.has(r.form) && (
-                          <span className="rounded-full bg-amber-200 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-900">
+                          <span className="rounded-full bg-[var(--color-warn-border)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--color-warn-text)]">
                             Updated
                           </span>
                         )}
@@ -498,7 +513,7 @@ export default function ReviewForm({
                       href={`${r.downloadUrl}?inline=1`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="shrink-0 rounded border border-green-300 px-2 py-1 text-xs font-medium text-green-900 outline-none transition-colors hover:bg-green-50 focus-visible:ring-2 focus-visible:ring-green-700 focus-visible:ring-offset-2"
+                      className="shrink-0 rounded border border-[var(--color-ok-border)] px-2 py-1 text-xs font-medium text-[var(--color-ok-text)] outline-none transition-colors hover:bg-[var(--color-ok-bg)] focus-visible:ring-2 focus-visible:ring-[var(--color-ok-text)] focus-visible:ring-offset-2"
                     >
                       Open in new tab
                     </a>
@@ -526,9 +541,9 @@ export default function ReviewForm({
                       <iframe
                         title={`Preview of ${FORM_LABELS[r.form]}`}
                         src={`${r.downloadUrl}?inline=1#view=FitH&zoom=page-width`}
-                        className="hidden h-[88vh] w-full border-t border-green-200 sm:block"
+                        className="hidden h-[88vh] w-full border-t border-[var(--color-ok-border)] sm:block"
                       />
-                      <p className="border-t border-green-200 px-3 py-3 text-xs text-green-800 sm:hidden">
+                      <p className="border-t border-[var(--color-ok-border)] px-3 py-3 text-xs text-[var(--color-ok-text)] sm:hidden">
                         PDF previews don&apos;t work well on a small screen — use{" "}
                         <span className="font-medium">Open in new tab</span> to view or download this form.
                       </p>

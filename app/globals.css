@@ -25,16 +25,54 @@
   --brand-light: #5b56ec;
   --lime: #c9f73d;
 
-  /* In-app (light): the same hues pulled down to working saturation.
-     Greys are indigo-tinted rather than slate so white cards sit on a
-     surface that belongs to the brand instead of a neutral default. */
-  --color-bg: #f5f5fb;
+  /* ------------------------------------------------------------------
+     In-app surface: LIGHT
+     ------------------------------------------------------------------
+     The app reads as an instrument, not a document editor. Three things
+     carry that, and they're all defined here rather than per-page:
+
+     1. The ground is a ruled field, not flat paper (--grid-line, painted
+        on <body> below). Faint enough to be felt rather than seen, but it
+        stops the page from being an undifferentiated wash.
+     2. Depth comes from a light edge, not a drop shadow. Every panel gets
+        a hairline border plus an inset highlight along its top edge, the
+        way a physical bezel catches light. Shadows are kept shallow and
+        tight underneath.
+     3. Radii are tight. The previous 16px/12px corners are what made this
+        read as generic SaaS; precision instruments have small, consistent
+        corner radii, and using two values everywhere (panel and control)
+        is itself the discipline. */
+  --color-bg: #eceef7;
+  --grid-line: rgba(20, 18, 74, 0.05);
   --color-surface: #ffffff;
-  --color-border: #e4e3f2;
-  --color-text: #14124a; /* = --brand-deep; body copy is the brand's ink */
-  --color-text-muted: #6d6b91;
-  --color-accent: #2d28d9; /* = --brand */
+  /* Recessed areas: input wells, table stripes, disabled tiles. */
+  --color-surface-sunken: #f5f6fc;
+  --color-border: #dcdef0;
+  --color-border-strong: #c2c5e2;
+  --color-text: #14124a;
+  --color-text-muted: #56537f;
+  --color-accent: #2d28d9;
   --color-accent-hover: #211dab;
+  /* Text/icons printed ON --color-accent. */
+  --color-on-accent: #ffffff;
+  /* The state colour: selected, active, current, "this is the live one".
+     On dark this is the brand's lime, which is the single most recognisable
+     thing the brand owns. On light, lime on white is illegible at any size,
+     so the role falls to the accent indigo — the ROLE is what's constant,
+     not the hue. Anything that needs lime specifically must be sitting on
+     deep ink, which is why the panel headers below are ink in both themes. */
+  --color-signal: #2d28d9;
+  --color-signal-contrast: #ffffff;
+  /* Focus. One ring definition for the whole app. */
+  --color-focus: #2d28d9;
+
+  /* Elevation: an edge highlight plus a tight shadow, not a soft halo. */
+  --panel-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --panel-shadow: 0 1px 2px rgba(20, 18, 74, 0.06), 0 8px 24px -16px rgba(20, 18, 74, 0.28);
+
+  /* Two radii, used everywhere, no exceptions. */
+  --r-panel: 8px;
+  --r-control: 6px;
 
   /* Status colours stay conventional — a warning that reads as "brand indigo"
      stops reading as a warning. Amber/red are doing a semantic job here. */
@@ -44,12 +82,316 @@
   --color-error-bg: #fef2f2;
   --color-error-border: #fecaca;
   --color-error-text: #b91c1c;
+  /* "Done / ready" — the generated-forms region on the review page. It was
+     written in raw Tailwind greens, which meant it stayed mint-on-white in
+     dark mode; semantic states need tokens like everything else. */
+  --color-ok-bg: #f0fdf4;
+  --color-ok-border: #bbf7d0;
+  --color-ok-text: #15803d;
+}
+
+/* ------------------------------------------------------------------
+   In-app surface: DARK
+   ------------------------------------------------------------------
+   Not an inversion. The ground drops BELOW the brand ink (#0a0920 against
+   --brand-deep #14124a) so that panels, which sit near the brand ink, read
+   as raised out of the field rather than painted onto it. The grid turns
+   lime at 4% — the one place the accent appears as texture rather than as
+   information.
+
+   No toggle, deliberately: honouring prefers-color-scheme costs zero
+   JavaScript and cannot flash the wrong theme before hydration. A toggle
+   means persisted state read on the client, which means either a flash or
+   a blocking inline script. If one is wanted later, that's the tradeoff to
+   price in. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg: #0a0920;
+    --grid-line: rgba(201, 247, 61, 0.04);
+    --color-surface: #16143a;
+    --color-surface-sunken: #100e2c;
+    --color-border: #2b2860;
+    --color-border-strong: #413d82;
+    --color-text: #eeecff;
+    --color-text-muted: #a5a2d4;
+    /* Measured, not eyeballed: the first pass at this was #6f6aff, which
+       scored 4.33:1 against --color-surface — under AA, and the accent is
+       used as text ("6 forms", links, counts), not just as a button fill.
+       #807bff clears it at 5.18 on panels and 5.77 on the ground. */
+    --color-accent: #807bff;
+    --color-accent-hover: #918dff;
+    --color-on-accent: #0a0920;
+    --color-signal: #c9f73d;
+    --color-signal-contrast: #14124a;
+    --color-focus: #c9f73d;
+
+    --panel-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    --panel-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 12px 32px -20px rgba(0, 0, 0, 0.9);
+
+    --color-warn-bg: #2e2410;
+    --color-warn-border: #6b5316;
+    --color-warn-text: #fcd34d;
+    --color-error-bg: #2d1218;
+    --color-error-border: #7a2231;
+    --color-error-text: #fca5a5;
+    --color-ok-bg: #0d2318;
+    --color-ok-border: #1f5a3a;
+    --color-ok-text: #86efac;
+  }
 }
 
 body {
-  background: var(--color-bg);
+  /* The ruled ground. Two hairline gradients on a 32px pitch — cheap (no
+     image, no element) and it scrolls with the page, so the whole app sits
+     on one continuous field instead of each page inventing its own. */
+  background-color: var(--color-bg);
+  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 32px 32px;
   color: var(--color-text);
   font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* ------------------------------------------------------------------
+   App primitives
+   ------------------------------------------------------------------
+   These exist because the same 250-character Tailwind string was being
+   retyped in five files — the input style alone lived as a local
+   `inputClasses` const in SettingsForm, ChangePassword, SupportForm,
+   IntakeFieldsEditor and DealsList, each free to drift from the others.
+   One definition per pattern means the app can be retuned here instead of
+   with a find-and-replace, and it's why the dark theme above needed no
+   per-page work.
+
+   Written as real CSS rather than @apply so the declarations are readable
+   as declarations, and so the tokens are visible at the point of use. */
+@layer components {
+  /* The workhorse: any raised container. Bezel edge + tight shadow. */
+  .rf-panel {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-panel);
+    box-shadow: var(--panel-highlight), var(--panel-shadow);
+  }
+
+  /* Panel header strip. Deep ink in BOTH themes — it's the one surface that
+     doesn't flip, because it's where lime is legible and lime is the most
+     distinctive thing the brand has. */
+  .rf-panel-head {
+    background: var(--brand-deep);
+    border-bottom: 1px solid var(--color-border);
+    border-radius: calc(var(--r-panel) - 1px) calc(var(--r-panel) - 1px) 0 0;
+    color: #fff;
+    /* Re-scope the signal token for anything inside this strip. The surface
+       is known to be deep ink regardless of theme, so lime is legible here
+       even in light mode, where the root definition has to fall back to
+       indigo. Descendants keep saying var(--color-signal) and get the right
+       answer for the surface they're actually on. */
+    --color-signal: var(--lime);
+    --color-text-muted: rgba(255, 255, 255, 0.55);
+  }
+
+  /* Micro-label: mono, uppercase, letterspaced. The single largest
+     contributor to "instrument" rather than "website" — counts, dates,
+     statuses and field codes are data, and data gets set in the data face. */
+  .rf-meta {
+    font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-muted);
+  }
+
+  /* Anywhere digits should line up between rows. */
+  .rf-num {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rf-field {
+    width: 100%;
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-control);
+    padding: 0.55rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--color-text);
+    outline: none;
+    transition:
+      border-color 120ms ease,
+      box-shadow 120ms ease,
+      background-color 120ms ease;
+  }
+
+  .rf-field::placeholder {
+    color: var(--color-text-muted);
+    opacity: 0.75;
+  }
+
+  .rf-field:focus {
+    background: var(--color-surface);
+    border-color: var(--color-focus);
+    /* A hairline ring, not a 4px halo. Precision reads as a thin bright
+       edge; the fat translucent glow is the generic look being replaced. */
+    box-shadow: 0 0 0 1px var(--color-focus), 0 0 12px -2px var(--color-focus);
+  }
+
+  .rf-field:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .rf-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    border: 1px solid transparent;
+    border-radius: var(--r-control);
+    padding: 0.6rem 1.1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition:
+      background-color 120ms ease,
+      box-shadow 120ms ease,
+      transform 80ms ease;
+  }
+
+  .rf-btn:hover:not(:disabled) {
+    background: var(--color-accent-hover);
+  }
+
+  /* 1px, not a bounce. Enough to feel mechanical. */
+  .rf-btn:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  .rf-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  /* Secondary: reads as an outline on the panel it sits on. */
+  .rf-btn-ghost {
+    background: transparent;
+    color: var(--color-text);
+    border-color: var(--color-border-strong);
+  }
+
+  .rf-btn-ghost:hover:not(:disabled) {
+    background: var(--color-surface-sunken);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  /* Destructive, and quiet about it until asked.
+     First pass made this a red outline at rest. On a list of ten deals that
+     put ten red buttons on screen, which reads as ten warnings rather than
+     one available action — and it made Delete louder than Close, which is
+     the safe one next to it. So: neutral at rest, red on hover/focus, at
+     which point the intent is real. The confirmation step behind it is what
+     actually protects the data; the colour only has to communicate. */
+  .rf-btn-danger {
+    background: transparent;
+    color: var(--color-text-muted);
+    border-color: transparent;
+  }
+
+  .rf-btn-danger:hover:not(:disabled),
+  .rf-btn-danger:focus-visible:not(:disabled) {
+    background: var(--color-error-bg);
+    border-color: var(--color-error-border);
+    color: var(--color-error-text);
+  }
+
+  /* Focus ring shared by every interactive thing that isn't .rf-field. */
+  .rf-btn:focus-visible,
+  .rf-chip:focus-visible,
+  .rf-tile:focus-within {
+    outline: none;
+    box-shadow: 0 0 0 1px var(--color-focus), 0 0 12px -2px var(--color-focus);
+  }
+
+  /* Filter tabs / segmented controls. */
+  .rf-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: var(--r-control);
+    padding: 0.35rem 0.7rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition:
+      color 120ms ease,
+      background-color 120ms ease;
+  }
+
+  .rf-chip:hover {
+    color: var(--color-text);
+    background: var(--color-surface-sunken);
+  }
+
+  .rf-chip[aria-selected="true"] {
+    color: var(--color-text);
+    background: var(--color-surface-sunken);
+    /* The live one is marked with a signal-coloured rule along its base —
+       the same device as the panel bezel, used to mean "current". */
+    box-shadow: inset 0 -2px 0 var(--color-signal);
+  }
+
+  /* Selectable card (the form-set picker). */
+  .rf-tile {
+    position: relative;
+    display: block;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-panel);
+    padding: 1rem;
+    cursor: pointer;
+    transition:
+      border-color 120ms ease,
+      background-color 120ms ease,
+      box-shadow 120ms ease;
+  }
+
+  .rf-tile:hover:not(.rf-tile-disabled) {
+    border-color: var(--color-border-strong);
+  }
+
+  .rf-tile-selected {
+    border-color: var(--color-accent);
+    background: color-mix(in srgb, var(--color-accent) 5%, var(--color-surface));
+    box-shadow: inset 2px 0 0 var(--color-accent);
+  }
+
+  .rf-tile-disabled {
+    cursor: not-allowed;
+    background: var(--color-surface-sunken);
+  }
+
+  /* List row — deals, generated forms, support tickets. Flat by default so a
+     list of ten doesn't read as ten floating cards; the left rule appears on
+     hover, which is what makes the row feel selectable. */
+  .rf-row {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-control);
+    transition:
+      border-color 120ms ease,
+      box-shadow 120ms ease;
+  }
+
+  .rf-row:hover {
+    border-color: var(--color-border-strong);
+    box-shadow: inset 2px 0 0 var(--color-signal);
+  }
 }
 
 /* Continuous ticker for the "keep scrolling" pill. Two identical tracks sit
@@ -66,6 +408,33 @@ body {
 
 .rf-marquee-track {
   animation: rf-marquee 18s linear infinite;
+}
+
+/* Toast entrance (components/Toaster.tsx). Short and small — a toast that
+   makes an entrance competes with the work the user is doing. */
+@keyframes rf-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rf-toast {
+  animation: rf-toast-in 160ms ease-out;
+}
+
+/* Motion is the decoration here, not the message: the toast still appears,
+   it just stops sliding. Applies to the marquee too, which is pure
+   decoration and has no business moving for someone who asked it not to. */
+@media (prefers-reduced-motion: reduce) {
+  .rf-toast,
+  .rf-marquee-track {
+    animation: none;
+  }
 }
 
 /* Slow drift for the suspended documents in the hero's 3D field. Only the

@@ -7,9 +7,11 @@
 // threading a `user` prop through just for this.
 //
 // Rendered in deep ink with the lime accent, matching the landing page's nav
-// and footer. The page body below stays light for form readability — the bar
-// is what carries the brand into the app, so signing in doesn't feel like
-// landing on a different product.
+// and footer. It stays ink in both light and dark themes — it's the one
+// surface whose background is known, which is what makes lime usable here
+// (see the --color-signal note in globals.css). The bar is what carries the
+// brand into the app, so signing in doesn't feel like landing on a different
+// product.
 
 import Link from "next/link";
 import Wordmark from "@/components/Wordmark";
@@ -37,7 +39,12 @@ export default async function Header({
   } = await supabase.auth.getUser();
 
   return (
-    <header className="bg-[var(--brand-deep)]">
+    // The bar is deep ink in both themes, so lime is legible on it either
+    // way — same reasoning as .rf-panel-head, and the same token re-scoping.
+    // The hairline along the bottom is the accent rather than a border grey:
+    // it reads as a lit edge, and it's what visually seats the ruled page
+    // below the chrome instead of letting the two just abut.
+    <header className="border-b border-[var(--lime)]/25 bg-[var(--brand-deep)] [--color-signal:var(--lime)]">
       {/* One width on every signed-in page. This used to match each page's own
           content column (max-w-3xl on the form pages, max-w-5xl on the
           dashboard) so the wordmark lined up with the page heading — but that
@@ -49,7 +56,7 @@ export default async function Header({
             <Wordmark tone="dark" />
           </Link>
           {active && dealId && (
-            <Link href="/dashboard" className="text-sm font-medium text-white/55 transition-colors hover:text-white">
+            <Link href="/dashboard" className="rf-meta text-white/55 transition-colors hover:text-white">
               ← Dashboard
             </Link>
           )}
@@ -61,11 +68,15 @@ export default async function Header({
                 <Link
                   key={step.key}
                   href={step.href}
+                  // Step numbers are a readout of where you are in the flow,
+                  // so they're set in the data face like every other reading
+                  // in the app. Tight corners rather than a pill: the pill is
+                  // the generic shape this redesign is getting away from.
                   className={
-                    "rounded-full px-3 py-1 font-medium transition-colors " +
+                    "rf-meta rounded-[var(--r-control)] px-3 py-1.5 transition-colors " +
                     (step.key === active
                       ? "bg-[var(--lime)] text-[var(--brand-deep)]"
-                      : "text-white/60 hover:bg-white/10 hover:text-white")
+                      : "text-white/55 hover:bg-white/10 hover:text-white")
                   }
                 >
                   {step.label}
@@ -78,20 +89,20 @@ export default async function Header({
               {/* Only rendered for an admin. The page and its API both check
                   again — this link is a convenience, not the gate. */}
               {isAdminUser(user) && (
-                <Link href="/admin/support" className="font-medium text-[var(--lime)] transition-opacity hover:opacity-80">
+                <Link href="/admin/support" className="rf-meta text-[var(--lime)] transition-opacity hover:opacity-80">
                   Admin
                 </Link>
               )}
-              <Link href="/support" className="font-medium text-white/60 transition-colors hover:text-white">
+              <Link href="/support" className="rf-meta text-white/55 transition-colors hover:text-white">
                 Support
               </Link>
-              <Link href="/settings" className="font-medium text-white/60 transition-colors hover:text-white">
+              <Link href="/settings" className="rf-meta text-white/55 transition-colors hover:text-white">
                 Settings
               </Link>
               <form action={signOut}>
                 <button
                   type="submit"
-                  className="font-medium text-white/60 transition-colors hover:text-white"
+                  className="rf-meta text-white/55 transition-colors hover:text-white"
                 >
                   Sign out
                 </button>

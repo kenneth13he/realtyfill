@@ -88,20 +88,7 @@ The Next app and `pdf-service/` each need it. Without it on both, the fill
 endpoint is either unauthenticated or broken — worth confirming in the
 dashboard rather than assuming, since nothing in the repo can check it.
 
-### 6. Nobody has opened the app on a real iPhone — Kenneth
-`scripts/browser_check.ts` covers Chromium desktop and a 375px mobile
-viewport, clean on localhost and production. It cannot cover the one thing
-that actually worries us: iOS Safari refuses to render PDFs in an iframe in
-ways no emulator reproduces, and the PDF preview is exactly where that bites.
-The `hidden sm:block` fallback is asserted to be the visible one at 375px —
-asserted in Chromium, which is not the browser with the problem.
-
-**Fix:** open it on a physical iPhone, walk the whole flow, check the preview
-step specifically.
-
-See `REMAINING_WORK.md` items 11 and 25.
-
-### 7. GitHub hygiene — Chris
+### 6. GitHub hygiene — Chris
 - Secret-scanning push protection: enable.
 - Confirm the repo is Private.
 - The `origin` remote still points at the old capitalized
@@ -114,7 +101,7 @@ See `REMAINING_WORK.md` items 11 and 25.
 
 ## P2 — before it costs money
 
-### 8. No spend cap on the Anthropic account — Chris
+### 7. No spend cap on the Anthropic account — Chris
 Listing extraction runs on `claude-sonnet-5` with prefix caching and per-call
 cost logging, so the per-call cost is known and low. What's missing is the
 ceiling: the per-user cap is 60 extractions/hour, so twenty active realtors
@@ -123,7 +110,7 @@ nothing anywhere stops it.
 
 **Fix:** a spend alert (and ideally a hard cap) on the Anthropic account.
 
-### 9. No retention policy for generated PDFs — Chris
+### 8. No retention policy for generated PDFs — Chris
 Generated forms accumulate in Storage forever. Deal deletion and account
 deletion both clean up properly, so this is only about PDFs nobody deletes —
 which is most of them. Invisible at a handful of testers; it's the first
@@ -134,26 +121,28 @@ cost explicitly.
 
 See `REMAINING_WORK.md` item 17.
 
-### 10. Logging exists, alerting doesn't — Chris
+### 9. Logging exists, alerting doesn't — Chris
 Errors are logged. Nothing tells us when they happen. The first we'd hear of
 a broken generate pipeline is a user saying so.
 
 See `REMAINING_WORK.md` item 16.
 
-### 11. Two stale Dependabot PRs, and a config that produces duplicates — Chris
+### 10. Two stale Dependabot PRs still open — Kenneth or Chris
 PRs #8 and #9 both bump `fastapi` only. The advisories that were making CI
-red were against `python-multipart`, which is now pinned at `0.0.32` on
-`main`, so both PRs are superseded and neither would fix anything.
+red were against `python-multipart`, now pinned at `0.0.32`, so both PRs are
+superseded and neither would have fixed anything on its own.
 
-The two are byte-identical because `dependabot.yml` has pip entries for both
-`/` and `/pdf-service`, and the root scan reaches into the subdirectory.
+The duplicate `/pdf-service` pip entry that produced the pair is already gone
+from `dependabot.yml` — for pip, the `/` scan walks down and finds both
+requirements files, which is why each entry opened its own PR against the
+same file.
 
-**Fix:** close #8 and #9; drop the `/` pip entry (root `requirements.txt`
-holds only `pypdf` and audits clean either way).
+**Fix:** close #8 and #9 on GitHub. Needs someone with repo write access to
+click it; it can't be done from here.
 
 See `REMAINING_WORK.md` item 15g.
 
-### 12. Two deployment paths, one in use — Chris
+### 11. Two deployment paths, one in use — Chris
 Vercel is live. The Render/Docker path still exists, and its `node:24-slim`
 image has never been build-tested. Either it's a real fallback and gets
 tested, or it's dead weight and gets deleted. Right now it's neither.
@@ -164,7 +153,7 @@ See `REMAINING_WORK.md` item 13.
 
 ## P3 — product decisions and polish
 
-### 13. Form 400 utility checkboxes — blocked on a real form
+### 12. Form 400 utility checkboxes — blocked on a real form
 The `/1` suffix semantics on the utility checkboxes can't be confirmed from
 the blank PDF alone. **This must not be guessed** — wrong checkbox semantics
 on an Agreement to Lease is a wrong legal document, not a cosmetic bug.
@@ -173,29 +162,27 @@ on an Agreement to Lease is a wrong legal document, not a cosmetic bug.
 
 See `REMAINING_WORK.md` item 9.
 
-### 14. Form 410 is 11/121 fields — product decision
+### 13. Form 410 is 11/121 fields — product decision
 It needs a tenant-facing flow to be worth anything; a realtor can't supply
 most of those fields. Either build that flow or drop the form from the set.
 
-### 15. Frontend polish — Kenneth
-None of this stops a realtor from using the product. In rough order of how
-much it's missed:
+### 14. Collapsible intake sections — Kenneth
+The last item left from the frontend polish list. Toasts, the illustrated
+empty state, the keyboard pass, the contrast audit and dark mode are all
+done; the app was also re-themed onto a token + primitive layer in
+`app/globals.css`, so it can be retuned from one file.
 
-- Toasts — errors are currently inline text only
-- Collapsible / auto-collapsing intake sections
-- Illustrated dashboard empty state
-- Keyboard-only pass
-- Dark mode
+Intake is a long single scroll, and the schema already groups its fields —
+those groups should collapse, and ideally auto-collapse once complete.
+
+**Why it wasn't done with the rest:** it isn't only styling.
+`ReviewForm.revealField()` focuses a field by id and scrolls it into view;
+if that field's group is collapsed, the lookup finds nothing and the "jump
+to the field the AI flagged" flow silently does nothing. Collapsing has to
+expand the containing group first. Worth doing properly rather than bolting
+a `<details>` around each group.
 
 See `REMAINING_WORK.md` items 22, 21, 23, 26, 27.
-
-### 16. `docs/PROJECT_STRUCTURE.md` is stale — either
-It carries a staleness banner and four corrections, but it predates the
-Vercel deploy, `pdf-service/`, three of the four form sets, `tests/`, and
-most of `app/`. It's the only per-file index we have, which is why it was
-annotated rather than deleted.
-
-**Fix:** a full rewrite, or delete it and accept that the code is the index.
 
 ---
 

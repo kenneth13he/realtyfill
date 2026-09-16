@@ -31,13 +31,13 @@ const STATUS_LABELS: Record<AdminRequest["status"], string> = {
   resolved: "Resolved",
 };
 const STATUS_CLASSES: Record<AdminRequest["status"], string> = {
-  open: "bg-amber-100 text-amber-900",
+  open: "bg-[var(--color-warn-border)] text-[var(--color-warn-text)]",
   in_progress: "bg-sky-100 text-sky-900",
-  resolved: "bg-emerald-100 text-emerald-900",
+  resolved: "bg-[var(--color-ok-bg)] text-[var(--color-ok-text)]",
 };
 
 const inputClasses =
-  "w-full rounded-md border border-[var(--color-border)] bg-white px-3 py-2 text-sm text-[var(--color-text)] shadow-sm outline-none transition-colors focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20";
+  "rf-field";
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleString(undefined, {
@@ -77,7 +77,7 @@ function Row({ req, onSaved }: { req: AdminRequest; onSaved: (r: AdminRequest) =
   }
 
   return (
-    <li className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
+    <li className="rf-panel p-5">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h3 className="text-base font-semibold text-[var(--color-text)]">{req.subject}</h3>
         <span className={"rounded-full px-2 py-0.5 text-xs font-medium " + STATUS_CLASSES[req.status]}>
@@ -138,7 +138,7 @@ function Row({ req, onSaved }: { req: AdminRequest; onSaved: (r: AdminRequest) =
           type="button"
           onClick={() => save({ reply })}
           disabled={saving || reply === (req.admin_reply ?? "")}
-          className="rounded-md bg-[var(--color-accent)] px-3 py-1.5 text-sm font-semibold text-white transition-opacity disabled:opacity-40"
+          className="rf-btn px-3 py-1.5 text-sm"
         >
           {saving ? "Saving…" : req.admin_reply ? "Update reply" : "Send reply"}
         </button>
@@ -147,7 +147,7 @@ function Row({ req, onSaved }: { req: AdminRequest; onSaved: (r: AdminRequest) =
           value={req.status}
           onChange={(e) => save({ status: e.target.value as AdminRequest["status"] })}
           disabled={saving}
-          className="rounded-md border border-[var(--color-border)] bg-white px-2 py-1.5 text-sm"
+          className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-2 py-1.5 text-sm"
           aria-label="Status"
         >
           {STATUSES.map((s) => (
@@ -166,14 +166,14 @@ function Row({ req, onSaved }: { req: AdminRequest; onSaved: (r: AdminRequest) =
           Email instead
         </a>
 
-        {saved && <span className="text-xs text-emerald-700">Saved</span>}
+        {saved && <span className="text-xs text-[var(--color-ok-text)]">Saved</span>}
         {req.replied_at && !saved && (
           <span className="text-xs text-[var(--color-text-muted)]">Replied {formatDate(req.replied_at)}</span>
         )}
       </div>
 
       {error && (
-        <p role="alert" className="mt-2 text-sm text-red-700">
+        <p role="alert" className="mt-2 text-sm text-[var(--color-error-text)]">
           {error}
         </p>
       )}
@@ -203,7 +203,7 @@ export default function AdminSupportList() {
 
   if (error) {
     return (
-      <p role="alert" className="text-sm text-red-700">
+      <p role="alert" className="text-sm text-[var(--color-error-text)]">
         {error}
       </p>
     );

@@ -22,8 +22,6 @@ export interface SupportRequest {
   replied_at: string | null;
 }
 
-const inputClasses =
-  "w-full rounded-md border border-[var(--color-border)] bg-white px-3 py-2 text-sm text-[var(--color-text)] shadow-sm outline-none transition-colors focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20";
 
 const STATUS_LABELS: Record<SupportRequest["status"], string> = {
   open: "Open",
@@ -32,9 +30,9 @@ const STATUS_LABELS: Record<SupportRequest["status"], string> = {
 };
 
 const STATUS_CLASSES: Record<SupportRequest["status"], string> = {
-  open: "bg-amber-100 text-amber-900",
+  open: "bg-[var(--color-warn-border)] text-[var(--color-warn-text)]",
   in_progress: "bg-sky-100 text-sky-900",
-  resolved: "bg-emerald-100 text-emerald-900",
+  resolved: "bg-[var(--color-ok-bg)] text-[var(--color-ok-text)]",
 };
 
 function formatDate(iso: string): string {
@@ -118,7 +116,7 @@ export default function SupportForm({
   return (
     <div className="flex flex-col gap-10">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
+        <div className="rf-panel p-5">
           <h2 className="text-base font-semibold text-[var(--color-text)]">Report a problem</h2>
           <p className="mt-1 text-sm text-[var(--color-text-muted)]">
             Tell us what you were doing and what happened. We can see your account and deals, so you
@@ -137,7 +135,7 @@ export default function SupportForm({
                 maxLength={200}
                 required
                 placeholder="Generating forms failed"
-                className={inputClasses}
+                className="rf-field"
               />
             </div>
 
@@ -153,7 +151,7 @@ export default function SupportForm({
                 required
                 rows={6}
                 placeholder="I clicked Generate on the review page and got an error after about ten seconds."
-                className={inputClasses}
+                className="rf-field"
               />
               <p className="mt-1 text-xs text-[var(--color-text-muted)]">{body.length}/5000</p>
             </div>
@@ -168,7 +166,7 @@ export default function SupportForm({
                 onChange={(e) => setErrorRef(e.target.value)}
                 maxLength={64}
                 placeholder="e.g. 4f2a91c0be"
-                className={inputClasses}
+                className="rf-field"
               />
               <p className="mt-1 text-xs text-[var(--color-text-muted)]">
                 If you saw an error message with a reference code, paste it here — it takes us straight
@@ -179,12 +177,12 @@ export default function SupportForm({
         </div>
 
         {error && (
-          <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
+          <p className="rounded-md bg-[var(--color-error-bg)] px-3 py-2 text-sm text-[var(--color-error-text)]" role="alert">
             {error}
           </p>
         )}
         {sent && (
-          <p className="rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-800" role="status">
+          <p className="rounded-md bg-[var(--color-ok-bg)] px-3 py-2 text-sm text-[var(--color-ok-text)]" role="status">
             Sent — we&apos;ll take a look. You can see it below.
           </p>
         )}
@@ -193,7 +191,7 @@ export default function SupportForm({
           <button
             type="submit"
             disabled={sending || !subject.trim() || !body.trim()}
-            className="rounded-md bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-opacity disabled:opacity-50"
+            className="rf-btn px-4 py-2 text-sm"
           >
             {sending ? "Sending…" : "Send request"}
           </button>
@@ -211,7 +209,7 @@ export default function SupportForm({
             {requests.map((req) => (
               <li
                 key={req.id}
-                className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4"
+                className="rf-panel p-4"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="font-medium text-[var(--color-text)]">{req.subject}</span>

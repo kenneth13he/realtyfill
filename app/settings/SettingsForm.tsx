@@ -6,6 +6,7 @@
 "use client";
 
 import { useState } from "react";
+import { useToast } from "@/components/Toaster";
 
 export interface Profile {
   full_name: string;
@@ -14,18 +15,15 @@ export interface Profile {
   brokerage_address: string;
 }
 
-const inputClasses =
-  "w-full rounded-md border border-[var(--color-border)] bg-white px-3 py-2 text-sm text-[var(--color-text)] shadow-sm outline-none transition-colors focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20";
 
 export default function SettingsForm({ initialProfile }: { initialProfile: Profile }) {
   const [profile, setProfile] = useState<Profile>(initialProfile);
   const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const toast = useToast();
 
   function setField(key: keyof Profile, value: string) {
     setProfile((prev) => ({ ...prev, [key]: value }));
-    setSaved(false);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -39,7 +37,9 @@ export default function SettingsForm({ initialProfile }: { initialProfile: Profi
         body: JSON.stringify(profile),
       });
       if (!res.ok) throw new Error("Failed to save");
-      setSaved(true);
+      // Previously a grey "Saved." beside the button — at the bottom of a
+      // page you've just scrolled down, which is the one place the eye isn't.
+      toast.success("Settings saved.");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -49,7 +49,7 @@ export default function SettingsForm({ initialProfile }: { initialProfile: Profi
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
+      <div className="rf-panel p-5">
         <h2 className="text-base font-semibold text-[var(--color-text)]">Profile</h2>
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
@@ -60,19 +60,19 @@ export default function SettingsForm({ initialProfile }: { initialProfile: Profi
               id="full_name"
               value={profile.full_name}
               onChange={(e) => setField("full_name", e.target.value)}
-              className={inputClasses}
+              className="rf-field"
             />
           </div>
           <div>
             <label htmlFor="phone" className="mb-1 block text-sm font-medium text-[var(--color-text)]">
               Phone
             </label>
-            <input id="phone" value={profile.phone} onChange={(e) => setField("phone", e.target.value)} className={inputClasses} />
+            <input id="phone" value={profile.phone} onChange={(e) => setField("phone", e.target.value)} className="rf-field" />
           </div>
         </div>
       </div>
 
-      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
+      <div className="rf-panel p-5">
         <h2 className="text-base font-semibold text-[var(--color-text)]">Brokerage defaults</h2>
         <p className="mt-1 text-sm text-[var(--color-text-muted)]">
           Pre-fills the listing brokerage fields on every new deal you create — you can still change them per deal.
@@ -86,7 +86,7 @@ export default function SettingsForm({ initialProfile }: { initialProfile: Profi
               id="brokerage_name"
               value={profile.brokerage_name}
               onChange={(e) => setField("brokerage_name", e.target.value)}
-              className={inputClasses}
+              className="rf-field"
             />
           </div>
           <div>
@@ -97,7 +97,7 @@ export default function SettingsForm({ initialProfile }: { initialProfile: Profi
               id="brokerage_address"
               value={profile.brokerage_address}
               onChange={(e) => setField("brokerage_address", e.target.value)}
-              className={inputClasses}
+              className="rf-field"
             />
           </div>
         </div>
@@ -113,11 +113,10 @@ export default function SettingsForm({ initialProfile }: { initialProfile: Profi
         <button
           type="submit"
           disabled={saving}
-          className="rounded-lg bg-[var(--color-accent)] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-hover)] disabled:cursor-not-allowed disabled:opacity-40"
+          className="rf-btn px-4 py-2.5"
         >
           {saving ? "Saving…" : "Save"}
         </button>
-        {saved && <span className="text-sm text-[var(--color-text-muted)]">Saved.</span>}
       </div>
     </form>
   );
