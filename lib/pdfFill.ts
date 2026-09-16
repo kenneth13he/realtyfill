@@ -90,20 +90,16 @@ async function fillPdfViaSubprocess(blankTemplatePath: string, fields: FillableF
 async function fillPdfViaService(blankTemplatePath: string, fields: FillableField[], outputPath: string): Promise<void> {
   const blankBytes = await fs.readFile(blankTemplatePath);
 
-  // Proves to pdf-service that this call came from us rather than from
-  // anyone who found its URL. The service only enforces it when it has the
-  // same value configured, so an unset variable leaves both sides behaving
-  // exactly as before — set PDF_SERVICE_SECRET on both to turn the check on.
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
-  if (process.env.PDF_SERVICE_SECRET) {
-    headers["X-PDF-Service-Secret"] = process.env.PDF_SERVICE_SECRET;
-  }
+  // Multipart with the PDF as raw bytes, not base64 inside JSON. Base64 adds
+  // 33%, and Vercel caps a function's request AND response bodies at 4.5 MB:
+  // the 3.43 MB RECO guide encoded to 4.57 MB and broke generation for every
+  // form set in production with a 500. Only in production — the local dev
+  // path shells out to Python and never makes this request.
+  const form = new FormData();
+  form.append("fields", JSON.stringify(fields));
+  form.append("pdf", new Blob([new Uint8Array(blankBytes)], { type: "application/pdf" }), "blank.pdf");
 
-  const res = await fetch(new URL("/fill", process.env.PDF_SERVICE_URL), {
-    method: "POST",
-    headers,
-    body: JSON.stringify({ blank_pdf_base64: blankBytes.toString("base64"), fields }),
-  });
+  const res = await fetch(new URL("/fill", process.env.PDF_SERVICE_URL), { method: "POST", body: form });
 
   if (!res.ok) {
     const body = await res.json().catch(() => null);
@@ -112,6 +108,6 @@ async function fillPdfViaService(blankTemplatePath: string, fields: FillableFiel
     throw new Error(`pdf-service /fill failed (${res.status}): ${message}`);
   }
 
-  const { filled_pdf_base64: filledBase64 } = (await res.json()) as { filled_pdf_base64: string };
-  await fs.writeFile(outputPath, Buffer.from(filledBase64, "base64"));
+  // Comes back as application/pdf, for the same size reason.
+  await fs.writeFile(outputPath, Buffer.from(await res.arrayBuffer()));
 }

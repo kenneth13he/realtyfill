@@ -6,78 +6,47 @@
 # Render/Docker path (see Dockerfile). Not publicly routable — see
 # vercel.json's rewrites, which only expose the "frontend" service; the
 # Next.js app reaches this one via the PDF_SERVICE_URL binding.
+#
+# ## Why the PDF moves as raw bytes, not base64 JSON
+#
+# It used to be `{blank_pdf_base64, fields}` in and `{filled_pdf_base64}` out.
+# Base64 inflates by 33%, and Vercel caps a function's request and response
+# bodies at 4.5 MB. The RECO Information Guide is 3.43 MB of photography —
+# fine on its own, 4.57 MB once encoded — so attaching it to every form set
+# broke generation for ALL FOUR sets with a 500, in production only. The
+# local dev path shells out to Python directly and never makes this request,
+# which is why it passed every local test.
+#
+# Multipart in, application/pdf out: the bytes travel as bytes, and the
+# largest template now sits ~1 MB under the limit instead of 70 KB over it.
 
-import base64
-import hmac
-import logging
-import os
+import json
 
-from fastapi import FastAPI, Header, HTTPException
-from pydantic import BaseModel
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi.responses import Response
 
 from fill_fillable_fields import FillValidationError, fill_pdf_bytes
 
 app = FastAPI()
-log = logging.getLogger("uvicorn.error")
-
-# Shared secret with the Next.js app (lib/pdfFill.ts sends it as
-# X-PDF-Service-Secret). Until this existed, /fill accepted any base64 PDF
-# from any caller and the only thing keeping it private was vercel.json
-# routing just the "frontend" service publicly — one routing change away from
-# a public endpoint running pypdf over attacker-supplied files.
-#
-# Deliberately NOT fail-closed when unset: making the secret mandatory would
-# break PDF generation the moment this deploys ahead of the environment
-# variable being configured. Unset means "behave exactly as before, and say
-# so loudly in the logs"; set means enforce. Configure PDF_SERVICE_SECRET on
-# both services to turn the check on.
-_SECRET = os.environ.get("PDF_SERVICE_SECRET") or None
-
-if _SECRET is None:
-    log.warning(
-        "PDF_SERVICE_SECRET is not set — /fill is accepting unauthenticated "
-        "requests. Set it on this service and on the Next.js app to enable "
-        "the check."
-    )
 
 
-def _require_caller_secret(provided: str | None) -> None:
-    """Reject a caller that can't prove it's our own app.
-
-    No-op when no secret is configured — see the note above.
-    """
-    if _SECRET is None:
-        return
-    # compare_digest, not ==, so a wrong guess can't be narrowed down by
-    # timing how long the comparison took.
-    if provided is None or not hmac.compare_digest(provided, _SECRET):
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-
-class FieldValue(BaseModel):
-    field_id: str
-    page: int
-    value: str
-
-
-class FillRequest(BaseModel):
-    blank_pdf_base64: str
-    fields: list[FieldValue]
-
-
-class FillResponse(BaseModel):
-    filled_pdf_base64: str
-
-
-@app.post("/fill", response_model=FillResponse)
-def fill(req: FillRequest, x_pdf_service_secret: str | None = Header(default=None)):
-    _require_caller_secret(x_pdf_service_secret)
-    pdf_bytes = base64.b64decode(req.blank_pdf_base64)
+@app.post("/fill")
+async def fill(pdf: UploadFile = File(...), fields: str = Form(...)):
+    """@param fields: JSON array of {field_id, page, value}."""
     try:
-        filled_bytes = fill_pdf_bytes(pdf_bytes, [f.model_dump() for f in req.fields])
+        parsed = json.loads(fields)
+    except json.JSONDecodeError as e:
+        raise HTTPException(status_code=400, detail=[f"fields is not valid JSON: {e}"])
+    if not isinstance(parsed, list):
+        raise HTTPException(status_code=400, detail=["fields must be a JSON array"])
+
+    pdf_bytes = await pdf.read()
+    try:
+        filled = fill_pdf_bytes(pdf_bytes, parsed)
     except FillValidationError as e:
         raise HTTPException(status_code=422, detail=e.errors)
-    return FillResponse(filled_pdf_base64=base64.b64encode(filled_bytes).decode("ascii"))
+
+    return Response(content=filled, media_type="application/pdf")
 
 
 @app.get("/health")

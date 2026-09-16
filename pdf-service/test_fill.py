@@ -5,8 +5,8 @@
 #
 # Run: python -m unittest discover -s pdf-service -p "test_*.py"
 
-import base64
 import io
+import json
 import pathlib
 import sys
 import unittest
@@ -66,7 +66,13 @@ class FillPdfBytesTest(unittest.TestCase):
 
 
 class ServiceEndpointTest(unittest.TestCase):
-    """The HTTP shape lib/pdfFill.ts depends on in the Vercel deployment."""
+    """The HTTP shape lib/pdfFill.ts depends on in the Vercel deployment.
+
+    Multipart in, application/pdf out. The previous base64-JSON shape broke
+    generation for every form set in production once the 3.43 MB RECO guide
+    was attached: encoded it came to 4.57 MB, over Vercel's 4.5 MB body cap.
+    These assert the bytes stay bytes in both directions.
+    """
 
     @classmethod
     def setUpClass(cls):
@@ -77,28 +83,51 @@ class ServiceEndpointTest(unittest.TestCase):
         from main import app
 
         cls.client = TestClient(app)
-        cls.blank_b64 = base64.b64encode(TEMPLATE.read_bytes()).decode()
+        cls.blank = TEMPLATE.read_bytes()
+
+    def post(self, fields, pdf=None):
+        return self.client.post(
+            "/fill",
+            files={"pdf": ("blank.pdf", pdf if pdf is not None else self.blank, "application/pdf")},
+            data={"fields": json.dumps(fields)},
+        )
 
     def test_health(self):
         self.assertEqual(self.client.get("/health").json(), {"ok": True})
 
-    def test_fill_round_trips_base64(self):
-        r = self.client.post("/fill", json={
-            "blank_pdf_base64": self.blank_b64,
-            "fields": [{"field_id": "p1_brokerage", "page": 1, "value": "Acme Realty"}],
-        })
+    def test_fill_returns_raw_pdf_not_base64(self):
+        r = self.post([{"field_id": "p1_brokerage", "page": 1, "value": "Acme Realty"}])
         self.assertEqual(r.status_code, 200)
-        out = base64.b64decode(r.json()["filled_pdf_base64"])
-        self.assertEqual(values_in(out).get("p1_brokerage"), "Acme Realty")
+        self.assertEqual(r.headers["content-type"], "application/pdf")
+        self.assertTrue(r.content.startswith(b"%PDF"))
+        self.assertEqual(values_in(r.content).get("p1_brokerage"), "Acme Realty")
 
     def test_validation_error_is_422_with_details(self):
-        r = self.client.post("/fill", json={
-            "blank_pdf_base64": self.blank_b64,
-            "fields": [{"field_id": "nope", "page": 1, "value": "x"}],
-        })
+        r = self.post([{"field_id": "nope", "page": 1, "value": "x"}])
         self.assertEqual(r.status_code, 422)
         # lib/pdfFill.ts joins this list into its thrown error message.
         self.assertIsInstance(r.json()["detail"], list)
+
+    def test_malformed_fields_is_400(self):
+        r = self.client.post(
+            "/fill",
+            files={"pdf": ("blank.pdf", self.blank, "application/pdf")},
+            data={"fields": "not json"},
+        )
+        self.assertEqual(r.status_code, 400)
+
+    def test_the_largest_template_stays_under_vercels_body_cap(self):
+        # The regression that caused the outage. RECO is the biggest template
+        # attached to every set; raw it fits, base64 it does not.
+        reco = pathlib.Path(__file__).resolve().parent.parent / "forms" / "blank_templates" / "shared" / "form_reco_blank.pdf"
+        raw = reco.stat().st_size
+        self.assertLess(raw, 4_500_000, "RECO no longer fits in a Vercel request body even raw")
+        self.assertGreater(raw * 4 / 3, 4_500_000, "base64 would now fit — this guard can be revisited")
+
+        r = self.post([{"field_id": "p13_real_estate_agent_name", "page": 13, "value": "Chris Luo"}],
+                      pdf=reco.read_bytes())
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(values_in(r.content).get("p13_real_estate_agent_name"), "Chris Luo")
 
 
 class BlankOnlyFormTest(unittest.TestCase):
