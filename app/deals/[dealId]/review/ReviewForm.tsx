@@ -475,11 +475,29 @@ export default function ReviewForm({
 
       {results.length > 0 && (
         <div className="rounded-xl border border-[var(--color-ok-border)] bg-[var(--color-ok-bg)] p-5">
-          <h2 className="text-base font-semibold text-[var(--color-ok-text)]">Generated PDFs</h2>
-          <p className="mt-1 text-sm text-[var(--color-ok-text)]">
-            Click a form to preview it. You can edit fields directly in the viewer below — use its own toolbar
-            (not a button here) to save, since that&apos;s what actually captures your edits.
-          </p>
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="min-w-0">
+              <h2 className="text-base font-semibold text-[var(--color-ok-text)]">Generated PDFs</h2>
+              <p className="mt-1 text-sm text-[var(--color-ok-text)]">
+                Click a form to preview it. You can edit fields directly in the viewer below — use its own toolbar
+                (not a button here) to save, since that&apos;s what actually captures your edits.
+              </p>
+            </div>
+            {/* The payoff of the whole flow, so it's the accent button rather
+                than another outline — and an <a>, not a fetch: the response
+                is served as an attachment, so the browser downloads it
+                without navigating away and without us touching a Blob URL.
+                Only worth showing for a set; with one form the row's own
+                Download button is the same click. */}
+            {results.length > 1 && (
+              <a
+                href={`/api/deals/${dealId}/download-all`}
+                className="rf-btn shrink-0 focus-visible:ring-2 focus-visible:ring-[var(--color-ok-text)] focus-visible:ring-offset-2"
+              >
+                Download all ({results.length})
+              </a>
+            )}
+          </div>
           <ul className="mt-3 flex flex-col gap-2">
             {results.map((r) => {
               const isOpen = previewing === r.form;
@@ -509,14 +527,29 @@ export default function ReviewForm({
                         which is unusable on a phone. This escape hatch is
                         always available and is the primary route on small
                         screens, where the iframe below is hidden outright. */}
-                    <a
-                      href={`${r.downloadUrl}?inline=1`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="shrink-0 rounded border border-[var(--color-ok-border)] px-2 py-1 text-xs font-medium text-[var(--color-ok-text)] outline-none transition-colors hover:bg-[var(--color-ok-bg)] focus-visible:ring-2 focus-visible:ring-[var(--color-ok-text)] focus-visible:ring-offset-2"
-                    >
-                      Open in new tab
-                    </a>
+                    <div className="flex shrink-0 items-center gap-1.5">
+                      <a
+                        href={`${r.downloadUrl}?inline=1`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="rounded border border-[var(--color-ok-border)] px-2 py-1 text-xs font-medium text-[var(--color-ok-text)] outline-none transition-colors hover:bg-[var(--color-ok-bg)] focus-visible:ring-2 focus-visible:ring-[var(--color-ok-text)] focus-visible:ring-offset-2"
+                      >
+                        Open in new tab
+                      </a>
+                      {/* Same route without `inline=1`, which is what makes
+                          Storage sign the URL with a download disposition —
+                          so this saves the file instead of opening a viewer.
+                          The label names the form, since "Download" repeated
+                          down a list of five tells a screen reader nothing
+                          about which one it's on. */}
+                      <a
+                        href={r.downloadUrl}
+                        aria-label={`Download ${FORM_LABELS[r.form]}`}
+                        className="rounded border border-[var(--color-ok-border)] px-2 py-1 text-xs font-medium text-[var(--color-ok-text)] outline-none transition-colors hover:bg-[var(--color-ok-bg)] focus-visible:ring-2 focus-visible:ring-[var(--color-ok-text)] focus-visible:ring-offset-2"
+                      >
+                        Download
+                      </a>
+                    </div>
                   </div>
                   {isOpen && (
                     <>
