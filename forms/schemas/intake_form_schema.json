@@ -1872,7 +1872,7 @@
         },
         {
           "key": "applicant1_present_address",
-          "label": "Applicant 1 — Present Address & Dates",
+          "label": "Applicant 1 — present address",
           "type": "text",
           "targets": {
             "form_410": [
@@ -1903,7 +1903,7 @@
         },
         {
           "key": "applicant1_present_landlord",
-          "label": "Applicant 1 — Present Landlord Name & Phone",
+          "label": "Applicant 1 — present landlord's name",
           "type": "text",
           "targets": {
             "form_410": [
@@ -1924,7 +1924,7 @@
         },
         {
           "key": "applicant2_present_address",
-          "label": "Applicant 2 — Present Address & Dates (optional)",
+          "label": "Applicant 2 — present address (optional)",
           "type": "text",
           "targets": {
             "form_410": [
@@ -1955,7 +1955,7 @@
         },
         {
           "key": "applicant2_present_landlord",
-          "label": "Applicant 2 — Present Landlord Name & Phone (optional)",
+          "label": "Applicant 2 — present landlord's name (optional)",
           "type": "text",
           "targets": {
             "form_410": [
@@ -2517,13 +2517,14 @@
         },
         {
           "key": "buyer_commission_percent",
-          "label": "Commission (% of sale price)",
+          "label": "Commission to buyer's brokerage (% only, e.g. 2.5)",
           "type": "text",
           "targets": {
             "form_371": [
               "txtp_commision"
             ]
-          }
+          },
+          "note": "The form prints the % sign itself: the line reads 'a commission of ____% of the sale price'. The box is about six characters wide, so anything but a number produces '2.5% of the sale price p% of the sale price'. The 'or ...' alternative beside it (txtcommis_writ / txtSPComm on 271, txtMoreComm on 272) has no question yet — see ISSUES.md."
         },
         {
           "key": "buyer_authority_start_date",
@@ -2660,7 +2661,7 @@
         },
         {
           "key": "listing_commission",
-          "label": "Commission to listing brokerage",
+          "label": "Commission to listing brokerage (% only, e.g. 2.5)",
           "type": "text",
           "targets": {
             "form_271": [
@@ -2669,11 +2670,12 @@
             "form_272": [
               "txtLBCommPer"
             ]
-          }
+          },
+          "note": "The form prints the % sign itself: the line reads 'a commission of ____% of the sale price'. The box is about six characters wide, so anything but a number produces '2.5% of the sale price p% of the sale price'. The 'or ...' alternative beside it (txtcommis_writ / txtSPComm on 271, txtMoreComm on 272) has no question yet — see ISSUES.md."
         },
         {
           "key": "listing_coop_commission",
-          "label": "Commission to co-operating brokerage",
+          "label": "Commission to co-operating brokerage (% only, e.g. 2.5)",
           "type": "text",
           "targets": {
             "form_271": [
@@ -2682,7 +2684,8 @@
             "form_272": [
               "txtCBrokComm"
             ]
-          }
+          },
+          "note": "The form prints the % sign itself: the line reads 'a commission of ____% of the sale price'. The box is about six characters wide, so anything but a number produces '2.5% of the sale price p% of the sale price'. The 'or ...' alternative beside it (txtcommis_writ / txtSPComm on 271, txtMoreComm on 272) has no question yet — see ISSUES.md."
         },
         {
           "key": "listing_start_date",
