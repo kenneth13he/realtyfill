@@ -1,5 +1,16 @@
 [
   {
+    "field_id": "p1_schedule",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      259.46,
+      739.09,
+      299.46,
+      760.63
+    ]
+  },
+  {
     "field_id": "p1_brokerage",
     "type": "text",
     "page": 1,
@@ -8,8 +19,7 @@
       657.4,
       552.8,
       669.4
-    ],
-    "label_hint": "BROKERAGE"
+    ]
   },
   {
     "field_id": "p1_seller",
@@ -20,8 +30,7 @@
       634.4,
       570.5,
       646.4
-    ],
-    "label_hint": "SELLER"
+    ]
   },
   {
     "field_id": "p1_for_the_property_known_as",
@@ -30,10 +39,9 @@
     "rect": [
       132.4,
       611.4,
-      571.0,
+      571,
       623.4
-    ],
-    "label_hint": "for the property known as"
+    ]
   },
   {
     "field_id": "p1_cont",
@@ -44,8 +52,7 @@
       588.4,
       222.8,
       600.4
-    ],
-    "label_hint": ""
+    ]
   },
   {
     "field_id": "p1_dated_the",
@@ -56,8 +63,7 @@
       588.4,
       312.2,
       600.4
-    ],
-    "label_hint": " dated the"
+    ]
   },
   {
     "field_id": "p1_dated_the_day_of",
@@ -68,8 +74,7 @@
       588.4,
       524.3,
       600.4
-    ],
-    "label_hint": " dated the ..................... day of"
+    ]
   },
   {
     "field_id": "p1_20",
@@ -80,7 +85,6 @@
       588.4,
       571.1,
       600.4
-    ],
-    "label_hint": "........................................................, 20"
+    ]
   }
 ]

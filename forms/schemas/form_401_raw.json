@@ -1,5 +1,16 @@
 [
   {
+    "field_id": "p1_schedule",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      259.46,
+      739.09,
+      307.46,
+      760.63
+    ]
+  },
+  {
     "field_id": "p1_tenant",
     "type": "text",
     "page": 1,
@@ -8,20 +19,18 @@
       658.5,
       553.8,
       670.5
-    ],
-    "label_hint": "TENANT"
+    ]
   },
   {
     "field_id": "p1_landlord",
     "type": "text",
     "page": 1,
     "rect": [
-      91.0,
+      91,
       635.5,
       571.5,
       647.5
-    ],
-    "label_hint": "LANDLORD"
+    ]
   },
   {
     "field_id": "p1_for_the_lease_of",
@@ -32,8 +41,7 @@
       612.5,
       571.5,
       624.5
-    ],
-    "label_hint": "for the lease of"
+    ]
   },
   {
     "field_id": "p1_cont",
@@ -44,8 +52,7 @@
       589.5,
       274.6,
       601.5
-    ],
-    "label_hint": ""
+    ]
   },
   {
     "field_id": "p1_dated_the",
@@ -56,8 +63,7 @@
       589.5,
       348.3,
       601.5
-    ],
-    "label_hint": " dated the"
+    ]
   },
   {
     "field_id": "p1_dated_the_day_of",
@@ -66,10 +72,9 @@
     "rect": [
       374.7,
       589.5,
-      520.0,
+      520,
       601.5
-    ],
-    "label_hint": " dated the ............... day of"
+    ]
   },
   {
     "field_id": "p1_20",
@@ -80,7 +85,6 @@
       589.5,
       571.5,
       601.5
-    ],
-    "label_hint": "........................................................, 20"
+    ]
   }
 ]

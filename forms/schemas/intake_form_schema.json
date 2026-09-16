@@ -136,6 +136,9 @@
             ],
             "form_272": [
               "p1_landlord"
+            ],
+            "form_292": [
+              "txtseller1"
             ]
           }
         },
@@ -265,6 +268,12 @@
             ],
             "form_324": [
               "txtp_streetnum"
+            ],
+            "form_291": [
+              "txtp_streetnum"
+            ],
+            "form_292": [
+              "txtp_streetnum"
             ]
           }
         },
@@ -284,6 +293,12 @@
               "txtp_street"
             ],
             "form_324": [
+              "txtp_street"
+            ],
+            "form_291": [
+              "txtp_street"
+            ],
+            "form_292": [
               "txtp_street"
             ]
           }
@@ -305,6 +320,12 @@
             ],
             "form_324": [
               "txtp_UnitNumber"
+            ],
+            "form_291": [
+              "txtp_unitNumber"
+            ],
+            "form_292": [
+              "txtp_unitNumber"
             ]
           }
         },
@@ -325,6 +346,12 @@
             ],
             "form_324": [
               "txtp_city"
+            ],
+            "form_291": [
+              "txtmunicipal"
+            ],
+            "form_292": [
+              "txtmunicipal"
             ]
           }
         },
@@ -359,6 +386,12 @@
               "txtp_zipcode"
             ],
             "form_324": [
+              "txtp_zipcode"
+            ],
+            "form_291": [
+              "txtp_zipcode"
+            ],
+            "form_292": [
               "txtp_zipcode"
             ]
           }
@@ -457,6 +490,9 @@
             ],
             "form_410": [
               "txtrent"
+            ],
+            "form_292": [
+              "txtp_listprice"
             ]
           }
         },
@@ -976,6 +1012,12 @@
             ],
             "form_801": [
               "p1_listing_brokerage"
+            ],
+            "form_291": [
+              "txtNoMapListBrok"
+            ],
+            "form_292": [
+              "txtNoMapListBrok"
             ]
           }
         },
@@ -993,6 +1035,12 @@
             ],
             "form_801": [
               "p1_sales_representative_broker_2"
+            ],
+            "form_291": [
+              "txtNoMapListAgt"
+            ],
+            "form_292": [
+              "txtNoMapListAgt"
             ]
           }
         },
@@ -1013,6 +1061,12 @@
             ],
             "form_271": [
               "p1_the_listing_brokerage_tel_no"
+            ],
+            "form_291": [
+              "txtl_brkphone"
+            ],
+            "form_292": [
+              "txtl_brkphone"
             ]
           }
         },
@@ -1127,6 +1181,12 @@
             ],
             "form_272": [
               "p1_on_the_landlord_s_behalf_within"
+            ],
+            "form_291": [
+              "txtHODays"
+            ],
+            "form_292": [
+              "txtHODays"
             ]
           }
         }
@@ -1497,6 +1557,9 @@
             ],
             "form_801": [
               "p1_seller_s"
+            ],
+            "form_291": [
+              "txtseller1"
             ]
           }
         },
@@ -2028,6 +2091,9 @@
             ],
             "form_272": [
               "p1_dollars_cdn"
+            ],
+            "form_291": [
+              "txtp_listprice"
             ]
           }
         },
@@ -2073,6 +2139,12 @@
             ],
             "form_272": [
               "p1_on_the"
+            ],
+            "form_291": [
+              "txtp_listdate_dd"
+            ],
+            "form_292": [
+              "txtp_listdate_dd"
             ]
           },
           "hidden": true
@@ -2101,6 +2173,12 @@
             ],
             "form_272": [
               "p1_20"
+            ],
+            "form_291": [
+              "txtp_listdate_yyyy"
+            ],
+            "form_292": [
+              "txtp_listdate_yyyy"
             ]
           },
           "hidden": true
@@ -2121,6 +2199,12 @@
             ],
             "form_272": [
               "p1_on_the_day_of"
+            ],
+            "form_291": [
+              "txtp_expiredate_dd"
+            ],
+            "form_292": [
+              "txtp_expiredate_dd"
             ]
           },
           "hidden": true
@@ -2135,6 +2219,12 @@
             ],
             "form_272": [
               "p1_20_2"
+            ],
+            "form_291": [
+              "txtp_expiredate_yyyy"
+            ],
+            "form_292": [
+              "txtp_expiredate_yyyy"
             ]
           },
           "hidden": true
@@ -2278,6 +2368,24 @@
         "sale_seller"
       ],
       "fields": [
+        {
+          "key": "schedule_letter",
+          "label": "Schedule letter (A, B, …)",
+          "type": "text",
+          "default": "A",
+          "targets": {
+            "form_401": [
+              "p1_schedule"
+            ],
+            "form_203": [
+              "p1_schedule"
+            ],
+            "form_303": [
+              "p1_schedule"
+            ]
+          },
+          "note": "The blank in the 'Schedule ____' heading. A schedule exists to be attached to and identified by another agreement, so generating one with a nameless heading left the realtor writing it in by hand every time."
+        },
         {
           "key": "schedule_date",
           "label": "Date on the schedule",

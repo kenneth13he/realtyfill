@@ -113,20 +113,26 @@ export const FORM_LABELS: Record<FormId, string> = {
 // forms/blank_templates/shared/ and is resolved by blankTemplatePath below.
 export const SHARED_FORM_IDS: FormId[] = ["form_reco"];
 
-// Forms delivered as blanks: they are part of a set and generate into the
-// bundle, but carry no fillable fields so nothing is written into them.
-// Declared explicitly so tests assert against this list rather than treating
-// "zero fields" as an acceptable surprise anywhere it turns up.
-export const BLANK_ONLY_FORM_IDS: FormId[] = ["form_291", "form_292"];
+// Forms delivered as blanks: part of a set, generated into the bundle, but
+// carrying no fillable fields. Empty now that PropTx 291/292 arrived as
+// proper fillable exports (897 and 901 fields) rather than the flat public
+// copies — kept as the declared mechanism, because the tests assert against
+// this list rather than treating "zero fields" as an acceptable surprise
+// anywhere it turns up.
+export const BLANK_ONLY_FORM_IDS: FormId[] = [];
 
-// PropTx's MLS data forms (291 sale / 292 lease) are now part of their sets,
-// but as BLANKS. They are 13-page data-entry sheets — hundreds of checkboxes
-// with max-select rules and a 99-row room table — laid out as grids rather
-// than the dot-leader blanks scripts/add_form_fields.py understands, so they
-// carry zero fillable fields and their schemas in forms/schemas/ are empty
-// arrays. Generating one copies the blank through unchanged, which is the
-// honest behaviour: the realtor gets the sheet in their bundle and enters the
-// data in PropTx, which is where they were entering it anyway.
+// PropTx's MLS data forms (291 sale / 292 lease) are fillable after all. The
+// first copies were OREA's flat public PDFs with zero fields; the real
+// PropTx exports carry 897 and 901 respectively. They are still 13-page
+// data-entry sheets — hundreds of checkboxes with max-select rules and a
+// 99-row room table — and most of that has no counterpart in the intake
+// schema, so only the unambiguous overlap is mapped: address, brokerage,
+// agent, holdover, the seller/landlord name, price and the listing period.
+// The rest the realtor fills in PropTx, as before.
+//
+// Note txtseller1 means SELLER NAME on 291 and LANDLORD NAME on 292 — the
+// same field id, a different caption per form — which is why those two map
+// from different intake keys.
 
 // ---------------------------------------------------------------------------
 // Form sets
