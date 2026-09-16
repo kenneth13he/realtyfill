@@ -15,7 +15,7 @@ Owners follow the standing split: **Kenneth** frontend (`components/`, `app/`
 pages), **Chris** infra and backend (`app/api/`, `lib/`, `supabase/`, config,
 deploy).
 
-Last reviewed: September 16, 2026 (offline fill audit — `npm run audit:fill`).
+Last reviewed: September 16, 2026 (offline fill audit + real-browser end-to-end — `npm run check`, `npm run test:e2e`).
 
 Legend: **P0** blocks launch · **P1** before real client data · **P2** before
 it costs money or embarrasses us · **P3** polish
@@ -211,6 +211,44 @@ no equivalent question for the *listing* brokerage, so `txtl_brkaddr` on 271,
 272 and 320 stays blank — even though Settings already stores a
 `brokerage_address` per user. Both forms also print city / province / postal
 as separate boxes and the intake holds the address as one line.
+
+### 18. Three boxes cannot hold a realistic Ontario value — form limits
+Not our bugs; the forms are simply this narrow, and Chrome truncates silently
+rather than warning. Worth knowing before a realtor reports it:
+
+| Question | Form | Box | Holds |
+|---|---|---|---|
+| `condo_property_name` | 101 | `hidlockers_1` | 15 — "The Rosedale" fits, "Pinnacle on Adelaide" does not |
+| `property_street_name` | 291 | `txtp_street` | 25 — "Queen's Park Crescent West" is 26 |
+| `property_street_name` | 292 | `txtp_street` | 20 |
+
+`npm run audit:fill` reports any value that exceeds a box's `/MaxLen`, and
+`scripts/overflow_check.py` reports text wider than its box even when it fits
+the character limit. Both are worth a look after any mapping change.
+
+### 19. Unmapped "or ..." alternatives beside the commission percentages
+Forms 271, 272 and 371 each print "a commission of ____% of the sale price of
+the Property **or** ____". We fill the percentage; the alternative box
+(`txtcommis_writ` and `txtSPComm` on 271, `txtMoreComm` and `txtPurchase` on
+272) has no question. A brokerage charging a flat fee has nowhere to say so.
+
+**Decide:** add a second commission question, or accept that flat-fee
+arrangements are written in by hand.
+
+### 20. Form 244's a.m./p.m. control — deliberately unmapped
+`chkOpt_SofferTime` sits beside the "no conveyance of offers prior to ____"
+time box, and its two options draw no visible glyph on the blank form, so
+which is a.m. and which is p.m. could not be confirmed. Same rule as Form
+400's utility checkboxes (issue 11): not guessed. The time box itself holds
+only 5 characters, so the question now asks for "7:00" rather than "7:00 p.m."
+
+**Unblocks when:** we see a real completed Form 244.
+
+### 21. Second salesperson, fax and open-house fields — no questions
+291/292 page 10 prints salespersons 2–4 with their own brokerage and phone,
+a brokerage fax, open-house date/time, and showing instructions. Form 101
+prints a fax for each side. None of these have intake questions. They are
+genuinely optional; listing them so it is a decision rather than an oversight.
 
 ---
 

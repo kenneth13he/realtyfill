@@ -3279,13 +3279,14 @@
         },
         {
           "key": "offer_conveyance_time",
-          "label": "No conveyance of offers prior to (time)",
+          "label": "No conveyance of offers prior to (time, e.g. 7:00)",
           "type": "text",
           "targets": {
             "form_244": [
               "txttimelimit_time"
             ]
-          }
+          },
+          "note": "The box holds 5 characters — '7:00 p.m.' prints as '7:00 '. The form has a separate (a.m./p.m.) control, chkOpt_SofferTime, whose two options draw no visible glyph on the blank, so which is which could not be confirmed and it is deliberately unmapped. See ISSUES.md."
         },
         {
           "key": "offer_conveyance_date",
