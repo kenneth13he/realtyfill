@@ -1,112 +1,68 @@
 [
   {
-    "field_id": "p13_real_estate_agent_name",
+    "field_id": "txtCurrentUserFullName",
     "type": "text",
     "page": 13,
     "rect": [
-      47.25,
-      676.14,
-      564.26,
-      695.36
+      48.66592,
+      677.3351,
+      562.9914,
+      693.3348
     ]
   },
   {
-    "field_id": "p13_brokerage_name",
+    "field_id": "txtCurrentUserOfficeName",
     "type": "text",
     "page": 13,
     "rect": [
-      47.25,
-      631.55,
-      564.26,
-      650.77
+      48.66592,
+      632.6691,
+      562.3248,
+      648.3355
     ]
   },
   {
-    "field_id": "p13_date_guide_was_provided",
+    "field_id": "txtProvideDate",
     "type": "text",
     "page": 13,
     "rect": [
-      47.25,
-      584.96,
-      297.24,
-      604.18
+      59.99908,
+      586.6698,
+      296.9955,
+      602.3362
     ]
   },
   {
-    "field_id": "p13_signature_of_real_estate_agent",
+    "field_id": "txtSignerRE1",
     "type": "text",
     "page": 13,
     "rect": [
-      315,
-      584.96,
-      564.99,
-      604.18
+      449.0154,
+      564.6963,
+      568.4238,
+      580.4858
     ]
   },
   {
-    "field_id": "p13_buyer_seller_name",
+    "field_id": "txtSelfRep1",
     "type": "text",
     "page": 13,
     "rect": [
-      47.25,
-      483.7,
-      297.24,
-      502.92
+      46.99928,
+      485.0047,
+      297.3288,
+      500.6711
     ]
   },
   {
-    "field_id": "p13_buyer_seller_name_2",
+    "field_id": "txtSelfRep2",
     "type": "text",
     "page": 13,
     "rect": [
-      315,
-      483.7,
-      564.24,
-      502.92
-    ]
-  },
-  {
-    "field_id": "p13_signature_of_buyer_seller",
-    "type": "text",
-    "page": 13,
-    "rect": [
-      47.25,
-      436.97,
-      297.24,
-      456.19
-    ]
-  },
-  {
-    "field_id": "p13_signature_of_buyer_seller_2",
-    "type": "text",
-    "page": 13,
-    "rect": [
-      315,
-      436.97,
-      564.24,
-      456.19
-    ]
-  },
-  {
-    "field_id": "p13_date",
-    "type": "text",
-    "page": 13,
-    "rect": [
-      47.25,
-      392.23,
-      297.24,
-      411.45
-    ]
-  },
-  {
-    "field_id": "p13_date_2",
-    "type": "text",
-    "page": 13,
-    "rect": [
-      315,
-      392.23,
-      564.24,
-      411.45
+      314.6619,
+      485.0047,
+      564.658,
+      500.6711
     ]
   }
 ]

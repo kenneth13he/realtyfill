@@ -32,10 +32,30 @@ Supabase redirect allow-list and this document mention the hostname at all.
 templates for the three new sets arrived as flat PDFs with zero AcroForm
 fields, so `scripts/add_form_fields.py` synthesizes fields over the dot-leader
 blanks. **That is all gone** — real fillable exports arrived for all ten on
-2026-09-16, plus PropTx 291/292, so every template in the app now carries its
-own field definitions rather than positions I measured off the page. The only
-synthesized template left is the RECO guide, which has no fillable version
-(10 fields, verified by rendering).
+2026-09-16, plus PropTx 291/292 and the RECO guide, so every template in the
+app now carries its own field definitions rather than positions I measured off
+the page. **No synthesized templates remain.**
+
+The RECO swap is worth recording because it is the one case where the
+synthesized version could be checked against the real one. Both put the same
+boxes within ~1.5pt of each other, so `add_box_fields.py`'s rectangle detector
+was right. But the real WEBForms export has six fields where the synthesis had
+ten: the two buyer/seller signature boxes and the two Date boxes are drawn on
+the page and are *not* fillable, and `txtSignerRE1` is not the "Signature of
+real estate agent" box at all — it sits on the caption line beneath it, an
+e-sign anchor. Filling it would print text over the caption. It is left
+unmapped, and `SIGNATURE_FIELD_PATTERN` in lib/profileMapper.ts would block it
+anyway.
+
+The real export also arrived with another agent's identity baked into two
+fields (`txtCurrentUserFullName`, `txtCurrentUserOfficeName`). Cleared with
+scripts/blank_fillable_fields.py and verified absent from the raw bytes, not
+just from the rendered page. **Check that on every WEBForms export** — they
+carry the exporting agent's account details.
+
+`txtCurrentUserOfficeName` is a field the synthesized template never had, so
+the acknowledgement now fills the brokerage name too, seeded from Settings
+along with the agent name (app/api/deals/route.ts).
 
 scripts/add_form_fields.py, add_box_fields.py and add_underscore_fields.py
 stay in the repo: they are what makes a flat PDF usable, and the next form

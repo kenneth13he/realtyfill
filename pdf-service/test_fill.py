@@ -19,11 +19,46 @@ from pypdf import PdfReader
 from fill_fillable_fields import FillValidationError, fill_pdf_bytes
 
 TEMPLATE = Path(__file__).resolve().parent.parent / "forms" / "blank_templates" / "purchase_buyer_condo" / "form_303_blank.pdf"
+SCHEMA = Path(__file__).resolve().parent.parent / "forms" / "schemas" / "form_303_raw.json"
+
+# A real field on page 1 of that template. Named as a constant because when
+# 303 was swapped from a synthesized template to its real WEBForms export the
+# old id (p1_brokerage) stopped existing, and five tests failed at once with
+# messages about validation rather than about the template having changed.
+# SchemaDriftTest below turns that into one failure that says so.
+FIELD = "txts_broker"
+
+# Likewise for the RECO guide, the largest template.
+RECO_FIELD = "txtCurrentUserFullName"
 
 
 def values_in(pdf_bytes: bytes) -> dict:
     fields = PdfReader(io.BytesIO(pdf_bytes)).get_fields() or {}
     return {k: v.get("/V") for k, v in fields.items() if v.get("/V")}
+
+
+class SchemaDriftTest(unittest.TestCase):
+    """Fails first, and legibly, when the template stops matching this file."""
+
+    def test_the_field_these_tests_fill_still_exists_on_page_one(self):
+        schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+        match = [f for f in schema if f["field_id"] == FIELD]
+        self.assertTrue(
+            match,
+            f"{FIELD} is gone from form_303_raw.json — the template was replaced. "
+            f"Pick another page-1 text field and update FIELD.",
+        )
+        self.assertEqual(match[0]["page"], 1)
+
+    def test_the_reco_field_the_size_cap_test_fills_still_exists(self):
+        schema = json.loads(
+            (SCHEMA.parent / "form_reco_raw.json").read_text(encoding="utf-8")
+        )
+        self.assertIn(
+            RECO_FIELD,
+            [f["field_id"] for f in schema],
+            f"{RECO_FIELD} is gone from form_reco_raw.json — the RECO template was replaced.",
+        )
 
 
 class FillPdfBytesTest(unittest.TestCase):
@@ -32,12 +67,12 @@ class FillPdfBytesTest(unittest.TestCase):
         cls.blank = TEMPLATE.read_bytes()
 
     def test_writes_the_value_into_the_named_field(self):
-        out = fill_pdf_bytes(self.blank, [{"field_id": "p1_brokerage", "page": 1, "value": "Acme Realty"}])
-        self.assertEqual(values_in(out).get("p1_brokerage"), "Acme Realty")
+        out = fill_pdf_bytes(self.blank, [{"field_id": FIELD, "page": 1, "value": "Acme Realty"}])
+        self.assertEqual(values_in(out).get(FIELD), "Acme Realty")
 
     def test_leaves_untargeted_fields_empty(self):
-        out = fill_pdf_bytes(self.blank, [{"field_id": "p1_brokerage", "page": 1, "value": "Acme Realty"}])
-        self.assertEqual(list(values_in(out)), ["p1_brokerage"])
+        out = fill_pdf_bytes(self.blank, [{"field_id": FIELD, "page": 1, "value": "Acme Realty"}])
+        self.assertEqual(list(values_in(out)), [FIELD])
 
     def test_rejects_an_unknown_field_id(self):
         with self.assertRaises(FillValidationError) as ctx:
@@ -48,7 +83,7 @@ class FillPdfBytesTest(unittest.TestCase):
         # A field id that exists but is claimed to be on the wrong page means
         # the caller's schema is out of step with the template.
         with self.assertRaises(FillValidationError) as ctx:
-            fill_pdf_bytes(self.blank, [{"field_id": "p1_brokerage", "page": 99, "value": "x"}])
+            fill_pdf_bytes(self.blank, [{"field_id": FIELD, "page": 99, "value": "x"}])
         self.assertIn("page", str(ctx.exception).lower())
 
     def test_reports_every_bad_field_not_just_the_first(self):
@@ -60,7 +95,7 @@ class FillPdfBytesTest(unittest.TestCase):
         self.assertEqual(len(ctx.exception.errors), 2)
 
     def test_output_is_a_readable_pdf(self):
-        out = fill_pdf_bytes(self.blank, [{"field_id": "p1_brokerage", "page": 1, "value": "Acme"}])
+        out = fill_pdf_bytes(self.blank, [{"field_id": FIELD, "page": 1, "value": "Acme"}])
         self.assertTrue(out.startswith(b"%PDF"))
         self.assertGreater(len(PdfReader(io.BytesIO(out)).pages), 0)
 
@@ -96,11 +131,11 @@ class ServiceEndpointTest(unittest.TestCase):
         self.assertEqual(self.client.get("/health").json(), {"ok": True})
 
     def test_fill_returns_raw_pdf_not_base64(self):
-        r = self.post([{"field_id": "p1_brokerage", "page": 1, "value": "Acme Realty"}])
+        r = self.post([{"field_id": FIELD, "page": 1, "value": "Acme Realty"}])
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r.headers["content-type"], "application/pdf")
         self.assertTrue(r.content.startswith(b"%PDF"))
-        self.assertEqual(values_in(r.content).get("p1_brokerage"), "Acme Realty")
+        self.assertEqual(values_in(r.content).get(FIELD), "Acme Realty")
 
     def test_validation_error_is_422_with_details(self):
         r = self.post([{"field_id": "nope", "page": 1, "value": "x"}])
@@ -124,10 +159,10 @@ class ServiceEndpointTest(unittest.TestCase):
         self.assertLess(raw, 4_500_000, "RECO no longer fits in a Vercel request body even raw")
         self.assertGreater(raw * 4 / 3, 4_500_000, "base64 would now fit — this guard can be revisited")
 
-        r = self.post([{"field_id": "p13_real_estate_agent_name", "page": 13, "value": "Chris Luo"}],
+        r = self.post([{"field_id": RECO_FIELD, "page": 13, "value": "Chris Luo"}],
                       pdf=reco.read_bytes())
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(values_in(r.content).get("p13_real_estate_agent_name"), "Chris Luo")
+        self.assertEqual(values_in(r.content).get(RECO_FIELD), "Chris Luo")
 
 
 class BlankOnlyFormTest(unittest.TestCase):

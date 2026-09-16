@@ -74,6 +74,10 @@ export async function POST(request: Request) {
   if (profile?.brokerage_name) seedAnswers.listing_brokerage_name = profile.brokerage_name;
   if (profile?.full_name) seedAnswers.listing_brokerage_agent_name = profile.full_name;
   if (profile?.phone) seedAnswers.listing_brokerage_phone = profile.phone;
+  // The RECO acknowledgement names YOU and YOUR brokerage on every set, whichever
+  // side of the deal you are on, so these two seed unconditionally.
+  if (profile?.brokerage_name) seedAnswers.reco_brokerage_name = profile.brokerage_name;
+  if (profile?.full_name) seedAnswers.reco_agent_name = profile.full_name;
 
   const { error: intakeErr } = await supabase.from("deal_intake").insert({ deal_id: deal.id, answers: seedAnswers });
   if (intakeErr) {

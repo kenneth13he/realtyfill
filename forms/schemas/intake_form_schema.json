@@ -2573,7 +2573,7 @@
     {
       "group": "reco_acknowledgement",
       "label": "RECO Information Guide",
-      "note": "RECO requires you to walk every client through this guide before providing services, and to have them acknowledge it. These four answers fill the acknowledgement page; the signatures are left for you and the client to sign. Your brokerage name is already printed on the form.",
+      "note": "RECO requires you to walk every client through this guide before providing services, and to have them acknowledge it. These answers fill the acknowledgement page; the signatures are left for you and the client to sign.",
       "fields": [
         {
           "key": "reco_agent_name",
@@ -2582,9 +2582,21 @@
           "profile": "full_name",
           "targets": {
             "form_reco": [
-              "p13_real_estate_agent_name"
+              "txtCurrentUserFullName"
             ]
           }
+        },
+        {
+          "key": "reco_brokerage_name",
+          "label": "Your brokerage name",
+          "type": "text",
+          "profile": "brokerage_name",
+          "targets": {
+            "form_reco": [
+              "txtCurrentUserOfficeName"
+            ]
+          },
+          "note": "Your own brokerage, not the other side's — the guide is an acknowledgement that YOU walked the client through it, so this is the same on every form set regardless of which side you represent. Seeded from Settings in app/api/deals/route.ts."
         },
         {
           "key": "reco_date_provided",
@@ -2600,7 +2612,7 @@
           "derived_from": "reco_date_provided",
           "targets": {
             "form_reco": [
-              "p13_date_guide_was_provided"
+              "txtProvideDate"
             ]
           }
         },
@@ -2610,7 +2622,7 @@
           "type": "text",
           "targets": {
             "form_reco": [
-              "p13_buyer_seller_name"
+              "txtSelfRep1"
             ]
           },
           "note": "Deliberately its own question rather than reused from the parties section: who your client is depends on which side of the deal you are on, and the existing tenant/landlord/buyer/seller fields can't express that per set."
@@ -2621,7 +2633,7 @@
           "type": "text",
           "targets": {
             "form_reco": [
-              "p13_buyer_seller_name_2"
+              "txtSelfRep2"
             ]
           }
         }
