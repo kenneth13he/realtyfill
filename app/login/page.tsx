@@ -58,7 +58,7 @@ export default async function LoginPage({
                 type="email"
                 required
                 autoComplete="email"
-                className="w-full rounded-md border border-[var(--color-border)] bg-white px-3 py-2 text-sm text-[var(--color-text)] shadow-sm outline-none focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20"
+                className="rf-field"
               />
               <p className="mt-1 text-xs text-[var(--color-text-muted)]">
                 We&apos;ll email you a link to set a new password.
@@ -66,7 +66,7 @@ export default async function LoginPage({
             </div>
             <button
               type="submit"
-              className="mt-2 w-full rounded-lg bg-[var(--color-accent)] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-hover)]"
+              className="mt-2 w-full rf-btn px-4 py-2.5"
             >
               Send reset link
             </button>
@@ -85,7 +85,7 @@ export default async function LoginPage({
         <input type="hidden" name="redirectTo" value={redirectTo ?? "/dashboard"} />
         <button
           type="submit"
-          className="flex w-full items-center justify-center gap-2.5 rounded-lg border border-[var(--color-border)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--color-text)] transition-colors hover:bg-[var(--color-bg)]"
+          className="flex w-full items-center justify-center gap-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2.5 text-sm font-semibold text-[var(--color-text)] transition-colors hover:bg-[var(--color-bg)]"
         >
           <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden>
             <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62Z" />
@@ -115,7 +115,7 @@ export default async function LoginPage({
             type="email"
             required
             autoComplete="email"
-            className="w-full rounded-md border border-[var(--color-border)] bg-white px-3 py-2 text-sm text-[var(--color-text)] shadow-sm outline-none focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20"
+            className="rf-field"
           />
         </div>
         <div>
@@ -129,12 +129,12 @@ export default async function LoginPage({
             required
             minLength={MIN_PASSWORD_LENGTH}
             autoComplete={isSignup ? "new-password" : "current-password"}
-            className="w-full rounded-md border border-[var(--color-border)] bg-white px-3 py-2 text-sm text-[var(--color-text)] shadow-sm outline-none focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20"
+            className="rf-field"
           />
         </div>
         <button
           type="submit"
-          className="mt-2 w-full rounded-lg bg-[var(--color-accent)] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-hover)]"
+          className="mt-2 w-full rf-btn px-4 py-2.5"
         >
           {isSignup ? "Create account" : "Sign in"}
         </button>

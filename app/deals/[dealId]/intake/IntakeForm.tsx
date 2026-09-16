@@ -110,7 +110,7 @@ export default function IntakeForm({
         </p>
 
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="rounded-lg border border-[var(--color-border)] bg-white p-4">
+          <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
             <label htmlFor="listing-file" className="mb-1.5 block text-sm font-medium text-[var(--color-text)]">
               Upload listing file(s) — PDF or .txt
             </label>
@@ -139,7 +139,7 @@ export default function IntakeForm({
                     <button
                       type="button"
                       onClick={() => setListingFiles((prev) => prev.filter((_, idx) => idx !== i))}
-                      className="shrink-0 text-red-600 hover:underline"
+                      className="shrink-0 text-[var(--color-error-text)] hover:underline"
                     >
                       Remove
                     </button>
@@ -151,7 +151,7 @@ export default function IntakeForm({
               type="button"
               onClick={handleExtractListingFile}
               disabled={extracting || listingFiles.length === 0}
-              className="mt-3 w-full rounded-md bg-[var(--color-accent)] px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-hover)] disabled:cursor-not-allowed disabled:opacity-40"
+              className="mt-3 w-full rf-btn px-3 py-2 text-sm"
             >
               {extracting
                 ? "Extracting…"
@@ -161,7 +161,7 @@ export default function IntakeForm({
             </button>
           </div>
 
-          <div className="rounded-lg border border-[var(--color-border)] bg-white p-4">
+          <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
             <label htmlFor="listing-text" className="mb-1.5 block text-sm font-medium text-[var(--color-text)]">
               Paste listing text
             </label>
@@ -177,7 +177,7 @@ export default function IntakeForm({
               type="button"
               onClick={handleExtractListingText}
               disabled={extracting || !listingText.trim()}
-              className="mt-3 w-full rounded-md bg-[var(--color-accent)] px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-hover)] disabled:cursor-not-allowed disabled:opacity-40"
+              className="mt-3 w-full rf-btn px-3 py-2 text-sm"
             >
               {extracting ? "Extracting…" : "Extract from pasted text"}
             </button>
@@ -203,7 +203,7 @@ export default function IntakeForm({
         <button
           type="submit"
           disabled={saving}
-          className="w-full rounded-lg bg-[var(--color-accent)] px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-[var(--color-accent-hover)] disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
+          className="w-full rf-btn px-4 py-3 text-base sm:w-auto"
         >
           {saving ? "Saving…" : "Continue to review →"}
         </button>

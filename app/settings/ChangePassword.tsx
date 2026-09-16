@@ -13,8 +13,6 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { changePassword, type ChangePasswordState } from "@/app/login/actions";
 import { MIN_PASSWORD_LENGTH, PASSWORD_REQUIREMENT } from "@/lib/passwordPolicy";
 
-const inputClasses =
-  "w-full rounded-md border border-[var(--color-border)] bg-white px-3 py-2 text-sm text-[var(--color-text)] shadow-sm outline-none transition-colors focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20";
 
 export default function ChangePassword({ hasPasswordLogin }: { hasPasswordLogin: boolean }) {
   const [open, setOpen] = useState(false);
@@ -30,7 +28,7 @@ export default function ChangePassword({ hasPasswordLogin }: { hasPasswordLogin:
   }, [state]);
 
   return (
-    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
+    <div className="rf-panel p-5">
       <h2 className="text-base font-semibold text-[var(--color-text)]">Password</h2>
 
       {!hasPasswordLogin ? (
@@ -48,7 +46,7 @@ export default function ChangePassword({ hasPasswordLogin }: { hasPasswordLogin:
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="mt-3 rounded-lg border border-[var(--color-border)] bg-white px-4 py-2 text-sm font-semibold text-[var(--color-text)] transition-colors hover:bg-[var(--color-bg)]"
+              className="mt-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 text-sm font-semibold text-[var(--color-text)] transition-colors hover:bg-[var(--color-bg)]"
             >
               Change password
             </button>
@@ -68,7 +66,7 @@ export default function ChangePassword({ hasPasswordLogin }: { hasPasswordLogin:
                   type="password"
                   required
                   autoComplete="current-password"
-                  className={inputClasses}
+                  className="rf-field"
                 />
               </div>
 
@@ -84,7 +82,7 @@ export default function ChangePassword({ hasPasswordLogin }: { hasPasswordLogin:
                     required
                     minLength={MIN_PASSWORD_LENGTH}
                     autoComplete="new-password"
-                    className={inputClasses}
+                    className="rf-field"
                   />
                   <p className="mt-1 text-xs text-[var(--color-text-muted)]">{PASSWORD_REQUIREMENT}</p>
                 </div>
@@ -99,7 +97,7 @@ export default function ChangePassword({ hasPasswordLogin }: { hasPasswordLogin:
                     required
                     minLength={MIN_PASSWORD_LENGTH}
                     autoComplete="new-password"
-                    className={inputClasses}
+                    className="rf-field"
                   />
                 </div>
               </div>
@@ -110,7 +108,7 @@ export default function ChangePassword({ hasPasswordLogin }: { hasPasswordLogin:
                   className={
                     "rounded-md border px-3 py-2 text-sm " +
                     (state.ok
-                      ? "border-green-200 bg-green-50 text-green-900"
+                      ? "border-[var(--color-ok-border)] bg-[var(--color-ok-bg)] text-[var(--color-ok-text)]"
                       : "border-[var(--color-error-border)] bg-[var(--color-error-bg)] text-[var(--color-error-text)]")
                   }
                 >
@@ -122,7 +120,7 @@ export default function ChangePassword({ hasPasswordLogin }: { hasPasswordLogin:
                 <button
                   type="submit"
                   disabled={pending}
-                  className="rounded-lg bg-[var(--color-accent)] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-hover)] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="rf-btn px-4 py-2.5"
                 >
                   {pending ? "Updating…" : "Update password"}
                 </button>

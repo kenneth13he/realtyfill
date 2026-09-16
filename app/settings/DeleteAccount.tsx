@@ -43,7 +43,7 @@ export default function DeleteAccount() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="mt-3 rounded-lg border border-[var(--color-error-border)] bg-white px-4 py-2 text-sm font-semibold text-[var(--color-error-text)] transition-colors hover:bg-[var(--color-error-bg)]"
+          className="mt-3 rounded-lg border border-[var(--color-error-border)] bg-[var(--color-surface)] px-4 py-2 text-sm font-semibold text-[var(--color-error-text)] transition-colors hover:bg-[var(--color-error-bg)]"
         >
           Delete my account
         </button>
@@ -57,7 +57,7 @@ export default function DeleteAccount() {
             value={confirmText}
             onChange={(e) => setConfirmText(e.target.value)}
             autoComplete="off"
-            className="w-full max-w-xs rounded-md border border-[var(--color-error-border)] bg-white px-3 py-2 text-sm text-[var(--color-text)] outline-none focus:ring-2 focus:ring-[var(--color-error-border)]"
+            className="w-full max-w-xs rounded-md border border-[var(--color-error-border)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-text)] outline-none focus:ring-2 focus:ring-[var(--color-error-border)]"
           />
           <div className="flex items-center gap-3">
             <button

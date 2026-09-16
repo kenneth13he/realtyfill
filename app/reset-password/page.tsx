@@ -54,13 +54,13 @@ export default async function ResetPasswordPage({
                 required
                 minLength={MIN_PASSWORD_LENGTH}
                 autoComplete="new-password"
-                className="w-full rounded-md border border-[var(--color-border)] bg-white px-3 py-2 text-sm text-[var(--color-text)] shadow-sm outline-none focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20"
+                className="rf-field"
               />
               <p className="mt-1 text-xs text-[var(--color-text-muted)]">{PASSWORD_REQUIREMENT}</p>
             </div>
             <button
               type="submit"
-              className="mt-2 w-full rounded-lg bg-[var(--color-accent)] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-hover)]"
+              className="mt-2 w-full rf-btn px-4 py-2.5"
             >
               Update password
             </button>

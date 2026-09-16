@@ -17,7 +17,7 @@ export function fieldIsVisible(condition: string | undefined, answers: Record<st
 }
 
 export const intakeInputClasses =
-  "w-full rounded-md border border-[var(--color-border)] bg-white px-3 py-2 text-sm text-[var(--color-text)] shadow-sm outline-none transition-colors focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20";
+  "rf-field";
 
 function Field({
   field,
@@ -37,13 +37,13 @@ function Field({
   // The rule itself lives in isMissingValue below, shared with the section
   // counts in the nav so the asterisks and the numbers always agree.
   const isMissing = isMissingValue(field, { [field.key]: value });
-  const missingInputClasses = isMissing ? " border-red-300 focus:border-red-400 focus:ring-red-400/20" : "";
+  const missingInputClasses = isMissing ? " border-[var(--color-error-text)] focus:border-[var(--color-error-text)] focus:ring-[var(--color-error-text)]/20" : "";
   return (
     <div className={field.type === "long_text" ? "sm:col-span-2" : undefined}>
       <label htmlFor={field.key} className="mb-1 flex items-center gap-1 text-sm font-medium text-[var(--color-text)]">
         <span>{field.label}</span>
         {isMissing && (
-          <span className="text-red-500" title="Missing — needed for the forms that use it">
+          <span className="text-[var(--color-error-text)]" title="Missing — needed for the forms that use it">
             *
           </span>
         )}
@@ -147,7 +147,7 @@ export default function IntakeFieldsEditor({
           long form. */}
       <nav
         aria-label="Intake sections"
-        className="sticky top-0 z-10 -mx-1 flex flex-col gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]/95 px-4 py-3 backdrop-blur"
+        className="sticky top-0 z-10 -mx-1 flex flex-col gap-2 rf-panel/95 px-4 py-3 backdrop-blur"
       >
         <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
           {totalMissing === 0
@@ -163,7 +163,7 @@ export default function IntakeFieldsEditor({
               >
                 {group.label}
                 {missing > 0 && (
-                  <span className="rounded-full bg-red-100 px-1.5 text-[10px] font-bold tabular-nums text-red-700">
+                  <span className="rounded-full bg-[var(--color-error-border)] px-1.5 text-[10px] font-bold tabular-nums text-[var(--color-error-text)]">
                     {missing}
                   </span>
                 )}
@@ -180,7 +180,7 @@ export default function IntakeFieldsEditor({
             id={`section-${group.group}`}
             /* scroll-mt clears the sticky nav above — without it a jump link
                lands with the heading hidden behind the bar. */
-            className="scroll-mt-28 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5"
+            className="scroll-mt-28 rf-panel p-5"
           >
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="text-base font-semibold text-[var(--color-text)]">{group.label}</h2>
