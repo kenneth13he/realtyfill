@@ -40,7 +40,15 @@ __all__ = [
 
 
 def fill_pdf_fields(input_pdf_path: str, fields_json_path: str, output_pdf_path: str):
-    with open(fields_json_path) as f:
+    # encoding="utf-8" is not optional here. lib/pdfFill.ts writes this file
+    # with Node's fs.writeFile, which is UTF-8; Python's open() without an
+    # encoding uses the platform default, which on Windows is cp1252. Every
+    # accented character therefore came back double-encoded, and a tenant
+    # named Côté was printed on the lease as CÃ´tÃ©. The value in Postgres was
+    # correct the whole time, so nothing upstream could see it — it only
+    # existed in the local-dev and Docker fill paths, because Vercel's service
+    # mode hands FastAPI a string that is already decoded.
+    with open(fields_json_path, encoding="utf-8") as f:
         fields = json.load(f)
 
     pdf_bytes = Path(input_pdf_path).read_bytes()

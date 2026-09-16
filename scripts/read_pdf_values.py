@@ -22,4 +22,9 @@ def values(path: str) -> dict:
 
 
 if __name__ == "__main__":
-    json.dump(values(sys.argv[1]), sys.stdout, ensure_ascii=False)
+    # Escaped ASCII, written as bytes. sys.stdout on Windows is cp1252 unless
+    # PYTHONIOENCODING says otherwise, and mojibake happens to be entirely
+    # representable in cp1252 — so a corrupted value would round-trip through
+    # this script without raising, and the caller comparing it would never see
+    # the corruption it exists to detect.
+    sys.stdout.buffer.write(json.dumps(values(sys.argv[1])).encode("utf-8"))

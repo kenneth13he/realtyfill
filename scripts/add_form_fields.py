@@ -239,7 +239,7 @@ def main():
 
     blanks = add_fields(args.input_pdf, args.output_pdf, args.verify)
     if args.json:
-        with open(args.json, "w") as f:
+        with open(args.json, "w", encoding="utf-8") as f:
             json.dump(
                 [{"field_id": b["field_id"], "type": "text", "page": b["page"], "rect": b["rect"],
                   "label_hint": b["label_hint"]} for b in blanks],
