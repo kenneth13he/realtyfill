@@ -10,6 +10,7 @@
 // Reads ANTHROPIC_API_KEY from the environment (.env.local, gitignored).
 
 import Anthropic from "@anthropic-ai/sdk";
+import { logUsage } from "./logger";
 
 // Opus 5 is the default and what production runs. CLAUDE_MODEL exists so
 // scripts/extraction_eval.ts can score a cheaper model against the same 18
@@ -67,6 +68,8 @@ export async function claudeExtractWithTool<T>(
     tool_choice: { type: "tool", name: toolName },
     messages: [{ role: "user", content: userContent }],
   });
+
+  logUsage({ route: "claude-extract", model: MODEL, tool: toolName }, response.usage);
 
   const toolUse = response.content.find((b): b is Anthropic.ToolUseBlock => b.type === "tool_use");
   if (!toolUse) {

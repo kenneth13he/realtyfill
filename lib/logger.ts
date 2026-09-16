@@ -58,3 +58,51 @@ export function logError(context: LogContext, error: unknown): string {
 export function userFacingError(ref: string, what = "Something went wrong on our end."): string {
   return `${what} Reference: ${ref} — include it if you contact support.`;
 }
+
+/**
+ * What one model call actually cost, as a log line.
+ *
+ * Added because two cost estimates in a row were wrong: both were measured
+ * against toy inputs ("Bob Smith is the buyer", ~230 tokens in, ~90 out) and
+ * neither resembled a real PDF upload or a real deal's context. Rather than
+ * estimate a third time, the app now reports its own numbers, and the log
+ * shows whether the prompt cache is actually being hit in production.
+ *
+ * Rates are Claude Opus 5 at the time of writing; cache writes bill at 1.25x
+ * input for the 5-minute TTL, reads at 0.1x. If the model or the rates
+ * change, this figure drifts — it is a guide for spotting expensive paths,
+ * not an invoice.
+ */
+export function logUsage(
+  context: { route: string; model: string; userId?: string; [key: string]: unknown },
+  usage: {
+    input_tokens?: number;
+    output_tokens?: number;
+    cache_creation_input_tokens?: number | null;
+    cache_read_input_tokens?: number | null;
+  }
+): void {
+  const input = usage.input_tokens ?? 0;
+  const output = usage.output_tokens ?? 0;
+  const cacheWrite = usage.cache_creation_input_tokens ?? 0;
+  const cacheRead = usage.cache_read_input_tokens ?? 0;
+
+  const usd = input / 1e6 * 5 + cacheWrite / 1e6 * 6.25 + cacheRead / 1e6 * 0.5 + output / 1e6 * 25;
+
+  console.log(
+    JSON.stringify({
+      level: "usage",
+      timestamp: new Date().toISOString(),
+      input,
+      output,
+      cacheWrite,
+      cacheRead,
+      // Zero here on a repeat call means the cache is not being hit and the
+      // prefix has a breaker in it.
+      cacheHit: cacheRead > 0,
+      estimatedUsd: Number(usd.toFixed(5)),
+      ...context,
+    })
+  );
+}
+
