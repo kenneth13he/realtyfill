@@ -15,7 +15,7 @@ Owners follow the standing split: **Kenneth** frontend (`components/`, `app/`
 pages), **Chris** infra and backend (`app/api/`, `lib/`, `supabase/`, config,
 deploy).
 
-Last reviewed: September 15, 2026.
+Last reviewed: September 15, 2026 (domain cutover to realtyfill.ca).
 
 Legend: **P0** blocks launch · **P1** before real client data · **P2** before
 it costs money or embarrasses us · **P3** polish
@@ -71,29 +71,26 @@ See `REMAINING_WORK.md` item 5.
 
 ## P1 — before real client data
 
-### 4. Supabase password policy is weaker than the app's — Chris
-The app enforces a 10-character minimum (`lib/passwordPolicy.ts`), but the
-Supabase project minimum is still 6. The anon key is public by design, so a
-caller can invoke Supabase Auth directly and get an account with a
-six-character password regardless of what our forms say. The app-side check
-is the convenience half; the dashboard setting is the control.
+### 4. Leaked-password protection needs Supabase Pro — Chris
+The length minimum is fixed: the Supabase project now requires 10 characters,
+matching `lib/passwordPolicy.ts`. That was the part that mattered — the anon
+key is public, so a caller can invoke Supabase Auth directly and the dashboard
+setting is the real control.
 
-**Fix:** Authentication > Policies > Password — set the minimum to 10, enable
-leaked-password protection, and enable MFA.
+What's left needs Pro: enabling HaveIBeenPwned leaked-password checking
+returns `402 — available on Pro Plans and up`. MFA is also still off.
 
-See `REMAINING_WORK.md` item 17b.
-
-### 5. `PDF_SERVICE_SECRET` not set on both Vercel services — Chris
-The Next app and `pdf-service/` each need it. Without it on both, the fill
-endpoint is either unauthenticated or broken — worth confirming in the
-dashboard rather than assuming, since nothing in the repo can check it.
+### 5. ~~PDF_SERVICE_SECRET~~ — not a real gap, verified
+`PDF_SERVICE_SECRET` appears nowhere: not in the code, not in Vercel. That's
+fine rather than missing. `/fill`, `/health` and `/pdf-service/fill` all 404
+through the public domain, which is exactly what `vercel.json`'s rewrites are
+meant to guarantee — only the `frontend` service is exposed, and the Next app
+reaches the other one over the internal `PDF_SERVICE_URL` binding. There is no
+public surface for a secret to protect.
 
 ### 6. GitHub hygiene — Chris
 - Secret-scanning push protection: enable.
 - Confirm the repo is Private.
-- The `origin` remote still points at the old capitalized
-  `github.com/kenneth13he/RealtyFill`; GitHub redirects, so it works, but it
-  breaks the day someone claims the old name. One `git remote set-url`.
 - The Anthropic API key was exposed in a session transcript and needs
   rotating if that hasn't happened yet.
 

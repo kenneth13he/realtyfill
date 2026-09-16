@@ -16,8 +16,11 @@ Status markers: ✅ done and verified · ⚠️ done but unverified · ❌ not s
 
 ## Where things actually stand
 
-**Live at:** https://realtyfill.ca — the real domain, registered September 15,
-2026. `realtyfill.vercel.app` still serves and stays as a fallback.
+**Live at:** https://realtyfill.ca — registered September 15, 2026, DNS
+resolving, TLS issued, full browser pass green against it. Both
+`realtyfill.vercel.app` and `www.realtyfill.ca` 308-redirect to the apex —
+redirected rather than deleted, so existing links keep working and nobody
+else can claim the vercel.app name.
 
 The app needed no code change to move: `lib/siteOrigin.ts` derives every auth
 redirect from the request's own host, so production, previews and localhost
@@ -106,10 +109,10 @@ this to a tester.
 
 ### 3. ✅ Supabase URL configuration — verified correct
 Confirmed via the management API:
-- `site_url`: `https://realtyfill.vercel.app` — switch to `https://realtyfill.ca`
-  once DNS resolves. It is the fallback Supabase uses when a redirect target
-  isn't allow-listed, so pointing it at a domain that doesn't answer yet
-  would break password reset for everyone.
+- `site_url`: `https://realtyfill.ca` — switched once the domain answered,
+  not before: it is the fallback Supabase substitutes when a redirect target
+  isn't allow-listed, so pointing it at a dead domain would have broken
+  password reset for everyone in the gap.
 - `uri_allow_list`: `https://realtyfill.vercel.app/**`, `http://localhost:3000/**`,
   `https://realtyfill.ca/**`, `https://www.realtyfill.ca/**`
 
