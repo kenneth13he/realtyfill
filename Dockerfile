@@ -17,7 +17,7 @@
 # runtime nor the Debian base layer underneath it. Node 24 is the current LTS
 # and is supported until 2028-04-30. Next 16 requires >=20.9.0, so this is
 # comfortably inside what the framework asks for.
-FROM node:24-slim@sha256:2fe369e969550cde8e867afc3fe370b260140cab4a23d467074295b42163d553
+FROM node:26-slim@sha256:14bf3eac4bf209d906d3c41256597d3ab1f926b2e93a79e9bdfe1efd32454239
 
 # python3-pip on Debian bookworm+ marks the system Python as "externally
 # managed" (PEP 668) and refuses a bare `pip install`. This container is
