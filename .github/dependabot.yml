@@ -2,9 +2,11 @@
 # Both ecosystems, because the audit that prompted this found the Node tree
 # clean and the Python tree never checked at all.
 #
-# Note the two separate pip entries: requirements.txt (the Docker/Render path)
-# and pdf-service/requirements.txt (the Vercel service) are different files
-# and Dependabot treats each directory independently.
+# One pip entry, not two. There used to be a second for "/" covering the root
+# requirements.txt (the unused Docker/Render path). The root scan also reached
+# into pdf-service/, so every Python advisory opened two byte-identical PRs —
+# #8 and #9 were the same fastapi bump twice. The root file holds only pypdf
+# and is covered by the subdirectory scan anyway.
 
 version: 2
 updates:
@@ -17,11 +19,6 @@ updates:
     groups:
       all-minor-and-patch:
         update-types: ["minor", "patch"]
-
-  - package-ecosystem: pip
-    directory: "/"
-    schedule:
-      interval: weekly
 
   - package-ecosystem: pip
     directory: "/pdf-service"

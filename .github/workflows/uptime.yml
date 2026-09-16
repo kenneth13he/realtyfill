@@ -1,0 +1,53 @@
+# .github/workflows/uptime.yml
+# The alerting half of ISSUES.md #10.
+#
+# Errors were already logged; nothing told anyone when they happened, so the
+# first report of a broken generate pipeline would have been a user saying
+# so. This polls /api/health — which makes a real round-trip to Postgres
+# rather than returning a constant — and fails the run when it isn't healthy.
+# A failed scheduled workflow emails the repo's watchers, which is alerting
+# without another account or another bill.
+#
+# Deliberately modest: GitHub's shortest cron is 5 minutes and scheduled runs
+# are best-effort, sometimes delayed under load. This catches "the site has
+# been down for a while", not "the site blipped". A dedicated monitor
+# (UptimeRobot, Better Stack) is better if this ever needs to page someone.
+
+name: Uptime
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  health:
+    name: Health check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe /api/health
+        run: |
+          set -euo pipefail
+          URL="${HEALTH_URL:-https://realtyfill.ca/api/health}"
+          echo "probing $URL"
+
+          # Retry before crying wolf: one dropped request is not an outage,
+          # and a cold serverless function can be slow rather than down.
+          for attempt in 1 2 3; do
+            code=$(curl -s -o /tmp/body -w "%{http_code}" --max-time 25 "$URL" || echo 000)
+            body=$(cat /tmp/body 2>/dev/null || true)
+            echo "attempt $attempt: HTTP $code $body"
+            if [ "$code" = "200" ] && printf '%s' "$body" | grep -q '"status":"ok"'; then
+              echo "healthy"; exit 0
+            fi
+            sleep 20
+          done
+
+          echo "::error::health check failed after 3 attempts — last response: HTTP $code $body"
+          exit 1
+        env:
+          # Override in repo variables if the canonical URL changes.
+          HEALTH_URL: ${{ vars.HEALTH_URL }}

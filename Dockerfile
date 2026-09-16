@@ -36,6 +36,22 @@ COPY requirements.txt ./
 RUN pip3 install --no-cache-dir --break-system-packages -r requirements.txt
 
 COPY . .
+
+# Next inlines NEXT_PUBLIC_* at build time, and lib/env.ts throws on a missing
+# one — so `npm run build` cannot run without these present. They were absent
+# entirely, which meant this image had never built and could not have: the
+# Render fallback was broken, not merely untested.
+#
+# Present, not correct. The real values are supplied at runtime by the host's
+# environment; only the NEXT_PUBLIC_* ones are baked in, so a deployment that
+# needs real inlined values must pass them here as --build-arg. Anything
+# secret (the service-role key, the Anthropic key) is read at runtime and must
+# never be a build arg — build args are visible in the image history.
+ARG NEXT_PUBLIC_SUPABASE_URL=https://placeholder.supabase.co
+ARG NEXT_PUBLIC_SUPABASE_ANON_KEY=placeholder-anon-key
+ARG NEXT_PUBLIC_SITE_URL=https://example.invalid
+ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL     NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY     NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+
 RUN npm run build
 
 ENV NODE_ENV=production
