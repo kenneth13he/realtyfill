@@ -98,13 +98,32 @@ function valueFor(field: { key: string; type: string; options?: { value: string 
     case "date":
       return `${int(2026, 2028)}-${String(int(1, 12)).padStart(2, "0")}-${String(int(1, 28)).padStart(2, "0")}`;
     case "currency":
-      return `${int(1, 4000) * 1000}.00`;
+      // Magnitude by what the field is, not one range for everything. The
+      // taxes box on 291 holds 8 characters, so a fixture that put a seven
+      // figure sum in it reported a clipped box on every run — an artifact of
+      // its own making, and the kind of noise that hides a real finding.
+      if (/price|purchase/.test(field.key)) return `${int(400, 2500) * 1000}.00`;
+      if (/tax/.test(field.key)) return `${int(2, 9)}${int(100, 999)}.00`;
+      return `${int(1, 9)}${int(100, 999)}.00`;
     case "number":
       return String(int(1, 180));
     case "long_text":
       return pick(FREE_TEXT);
     default:
+      // Order matters and is the whole trick here. "landlord_address_po_box"
+      // contains "landlord", so a name rule placed first claims it and the
+      // fixture reports a clipped PO Box that is really a clipped person.
+      // Specific patterns first, the person-name catch-all last.
       if (/province/.test(k)) return "ON";
+      if (/po_box/.test(k)) return `PO Box ${int(1, 999)}`;
+      if (/address_unit$|^.*_unit$/.test(k)) return String(int(1, 3000));
+      if (/due_day/.test(k)) return pick(["1st", "15th"]);
+      if (/registry_office/.test(k)) return pick(["TSCC", "MTCC", "YRSCC", "PCC"]);
+      if (/commission/.test(k)) return pick(["2.5", "3", "2.25"]);
+      if (/annual_taxes|^mls_annual/.test(k)) return `${int(2, 9)}${int(100, 999)}.00`;
+      if (/_time$/.test(k)) return `${int(1, 12)}:${pick(["00", "30"])}`;
+      if (/possession_remarks/.test(k)) return pick(["Immediate", "Flexible", "60 days"]);
+      if (/seller_contact/.test(k)) return `416-${int(200, 999)}-${int(1000, 9999)}`;
       if (/postal/.test(k)) return `M${int(1, 9)}${pick(["T", "V", "X"])} ${int(1, 9)}${pick(["P", "Z"])}${int(1, 9)}`;
       if (/phone|fax/.test(k)) return `416-${int(200, 999)}-${int(1000, 9999)}`;
       if (/email/.test(k)) return `agent${int(1, 999)}@example.com`;
@@ -116,7 +135,6 @@ function valueFor(field: { key: string; type: string; options?: { value: string 
       if (/city|municipal|community|^mls_area$/.test(k)) return pick(CITY);
       if (/unit_number|apt|level|locker|parking_space/.test(k)) return String(int(1, 3000));
       if (/full_name|_name$|representative|agent|holder|landlord|tenant|buyer|seller|client/.test(k)) return name();
-      if (/time/.test(k)) return `${int(1, 12)}:${pick(["00", "30"])} p.m.`;
       if (/year/.test(k)) return String(int(2020, 2028));
       if (/letter/.test(k)) return pick(["A", "B", "C"]);
       if (/days/.test(k)) return String(int(30, 90));
@@ -270,6 +288,26 @@ async function runSet(page: Page, setId: FormSetId) {
         }
       }
       console.log(`  ${setId}/${formId}: ${expected.length} boxes checked`);
+    }
+
+    // The "download all" zip is a separate route that fetches every PDF back
+    // through the server and archives it. Nothing else here exercises it, and
+    // a realtor reaching for one file per form is the exception.
+    const zipRes = await page.request.get(`${BASE}/api/deals/${dealId}/download-all`);
+    if (!zipRes.ok()) {
+      say(where, `download-all returned ${zipRes.status()}`);
+    } else {
+      const zip = await zipRes.body();
+      const zipPath = path.join(OUT, `${setId}.zip`);
+      fs.writeFileSync(zipPath, zip);
+      // Count local file headers rather than trusting the byte length.
+      let entries = 0;
+      for (let i = 0; i + 4 <= zip.length; i++) {
+        if (zip[i] === 0x50 && zip[i + 1] === 0x4b && zip[i + 2] === 0x03 && zip[i + 3] === 0x04) entries++;
+      }
+      const want = FORM_SETS[setId].formIds.length;
+      if (entries !== want) say(where, `download-all archived ${entries} file(s), expected ${want}`);
+      else console.log(`  ${setId}/zip: ${entries} forms archived`);
     }
   } finally {
     // Always clean up, including after a thrown error — a failed run must not

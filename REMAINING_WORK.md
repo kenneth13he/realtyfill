@@ -122,6 +122,41 @@ It found, in one pass:
 `tests/schemaIntegrity.test.ts` now asserts that no set offers a question none
 of its forms can print, so the dead-question class cannot come back silently.
 
+**There is now a real-browser end-to-end check too: `npm run test:e2e`.**
+It types random-but-realistic data into every question on the actual intake
+page, for all four sets, then generates, downloads each PDF and the zip, and
+checks what came out against what was typed. A value has to survive the intake
+controls, the save into Postgres, the generate route, the PDF service and
+Storage to pass. It costs nothing — the extractor is never called — and it
+deletes the deals it creates, including after a failure.
+
+Between it and `npm run audit:fill`, this pass found and fixed:
+
+- **A schema `default` never reached the PDF.** The editor renders
+  `value={value || field.default}`, so the realtor saw "Ontario" and "A" but
+  unless they edited the field the value lived only in the DOM. Four fields,
+  thirteen targets, including the "Schedule ___" heading.
+- **Nine boxes across Forms 400 and 372** were fed a raw ISO date aimed at all
+  three of a date's part boxes at once, so the Agreement to Lease printed its
+  commencement date as "2028-05-18 / 2028- / 2028".
+- **Form 410 said each applicant lived at their address FROM their address TO
+  their address**, and gave the landlord's name as the landlord's telephone.
+- **Form 372 wrote the tenant's whole address into the street, city and
+  2-character province boxes.**
+- **Form 400's deposit read "in the amount of 2500.00 Dollars (CDN$) 2500.00".**
+- **A tenant named Côté was printed as CÃ´tÃ©** — the fill script read Node's
+  UTF-8 JSON with Python's platform default, which is cp1252 here.
+- **Eight boxes a set prints could not be filled by that set**, because their
+  questions sat in a group scoped to a different one. A schedule generated for
+  a seller carried no date identifying its agreement.
+- **The province default was "Ontario" in boxes that hold two characters** and
+  printed as "On", confirmed in Chrome rather than inferred.
+
+Each has a test, and three of those tests were verified by reintroducing the
+bug and watching them fail. `scripts/render_pdf_in_chrome.ts` exists because
+PyMuPDF — what everything else here renders with — draws a value straight past
+its field's `/MaxLen` and Chrome does not.
+
 scripts/add_form_fields.py, add_box_fields.py and add_underscore_fields.py
 stay in the repo: they are what makes a flat PDF usable, and the next form
 that arrives flat will need them.

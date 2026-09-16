@@ -2916,7 +2916,7 @@
         },
         {
           "key": "mls_condo_registry_office",
-          "label": "Condo registry office",
+          "label": "Condo registry office (e.g. TSCC — the code only)",
           "type": "text",
           "targets": {
             "form_291": [
@@ -2925,7 +2925,8 @@
             "form_292": [
               "txtcondoreoffice"
             ]
-          }
+          },
+          "note": "The box holds 8 characters. 'TSCC 2145' is 9 and prints as 'TSCC 214' — the corporation number belongs in its own box beside it."
         },
         {
           "key": "mls_condo_corp_number",

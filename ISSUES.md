@@ -221,6 +221,7 @@ rather than warning. Worth knowing before a realtor reports it:
 | `condo_property_name` | 101 | `hidlockers_1` | 15 — "The Rosedale" fits, "Pinnacle on Adelaide" does not |
 | `property_street_name` | 291 | `txtp_street` | 25 — "Queen's Park Crescent West" is 26 |
 | `property_street_name` | 292 | `txtp_street` | 20 |
+| `condo_corporation_name` | 101 | `txtlegalNameCondo` | 50 — "York Region Standard Condominium Corporation No. 1024" is 53 |
 
 `npm run audit:fill` reports any value that exceeds a box's `/MaxLen`, and
 `scripts/overflow_check.py` reports text wider than its box even when it fits
