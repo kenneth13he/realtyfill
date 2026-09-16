@@ -2,9 +2,15 @@
 # Both ecosystems, because the audit that prompted this found the Node tree
 # clean and the Python tree never checked at all.
 #
-# Note the two separate pip entries: requirements.txt (the Docker/Render path)
-# and pdf-service/requirements.txt (the Vercel service) are different files
-# and Dependabot treats each directory independently.
+# One pip entry, not two. There are two requirements files — requirements.txt
+# (the Docker/Render path) and pdf-service/requirements.txt (the Vercel
+# service) — and the original config listed a directory for each, on the
+# assumption that Dependabot scans each directory independently.
+#
+# It doesn't, for pip: the "/" scan walks down and finds both files. The proof
+# is PRs #8 and #9, opened the same day against the same file with the same
+# diff — one from each entry. So "/" alone covers both; a "/pdf-service" entry
+# only duplicates it.
 
 version: 2
 updates:
@@ -20,11 +26,6 @@ updates:
 
   - package-ecosystem: pip
     directory: "/"
-    schedule:
-      interval: weekly
-
-  - package-ecosystem: pip
-    directory: "/pdf-service"
     schedule:
       interval: weekly
 
