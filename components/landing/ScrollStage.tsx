@@ -10,7 +10,11 @@
 //
 // Below `lg` this collapses to a plain stacked layout (see the second block).
 // A pinned scroll story on a phone means a long stretch where dragging appears
-// to do nothing, which reads as a broken page rather than as an effect.
+// to do nothing, which reads as a broken page rather than as an effect. The
+// tower there still lights up — driven by its own position in the viewport
+// rather than by a pinned range — so the building responds to scrolling at
+// every width. It was previously hardcoded to fully lit, which made the one
+// animated thing on the page look broken the moment the window got narrow.
 //
 // Reduced motion: the scroll-linked parts stay — they're a direct response to
 // the user's own input, not autoplay — but pointer parallax and the idle drift
@@ -43,9 +47,30 @@ function panelStyle(p: number, start: number, end: number) {
   };
 }
 
+/**
+ * How far a non-pinned element has travelled into view, 0 → 1.
+ *
+ * 0 when its top edge is at the bottom of the viewport, 1 once it is fully
+ * on screen — or, if it is taller than the viewport, once it fills the
+ * screen, which is the most of it a reader can ever see at once. Returns 0
+ * for a `display: none` element, since `getBoundingClientRect` reports zeros
+ * for one and the desktop/mobile blocks are exactly that for each other.
+ */
+function entryProgress(el: HTMLElement): number {
+  const rect = el.getBoundingClientRect();
+  if (rect.height === 0) return 0;
+  const travel = Math.min(rect.height, window.innerHeight);
+  return Math.max(0, Math.min(1, (window.innerHeight - rect.top) / travel));
+}
+
 export default function ScrollStage() {
   const ref = useRef<HTMLDivElement>(null);
+  const towerRef = useRef<HTMLDivElement>(null);
   const [p, setP] = useState(0);
+  // Small-screen tower's own progress. Separate from `p` because the two
+  // blocks are never visible at the same time and measure different things:
+  // `p` is travel through a pinned range, this is travel into view.
+  const [tp, setTp] = useState(0);
   const [mx, setMx] = useState(0);
   const [reduced, setReduced] = useState(false);
 
@@ -61,10 +86,15 @@ export default function ScrollStage() {
     let raf = 0;
     function read() {
       const el = ref.current;
-      if (!el) return;
-      const travel = el.offsetHeight - window.innerHeight;
-      const scrolled = -el.getBoundingClientRect().top;
-      setP(travel > 0 ? Math.max(0, Math.min(1, scrolled / travel)) : 0);
+      if (el) {
+        // offsetHeight is 0 while this block is `display: none` below lg,
+        // which makes travel negative and pins p at 0 — correct, since the
+        // pinned story isn't on screen then.
+        const travel = el.offsetHeight - window.innerHeight;
+        const scrolled = -el.getBoundingClientRect().top;
+        setP(travel > 0 ? Math.max(0, Math.min(1, scrolled / travel)) : 0);
+      }
+      if (towerRef.current) setTp(entryProgress(towerRef.current));
     }
     function onScroll() {
       cancelAnimationFrame(raf);
@@ -88,6 +118,12 @@ export default function ScrollStage() {
   // no side visible, so it stopped reading as a 3D object exactly where most
   // of the scrolling happens. Never crossing 0 keeps a side wall in view.
   const yaw = -34 + p * 22 + (reduced ? 0 : mx * 8);
+
+  // Same "never fully dark" floor as the desktop story, and the same rule
+  // about staying off-axis — a smaller swing because the small-screen tower
+  // passes through its whole range in one screen-height of scrolling.
+  const towerLit = 1 + Math.round(tp * (FLOORS - 1));
+  const towerYaw = -30 + tp * 12;
 
   return (
     <>
@@ -230,14 +266,15 @@ export default function ScrollStage() {
 
           {/* Height is derived from the tower's own rendered size rather than
               guessed — the floors are absolutely positioned and would
-              otherwise spill over the section below. */}
-          <Tower
-            lit={FLOORS}
-            yaw={-24}
-            scale={0.68}
-            className="mt-12"
-            style={{ height: TOWER_PX * 0.68 }}
-          />
+              otherwise spill over the section below. Measured on this
+              wrapper rather than on Tower itself, which reserves that fixed
+              height and so would report the same rect either way. */}
+          <div ref={towerRef} className="mt-12">
+            <Tower lit={towerLit} yaw={towerYaw} scale={0.68} style={{ height: TOWER_PX * 0.68 }} />
+            <div className="mt-2 text-center text-xs font-medium uppercase tracking-[0.18em] text-white/35">
+              {towerLit} of {FLOORS} floors lit
+            </div>
+          </div>
         </div>
       </div>
     </>

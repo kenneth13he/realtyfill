@@ -2,6 +2,8 @@
 
 Every file below has a matching header comment in the file itself. This doc is the one-page index — use it to see the whole app's shape and what's left, without opening every file. Update both (the file's header comment and this doc) together when a file's job changes.
 
+> **⚠️ This index is behind the code (last full pass: the five-lease-form Phase 2 build).** The per-file entries below are still accurate for the files they name, but whole areas are missing and a few statements are now wrong. It predates: the Vercel deployment and the `pdf-service/` Service (PDF filling is an HTTP call now, not a local `child_process` shell-out); the other three form sets (lease–landlord, sale–buyer, sale–seller — ~10 more forms, `scripts/add_form_fields.py`); the `tests/` suite (91 `node:test` cases — anywhere below that says "no automated tests", there are); `app/terms`, `app/privacy`, `app/reset-password`, `app/support`, `app/admin`; and everything in `components/` (`Header`, `Wordmark`, `Spinner`, `LegalPage`, `landing/`). **`REMAINING_WORK.md` is the current source of truth for status**; treat this file as a map of `lib/`, `scripts/` and `forms/`, not as a checklist.
+
 Status legend: 🔲 not started · 🟡 stubbed (header comment + TODOs, no logic) · ✅ implemented
 
 ---
@@ -114,12 +116,12 @@ Maps intake answers → one form's `[{field_id, page, value}]` list (the exact s
 - [x] Walks `intake_form_schema.json`'s fields, resolves each target's page via the raw schema
 - [x] Skips any field_id matching `/sig|Signature/i` — the hard "never touch a signature field" rule
 - [x] Verified against real filled PDFs (inspected actual output `/V` values post-generation, not just "no errors thrown")
-- [ ] No automated test suite yet — verification so far has been manual `pypdf` inspection after each generate call
+- [x] Covered by `tests/profileMapper.test.ts` and `tests/schemaIntegrity.test.ts` — including the check that every intake `targets` entry names a field id that really exists on that form, which is the failure mode that fails silently (blank box on a valid PDF)
 
 ### `lib/pdfFill.ts` ✅
 Fills one blank template, writes the output PDF.
-- [x] **Decision made**: shells out to `scripts/fill_fillable_fields.py` via `child_process.execFile` (kept the proven Python logic rather than porting to a JS lib)
-- [ ] Revisit if Python becomes a real deployment constraint in Phase 2
+- [x] **Decision made**: keep the proven Python fill logic rather than port it to a JS lib.
+- [x] **Superseded**: Python *was* the deployment constraint it warns about below. It no longer shells out via `child_process.execFile` — it `POST`s to the `pdf-service/` Vercel Service (`PDF_SERVICE_URL`), which runs the same `fill_fillable_fields.py`. `scripts/fill_fillable_fields.py` is now a thin CLI wrapper importing that same module.
 
 ### `lib/claude.ts` ✅ (current)
 Wrapper around the Anthropic API for the listing-extraction feature. Model `claude-opus-5` at `effort: "medium"` (bumped up from an earlier `"low"` once extraction started requiring real judgment — deciding fields vs. flagged, not just reading values off a page — rather than the speed/cost trade of a purely mechanical task). Reads `ANTHROPIC_API_KEY` from `.env.local` (gitignored; `.env.example` documents the variable).
@@ -156,7 +158,7 @@ Confirms whether a given PDF has real AcroForm fields or is flat/scanned. Used i
 Dumps a PDF's full field list (id, type, page, position, radio/checkbox value codes) to JSON. **Had a real bug**: silently dropped any text field appearing as multiple widgets across pages (its multi-widget handling only covered checkbox/radio fields) — this caused Form 400 to be missing 20 fields (`txtbuyer1`, `txtseller1`, the whole address) and Form 372 to be missing 6, discovered by inspecting actual generated PDF output and finding blank tenant/landlord/address fields. Fixed; all five raw schemas regenerated and re-verified PII-clean.
 
 ### `scripts/fill_fillable_fields.py` ✅
-Takes a blank template + a `field_values.json` and writes a filled output PDF. Proven end-to-end across all five forms, called live by `lib/pdfFill.ts`.
+Takes a blank template + a `field_values.json` and writes a filled output PDF. Proven end-to-end across all five forms. **No longer called by `lib/pdfFill.ts`** — the logic moved to `pdf-service/fill_fillable_fields.py` (which the deployed Service imports) and this is now a thin CLI wrapper over it, so there is one copy rather than two. Validation errors print to stderr, not stdout.
 
 ### `scripts/blank_fillable_fields.py` ✅
 Clears every field's value from a filled PDF to produce a true blank template, scanning every page's own annotations. Used to produce `forms/blank_templates/*_blank.pdf`.
@@ -182,13 +184,12 @@ Quick start: `npm install && npm run dev`, visit `http://localhost:3000`, sign u
 
 ### Known gaps (not blocking)
 - No client-side validation — an empty required field can be submitted (though the review page now visually flags missing non-optional fields with a `*`).
-- No automated tests — all verification so far has been manual (type-check, live HTTP requests against a real Supabase project, `pypdf` inspection of output).
+- ~~No automated tests~~ — out of date: `tests/` now holds 91 `node:test` cases (`npm test`) plus a Python suite (`npm run test:py`). See `REMAINING_WORK.md` item 15 for what they do and don't cover.
 - `deal_profile_schema.json`'s relationship to `intake_form_schema.json` still needs a decision (keep as reference doc, or retire it).
 - `lib/pdfFill.ts` still shells out to a local Python script — fine on a persistent Node host (the plan's Step 9 choice), a real blocker on typical serverless hosts (Vercel's default functions don't have Python at runtime). Deliberately not ported to a JS PDF library; see that file's header for the reasoning.
 
 ## Not yet started
 
-- Step 9: choosing/deploying to a real host (needs a decision only the project owner can make — which host, budget).
-- Step 10 remainder: confirming HTTPS is actually on once deployed (rate limiting on `/login` and `/api/extract-listing` is done — see `lib/rateLimit.ts`).
+- ~~Step 9: choosing/deploying to a real host~~ — done: Vercel, live at https://realtyfill.vercel.app, HTTPS automatic. The Render/Docker config is still in the repo unused (`REMAINING_WORK.md` item 13).
 - Billing (Stripe) — explicitly deferred out of this pass by design.
 - Any LLM use beyond the one scoped listing-extraction endpoint — deal-specific fields remain direct realtor entry by design (see `mvp-build-plan.md`'s Phase 1 "Design decision" note).

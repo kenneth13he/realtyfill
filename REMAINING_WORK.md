@@ -1,8 +1,9 @@
 # Remaining Work
 
-Single source of truth for what's left. Supersedes `TESTING_READINESS.md`
-(that one predates the Vercel deployment and is now partly stale — delete it
-once you've read this).
+Single source of truth for what's left. It replaced `TESTING_READINESS.md`,
+which predated the Vercel deployment and has now been deleted — every item
+in it was either done (deploy, legal pages, forgot-password, account
+deletion, feedback channel) or restated below.
 
 Status markers: ✅ done and verified · ⚠️ done but unverified · ❌ not started
 
@@ -110,10 +111,18 @@ Not clicked through in a browser yet (see item 11).
 
 ## Should be done before real client data goes in
 
-### 5. ❌ Terms of Service + Privacy Policy
-No such pages exist. The app stores real tenant/landlord names, phones, and
-addresses; one Schedule document we tested even involves a tenant's SIN.
-Needed before a realtor puts a real client's information in.
+### 5. 🟡 Terms of Service + Privacy Policy — written, placeholders unfilled
+`/terms` and `/privacy` exist (`components/LegalPage.tsx` holds the shared
+shell). They cover the clauses that matter for this product: not legal
+advice, the realtor is responsible for reviewing generated forms, signature
+fields are never auto-filled.
+
+**Two things still block relying on them.** `LEGAL_CONTACT_EMAIL` and
+`LEGAL_ENTITY_NAME` in `components/LegalPage.tsx` are still literal
+`[YOUR CONTACT EMAIL]` / `[YOUR LEGAL NAME OR COMPANY]` placeholders, and
+neither page has been read by anyone qualified. The app stores real
+tenant/landlord names, phones and addresses; one Schedule document we tested
+even involves a tenant's SIN.
 
 ### 6. ✅ Forgot-password flow
 Built. `/login?mode=reset` requests a link, `/auth/callback` exchanges the
@@ -369,6 +378,20 @@ a client pointed at `undefined` and surfaced later as a confusing auth error
 
 ---
 
+### 15g. ❌ CI's dependency audit is red on `main`
+The `Dependency audit` job fails every run. It is a real finding, not a
+flaky check: `pdf-service/requirements.txt` pins `fastapi==0.117.1`, which
+resolves `starlette 0.48.0`, and pip-audit reports 12 published advisories
+against that version. The Node half (`npm audit`) passes.
+
+Dependabot already opened the fix — PRs #8 and #9 both bump that one pin to
+`fastapi==0.141.1`, and CI including the audit job is green on both.
+Merging either one clears it; the other then has an empty diff and closes
+itself. (They are duplicates because `.github/dependabot.yml` has a pip
+entry for `/` as well as `/pdf-service`, and the root one reaches the same
+file. Worth dropping the `/` pip entry — root `requirements.txt` only holds
+`pypdf`, and it belongs to the unused Render path in item 13.)
+
 ### 16. ⚠️ Logging exists, alerting doesn't
 `lib/logger.ts` writes structured JSON errors visible in Vercel's Logs tab,
 but nothing notifies you. If PDF generation starts failing for a realtor
@@ -404,6 +427,14 @@ developer app" problem this section was written about is fixed.
 Built: nav, hero, visual proof (`components/landing/VisualProof.tsx`), the
 form-set grid, a trust row and a footer, with `Tower`/`Marquee`/`ScrollStage`
 carrying the motion.
+
+Fixed since: below `lg` the tower was passed a hardcoded `lit={FLOORS}`, so
+narrowing the window left the page's one animated element frozen fully lit —
+it read as broken rather than as a deliberately simpler layout. It now
+lights from its own position in the viewport (`entryProgress` in
+`ScrollStage.tsx`), keeping the page's native scroll with no pinning, which
+is the part that genuinely doesn't belong on a phone. Verified by SSR output
+and build; the scroll response itself is still browser-unverified (item 11).
 
 ### 19. ✅ Logo + brand identity
 `components/Wordmark.tsx` is the single definition (four call sites used to
