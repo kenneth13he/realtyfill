@@ -199,7 +199,12 @@ export default function IntakeForm({
         </p>
       )}
 
-      <div className="sticky bottom-0 -mx-6 border-t border-[var(--color-border)] bg-[var(--color-bg)]/95 px-6 py-4 backdrop-blur">
+      {/* z-20 puts this above the section nav's z-10. Both are sticky and the
+          form is short enough on a laptop for the two to meet in the middle
+          of a scroll; without this, the nav's chips paint over the Continue
+          button. The submit control is the one thing on this page that must
+          never be obscured. */}
+      <div className="sticky bottom-0 z-20 -mx-6 border-t border-[var(--color-border)] bg-[var(--color-bg)]/95 px-6 py-4 backdrop-blur">
         <button
           type="submit"
           disabled={saving}
