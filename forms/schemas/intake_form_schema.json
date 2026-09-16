@@ -422,12 +422,6 @@
             "form_324": [
               "txtp_city"
             ],
-            "form_291": [
-              "txtmunicipal"
-            ],
-            "form_292": [
-              "txtmunicipal"
-            ],
             "form_101": [
               "txtp_city"
             ],
@@ -453,6 +447,21 @@
               "txtp_city"
             ]
           }
+        },
+        {
+          "key": "property_municipality_only",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtmunicipal"
+            ],
+            "form_292": [
+              "txtmunicipal"
+            ]
+          },
+          "hidden": true,
+          "note": "property_city with any trailing TRREB district code stripped. 291/292 print AREA, MUNICIPALITY and COMMUNITY as separate columns, so the code belongs in mls_area, not in the municipality box."
         },
         {
           "key": "property_province",
@@ -2301,12 +2310,6 @@
           "label": "",
           "type": "text",
           "targets": {
-            "form_291": [
-              "txtp_listdate_dd"
-            ],
-            "form_292": [
-              "txtp_listdate_dd"
-            ],
             "form_271": [
               "txtp_listdate_d"
             ],
@@ -2335,12 +2338,6 @@
           "label": "",
           "type": "text",
           "targets": {
-            "form_291": [
-              "txtp_listdate_yyyy"
-            ],
-            "form_292": [
-              "txtp_listdate_yyyy"
-            ],
             "form_271": [
               "txtp_listdate_yy"
             ],
@@ -2349,6 +2346,51 @@
             ]
           },
           "hidden": true
+        },
+        {
+          "key": "listing_start_date_day_num",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtp_listdate_dd"
+            ],
+            "form_292": [
+              "txtp_listdate_dd"
+            ]
+          },
+          "hidden": true,
+          "note": "291/292 print the date as MM / DD / YYYY in three labelled boxes. The _day/_month/_year trio is shaped for OREA's 'the ___ day of ___, 20___' and would print 'September' and '26' into boxes captioned MM and YYYY."
+        },
+        {
+          "key": "listing_start_date_month_num",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtp_listdate_mm"
+            ],
+            "form_292": [
+              "txtp_listdate_mm"
+            ]
+          },
+          "hidden": true,
+          "note": "291/292 print the date as MM / DD / YYYY in three labelled boxes. The _day/_month/_year trio is shaped for OREA's 'the ___ day of ___, 20___' and would print 'September' and '26' into boxes captioned MM and YYYY."
+        },
+        {
+          "key": "listing_start_date_year_full",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtp_listdate_yyyy"
+            ],
+            "form_292": [
+              "txtp_listdate_yyyy"
+            ]
+          },
+          "hidden": true,
+          "note": "291/292 print the date as MM / DD / YYYY in three labelled boxes. The _day/_month/_year trio is shaped for OREA's 'the ___ day of ___, 20___' and would print 'September' and '26' into boxes captioned MM and YYYY."
         },
         {
           "key": "listing_expiry_date",
@@ -2361,12 +2403,6 @@
           "label": "",
           "type": "text",
           "targets": {
-            "form_291": [
-              "txtp_expiredate_dd"
-            ],
-            "form_292": [
-              "txtp_expiredate_dd"
-            ],
             "form_271": [
               "txtp_expiredate_d"
             ],
@@ -2381,12 +2417,6 @@
           "label": "",
           "type": "text",
           "targets": {
-            "form_291": [
-              "txtp_expiredate_yyyy"
-            ],
-            "form_292": [
-              "txtp_expiredate_yyyy"
-            ],
             "form_271": [
               "txtp_expiredate_yy"
             ],
@@ -2395,6 +2425,417 @@
             ]
           },
           "hidden": true
+        },
+        {
+          "key": "listing_expiry_date_month",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_271": [
+              "txtp_expiredate_mmmm"
+            ],
+            "form_272": [
+              "txtp_expiredate_mmmm"
+            ]
+          },
+          "hidden": true,
+          "note": "271/272 print the expiry as 'the ___ day of ______, 20__'. Day and year were mapped and the month was not, so a listing agreement generated with a blank month on its expiry date."
+        },
+        {
+          "key": "listing_expiry_date_day_num",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtp_expiredate_dd"
+            ],
+            "form_292": [
+              "txtp_expiredate_dd"
+            ]
+          },
+          "hidden": true,
+          "note": "291/292 print the date as MM / DD / YYYY in three labelled boxes. The _day/_month/_year trio is shaped for OREA's 'the ___ day of ___, 20___' and would print 'September' and '26' into boxes captioned MM and YYYY."
+        },
+        {
+          "key": "listing_expiry_date_month_num",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtp_expiredate_mm"
+            ],
+            "form_292": [
+              "txtp_expiredate_mm"
+            ]
+          },
+          "hidden": true,
+          "note": "291/292 print the date as MM / DD / YYYY in three labelled boxes. The _day/_month/_year trio is shaped for OREA's 'the ___ day of ___, 20___' and would print 'September' and '26' into boxes captioned MM and YYYY."
+        },
+        {
+          "key": "listing_expiry_date_year_full",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtp_expiredate_yyyy"
+            ],
+            "form_292": [
+              "txtp_expiredate_yyyy"
+            ]
+          },
+          "hidden": true,
+          "note": "291/292 print the date as MM / DD / YYYY in three labelled boxes. The _day/_month/_year trio is shaped for OREA's 'the ___ day of ___, 20___' and would print 'September' and '26' into boxes captioned MM and YYYY."
+        }
+      ]
+    },
+    {
+      "group": "mls_data",
+      "label": "MLS(R) Data Information Form",
+      "sets": [
+        "sale_seller",
+        "lease_landlord"
+      ],
+      "note": "Page 1 of PropTx Forms 291/292 - the board's own data form. Almost all of it is on the listing the realtor already uploads, so these are extraction targets first and questions second.",
+      "fields": [
+        {
+          "key": "mls_number",
+          "label": "MLS(R) number(s)",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtmlsnumber"
+            ],
+            "form_292": [
+              "txtmlsnumber"
+            ],
+            "form_244": [
+              "txtmlsnumber"
+            ]
+          },
+          "note": "Moved here from the seller_direction group so the lease-landlord set can reach it too; Form 244 still uses it."
+        },
+        {
+          "key": "mls_assessment_roll_number",
+          "label": "Assessment roll # (ARN)",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtp_TaxID"
+            ],
+            "form_292": [
+              "txtp_TaxID"
+            ]
+          }
+        },
+        {
+          "key": "mls_pin",
+          "label": "PIN #",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtNum1"
+            ],
+            "form_292": [
+              "txtNum1"
+            ]
+          }
+        },
+        {
+          "key": "mls_additional_pin",
+          "label": "Additional PIN #",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtAddtnNum1"
+            ],
+            "form_292": [
+              "txtAddtnNum1"
+            ]
+          }
+        },
+        {
+          "key": "mls_area",
+          "label": "Area",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtarea"
+            ],
+            "form_292": [
+              "txtarea"
+            ]
+          }
+        },
+        {
+          "key": "mls_community",
+          "label": "Community",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtcommunity"
+            ],
+            "form_292": [
+              "txtcommunity"
+            ]
+          },
+          "note": "Marked mandatory-if-available on the form itself."
+        },
+        {
+          "key": "mls_street_abbreviation",
+          "label": "Street type abbreviation (St, Ave, Rd)",
+          "type": "text",
+          "targets": {
+            "form_292": [
+              "txtabbrev"
+            ]
+          },
+          "note": "292 only. 291 carries the street type in hidp_uploadstreettype, a hidden upload field with no printed box."
+        },
+        {
+          "key": "mls_building_name",
+          "label": "Building name",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtbuildname"
+            ],
+            "form_292": [
+              "txtbuildname"
+            ]
+          }
+        },
+        {
+          "key": "mls_property_management_company",
+          "label": "Property management company",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtpropmangcompany"
+            ],
+            "form_292": [
+              "txtpropmangcompany"
+            ]
+          }
+        },
+        {
+          "key": "mls_condo_registry_office",
+          "label": "Condo registry office",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtcondoreoffice"
+            ],
+            "form_292": [
+              "txtcondoreoffice"
+            ]
+          }
+        },
+        {
+          "key": "mls_condo_corp_number",
+          "label": "Condo corporation #",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtcondocorpnum"
+            ],
+            "form_292": [
+              "txtcondocorpnum"
+            ]
+          }
+        },
+        {
+          "key": "mls_condo_level",
+          "label": "Level",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtlevel"
+            ],
+            "form_292": [
+              "txtlevel"
+            ]
+          }
+        },
+        {
+          "key": "mls_condo_unit_number",
+          "label": "Unit # (condo register)",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtunitnum"
+            ],
+            "form_292": [
+              "txtunitnum"
+            ]
+          }
+        },
+        {
+          "key": "mls_directions",
+          "label": "Directions",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtcrossstrts"
+            ],
+            "form_292": [
+              "txtOtherDirections"
+            ]
+          },
+          "note": "291 names this box txtcrossstrts, which is NOT the cross-streets box - confirmed by rendering the page with each field showing its own id. Its cross-streets box is txtmaincs."
+        },
+        {
+          "key": "mls_main_cross_streets",
+          "label": "Main cross streets",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtmaincs"
+            ],
+            "form_292": [
+              "txtCrossSt"
+            ]
+          }
+        },
+        {
+          "key": "mls_maintenance_fee",
+          "label": "Monthly maintenance / common element fee",
+          "type": "currency",
+          "targets": {
+            "form_292": [
+              "txtCOMFeeMTH"
+            ]
+          },
+          "sets": [
+            "lease_landlord"
+          ]
+        },
+        {
+          "key": "mls_zoning",
+          "label": "Zoning",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtZoning"
+            ]
+          },
+          "sets": [
+            "sale_seller"
+          ]
+        },
+        {
+          "key": "mls_annual_taxes",
+          "label": "Annual property taxes",
+          "type": "currency",
+          "targets": {
+            "form_291": [
+              "txtTaxes"
+            ]
+          },
+          "sets": [
+            "sale_seller"
+          ]
+        },
+        {
+          "key": "mls_tax_year",
+          "label": "Tax year",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtTaxYear"
+            ]
+          },
+          "sets": [
+            "sale_seller"
+          ]
+        },
+        {
+          "key": "mls_lease_or_sublease",
+          "label": "Lease or sub-lease?",
+          "type": "radio",
+          "targets": {
+            "form_292": [
+              "chkOpt_Lease"
+            ]
+          },
+          "options": [
+            {
+              "value": "/1",
+              "label": "For Lease"
+            },
+            {
+              "value": "/2",
+              "label": "For Sub-Lease"
+            }
+          ],
+          "sets": [
+            "lease_landlord"
+          ],
+          "note": "Option codes read off the widget rects and matched to the printed captions, not guessed."
+        },
+        {
+          "key": "mls_possession_date",
+          "label": "Possession date",
+          "type": "date",
+          "targets": {},
+          "note": "The form requires either this or possession remarks."
+        },
+        {
+          "key": "mls_possession_date_month_num",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtp_possessiondate_mm"
+            ],
+            "form_292": [
+              "txtp_possessiondate_mm"
+            ]
+          },
+          "hidden": true,
+          "note": "PropTx prints the possession date as MM / DD / YYYY, so it uses the numeric date parts computed in lib/profileMapper.ts, not the OREA trio."
+        },
+        {
+          "key": "mls_possession_date_day_num",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtp_possessiondate_dd"
+            ],
+            "form_292": [
+              "txtp_possessiondate_dd"
+            ]
+          },
+          "hidden": true,
+          "note": "PropTx prints the possession date as MM / DD / YYYY, so it uses the numeric date parts computed in lib/profileMapper.ts, not the OREA trio."
+        },
+        {
+          "key": "mls_possession_date_year_full",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtp_possessiondate_yyyy"
+            ],
+            "form_292": [
+              "txtp_possessiondate_yyyy"
+            ]
+          },
+          "hidden": true,
+          "note": "PropTx prints the possession date as MM / DD / YYYY, so it uses the numeric date parts computed in lib/profileMapper.ts, not the OREA trio."
+        },
+        {
+          "key": "mls_possession_remarks",
+          "label": "Possession remarks",
+          "type": "text",
+          "targets": {
+            "form_291": [
+              "txtPossRemarks"
+            ],
+            "form_292": [
+              "txtPossRks"
+            ]
+          }
         }
       ]
     },
@@ -2405,16 +2846,6 @@
         "sale_seller"
       ],
       "fields": [
-        {
-          "key": "mls_number",
-          "label": "MLS(R) number(s)",
-          "type": "text",
-          "targets": {
-            "form_244": [
-              "txtmlsnumber"
-            ]
-          }
-        },
         {
           "key": "lbr_id",
           "label": "L/BR ID #",

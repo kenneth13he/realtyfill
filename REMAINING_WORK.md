@@ -57,6 +57,37 @@ carry the exporting agent's account details.
 the acknowledgement now fills the brokerage name too, seeded from Settings
 along with the agent name (app/api/deals/route.ts).
 
+**Two dates were generating with a hole in them.** Forms 271 and 272 printed
+a listing agreement whose expiry read "31 ________ 26": the day and year were
+mapped and the month was not, because `listing_expiry_date_month` was never
+created as a key (the start date had one). 291/292 had the same hole in both
+of their dates, plus a second fault — they caption their year box YYYY, and
+`_year` is deliberately two digits because OREA pre-prints the "20", so the
+MLS form printed the year as "26".
+
+Fixed by adding `_month_num` / `_day_num` / `_year_full` alongside the
+existing trio rather than changing it, since the originals are right for the
+forms they were built for. `tests/schemaIntegrity.test.ts` now fails if any
+date on any form has some parts mapped and others not — verified by deleting
+the key again and watching it fail. That check is what should have existed
+first: a half-mapped date generates cleanly and nothing else notices.
+
+**PropTx 291/292 page 1 is now mapped** (34/54 and 35/52, up from 11 and 12).
+A new `mls_data` intake group carries the board's own fields — MLS number,
+ARN/PIN, area, community, building name, property management company, condo
+registry office / corp # / level / unit, directions, cross streets,
+maintenance, taxes, zoning, possession. Because `buildFieldSchema` generates
+the extraction tool from the intake schema, every one of them is also
+extractable from the uploaded listing without touching the route.
+
+Two things that only a render would have caught: on 291 the box captioned
+DIRECTIONS is named `txtcrossstrts`, which is not the cross-streets box
+(that's `txtmaincs`) — the same class of lying field name as Form 101's
+Unit/Building swap. And `property_city` carries an appended TRREB district
+code ("Toronto C01") because OREA forms give one address line; 291/292 print
+AREA, MUNICIPALITY and COMMUNITY as separate columns, so a computed
+`property_municipality_only` strips it.
+
 scripts/add_form_fields.py, add_box_fields.py and add_underscore_fields.py
 stay in the repo: they are what makes a flat PDF usable, and the next form
 that arrives flat will need them.

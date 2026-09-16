@@ -33,8 +33,27 @@ export interface Deal {
 
 const STATUS_FILTERS = ["active", "closed", "archived"] as const;
 
+// Fixed locale and time zone, not the viewer's.
+//
+// This list is server-rendered (app/dashboard/page.tsx fetches the deals and
+// passes them in as initialDeals), so this function runs twice: once on
+// Vercel, which is UTC, and once in the browser, which is Eastern. For any
+// updated_at in the UTC small hours the two produce different text, React
+// sees a mismatch and throws hydration error #418 on the dashboard.
+//
+// Every deal here is an Ontario transaction, so America/Toronto is also the
+// correct date to show — a deal saved at 9pm Tuesday should not read
+// Wednesday. Fixing the locale as well keeps the two renders identical
+// regardless of the viewer's browser settings.
+const DATE_FORMAT = new Intl.DateTimeFormat("en-CA", {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+  timeZone: "America/Toronto",
+});
+
 function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+  return DATE_FORMAT.format(new Date(iso));
 }
 
 export default function DealsList({ initialDeals, loadError }: { initialDeals: Deal[]; loadError: string | null }) {

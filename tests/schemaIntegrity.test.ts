@@ -187,3 +187,42 @@ describe("filterSchemaForSet", () => {
     }
   });
 });
+
+// A date on these forms is not one blank, it is two to four side by side:
+// "the ___ day of ______, 20__" on OREA's, and MM / DD / YYYY on PropTx's
+// board data forms. Mapping some of the parts and not the rest produces a
+// document that generates cleanly and prints a date with a hole in it, which
+// no other check here notices — the ids all exist, they are just not all used.
+//
+// This shipped: Forms 271/272 printed a listing agreement whose expiry date
+// read "31 ________ 26", because listing_expiry_date_month was never created
+// as a key, and 291/292 had the same hole in both of their dates.
+describe("split date blanks", () => {
+  const PART = /^(.*?)_(d|dd|mm|mmmm|yy|yyyy)$/;
+
+  test("a date is either fully mapped or not mapped at all", () => {
+    for (const formId of ALL_FORM_IDS) {
+      const targeted = new Set(
+        schema.groups.flatMap((g) => g.fields.flatMap((f) => f.targets[formId] ?? []))
+      );
+      const groups = new Map<string, { id: string; mapped: boolean }[]>();
+      for (const { field_id } of getRawFormSchema(formId)) {
+        const m = PART.exec(field_id);
+        if (!m) continue;
+        const list = groups.get(m[1]) ?? [];
+        list.push({ id: field_id, mapped: targeted.has(field_id) });
+        groups.set(m[1], list);
+      }
+      for (const [base, parts] of groups) {
+        const filled = parts.filter((p) => p.mapped);
+        if (filled.length === 0) continue; // the whole date is unmapped: fine
+        const blank = parts.filter((p) => !p.mapped).map((p) => p.id);
+        assert.deepEqual(
+          blank,
+          [],
+          `${formId}: ${base} would print partially filled — ${blank.join(", ")} has no intake key`
+        );
+      }
+    }
+  });
+});

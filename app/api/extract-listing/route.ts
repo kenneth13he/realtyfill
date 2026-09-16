@@ -165,6 +165,24 @@ const FIELD_HINTS: Record<string, FieldSpec> = {
   electricity_included: { type: "boolean" },
   heat_included: { type: "boolean" },
   water_included: { type: "boolean" },
+
+  // PropTx Forms 291/292 (the board's own data form). These come straight off
+  // a TRREB/REALM printout, but several of their labels are ambiguous without
+  // saying which column of the listing they mean.
+  mls_number: { type: "string", description: "the MLS(R) listing number, e.g. 'C12345678'" },
+  mls_area: { type: "string", description: "the listing's Area field, e.g. 'Toronto' — NOT the district code" },
+  mls_community: { type: "string", description: "the listing's Community field, e.g. 'Bay Street Corridor'" },
+  mls_assessment_roll_number: { type: "string", description: "ARN / assessment roll number, digits only" },
+  mls_pin: { type: "string", description: "the property identification number (PIN)" },
+  mls_additional_pin: { type: "string", description: "a second PIN, only if the listing states one" },
+  mls_condo_registry_office: { type: "string", description: "the condo registry office abbreviation, e.g. 'TSCC', 'MTCC', 'YCC', 'PCC'" },
+  mls_condo_corp_number: { type: "string", description: "the condo corporation number alone, e.g. '2145' — not the registry prefix" },
+  mls_building_name: { type: "string", description: "the building's name, if the listing names one" },
+  mls_directions: { type: "string", description: "driving directions to the property, if given — NOT the cross streets" },
+  mls_main_cross_streets: { type: "string", description: "the nearest intersection, e.g. 'College St & Bay St'" },
+  mls_maintenance_fee: { type: "string", description: "monthly maintenance / common element fee, numeric only" },
+  mls_annual_taxes: { type: "string", description: "annual property taxes, numeric only" },
+  mls_tax_year: { type: "string", description: "the year those taxes are for, e.g. '2026'" },
 };
 
 // The model is asked for `heat_included` (a boolean) but the answer is stored

@@ -61,6 +61,14 @@ export function withComputedValues(answers: Record<string, string>): Record<stri
   const oneline = [streetLine, cityLine].filter(Boolean).join(", ");
   if (oneline && !out.property_address_oneline) out.property_address_oneline = oneline;
 
+  // property_city deliberately carries the TRREB district code appended to
+  // the city ("Toronto C01"), because OREA forms give one address line and
+  // the code has nowhere else to go. PropTx's board data forms (291/292)
+  // print AREA, MUNICIPALITY and COMMUNITY as three separate columns, so
+  // putting "Toronto C01" in the municipality box is wrong there.
+  const city = (answers.property_city ?? "").trim();
+  if (city) out.property_municipality_only ??= city.replace(/\s+[A-Z]\d{2}$/i, "").trim();
+
   for (const [key, target] of [
     ["purchase_price_amount", "purchase_price_words"],
     ["purchase_deposit_amount", "purchase_deposit_words"],
@@ -83,6 +91,18 @@ export function withComputedValues(answers: Record<string, string>): Record<stri
     // box wants it written the way a person writes it. "2026-09-15" on a
     // document a client signs looks like a database field, not a date.
     out[`${key}_long`] ??= `${monthName} ${Number(day)}, ${year}`;
+
+    // PropTx's MLS Data Information Forms (291/292) print dates as
+    // MM / DD / YYYY in three labelled boxes — a numeric month and a FOUR
+    // digit year, neither of which the three above can supply. `_year` is
+    // "26" because OREA pre-prints the "20" and leaves two blanks; putting
+    // that in a box captioned YYYY prints the year as 26. `_month` is
+    // "September" because OREA writes dates in words; a box captioned MM
+    // wants 09. Separate keys rather than changing the originals, which are
+    // right for the forms they were built for.
+    out[`${key}_month_num`] ??= month;
+    out[`${key}_day_num`] ??= day;
+    out[`${key}_year_full`] ??= year;
   }
 
   return out;

@@ -136,3 +136,51 @@ describe("mapIntakeToFormFields", () => {
     }
   });
 });
+
+// PropTx's board data forms print dates as MM / DD / YYYY in three captioned
+// boxes. The OREA trio can't fill those: _month is a word because OREA writes
+// dates out, and _year is two digits because OREA pre-prints the "20".
+describe("numeric date parts for the MLS data forms", () => {
+  const out = withComputedValues({ listing_start_date: "2026-09-05" });
+
+  test("month is a zero-padded number, not a word", () => {
+    assert.equal(out.listing_start_date_month_num, "09");
+    assert.equal(out.listing_start_date_month, "September"); // unchanged for OREA
+  });
+
+  test("year is four digits, not two", () => {
+    assert.equal(out.listing_start_date_year_full, "2026");
+    assert.equal(out.listing_start_date_year, "26"); // unchanged for OREA
+  });
+
+  test("day is zero-padded", () => {
+    assert.equal(out.listing_start_date_day_num, "05");
+    assert.equal(out.listing_start_date_day, "5"); // unchanged for OREA
+  });
+});
+
+// 291/292 print AREA, MUNICIPALITY and COMMUNITY as three separate columns,
+// so the TRREB district code that property_city deliberately carries for
+// OREA's single address line does not belong in the municipality box.
+describe("municipality without the district code", () => {
+  test("strips a trailing TRREB code", () => {
+    assert.equal(
+      withComputedValues({ property_city: "Toronto C01" }).property_municipality_only,
+      "Toronto"
+    );
+  });
+
+  test("leaves a plain city alone", () => {
+    assert.equal(
+      withComputedValues({ property_city: "Mississauga" }).property_municipality_only,
+      "Mississauga"
+    );
+  });
+
+  test("does not eat a real part of a place name", () => {
+    assert.equal(
+      withComputedValues({ property_city: "Stoney Creek" }).property_municipality_only,
+      "Stoney Creek"
+    );
+  });
+});
