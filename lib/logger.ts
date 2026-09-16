@@ -59,19 +59,28 @@ export function userFacingError(ref: string, what = "Something went wrong on our
   return `${what} Reference: ${ref} — include it if you contact support.`;
 }
 
+/** Per-MTok input/output rates, by model. */
+const RATES: Record<string, { in: number; out: number }> = {
+  "claude-opus-5": { in: 5, out: 25 },
+  "claude-sonnet-5": { in: 2, out: 10 },
+  "claude-haiku-4-5": { in: 1, out: 5 },
+};
+
 /**
  * What one model call actually cost, as a log line.
  *
  * Added because two cost estimates in a row were wrong: both were measured
  * against toy inputs ("Bob Smith is the buyer", ~230 tokens in, ~90 out) and
  * neither resembled a real PDF upload or a real deal's context. Rather than
- * estimate a third time, the app now reports its own numbers, and the log
- * shows whether the prompt cache is actually being hit in production.
+ * estimate a third time, the app reports its own numbers, and the log shows
+ * whether the prompt cache is actually being hit in production.
  *
- * Rates are Claude Opus 5 at the time of writing; cache writes bill at 1.25x
- * input for the 5-minute TTL, reads at 0.1x. If the model or the rates
- * change, this figure drifts — it is a guide for spotting expensive paths,
- * not an invoice.
+ * Rates are per model — the first version hardcoded Opus's, and the moment
+ * the default became Sonnet it started overstating every call by 2.5x. A
+ * cost log that lies is worse than no cost log. An unknown model logs
+ * `estimatedUsd: null` rather than a confident wrong number.
+ *
+ * Cache writes bill at 1.25x input for the 5-minute TTL, reads at 0.1x.
  */
 export function logUsage(
   context: { route: string; model: string; userId?: string; [key: string]: unknown },
@@ -87,7 +96,13 @@ export function logUsage(
   const cacheWrite = usage.cache_creation_input_tokens ?? 0;
   const cacheRead = usage.cache_read_input_tokens ?? 0;
 
-  const usd = input / 1e6 * 5 + cacheWrite / 1e6 * 6.25 + cacheRead / 1e6 * 0.5 + output / 1e6 * 25;
+  const rate = RATES[context.model];
+  const usd = rate
+    ? input / 1e6 * rate.in +
+      cacheWrite / 1e6 * rate.in * 1.25 +
+      cacheRead / 1e6 * rate.in * 0.1 +
+      output / 1e6 * rate.out
+    : null;
 
   console.log(
     JSON.stringify({
@@ -100,9 +115,8 @@ export function logUsage(
       // Zero here on a repeat call means the cache is not being hit and the
       // prefix has a breaker in it.
       cacheHit: cacheRead > 0,
-      estimatedUsd: Number(usd.toFixed(5)),
+      estimatedUsd: usd === null ? null : Number(usd.toFixed(5)),
       ...context,
     })
   );
 }
-

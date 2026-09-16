@@ -12,12 +12,22 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { logUsage } from "./logger";
 
-// Opus 5 is the default and what production runs. CLAUDE_MODEL exists so
-// scripts/extraction_eval.ts can score a cheaper model against the same 18
-// cases before anyone proposes switching — a model change is a quality
-// tradeoff, and this project has an eval precisely so it doesn't have to be
-// argued about. Do not set it in production without an eval run behind it.
-const MODEL = process.env.CLAUDE_MODEL ?? "claude-opus-5";
+// Sonnet 5 ($2/$10 per MTok) rather than Opus 5 ($5/$25) — a deliberate
+// cost decision, taken with the eval result in hand rather than instead of
+// it: Sonnet scores 15/18 where Opus scores 18/18.
+//
+// The failure that matters is the condominium legal description. Given
+// "Unit 1706, Level 17, TSCC 2510", Opus puts 1706 in condo_apt_unit_no and
+// flags condo_unit_number as not stated; Sonnet writes 1706 into
+// condo_unit_number, which is the LEGAL unit per the registered plan and
+// frequently not the number on the door. On Form 101 that misdescribes the
+// property being purchased. It is a quiet failure — the PDF generates and
+// looks right.
+//
+// So: review the condo fields on a purchase deal before sending it out.
+// CLAUDE_MODEL overrides this per-run; `CLAUDE_MODEL=claude-opus-5 npx tsx
+// scripts/extraction_eval.ts` re-scores the old model any time.
+const MODEL = process.env.CLAUDE_MODEL ?? "claude-sonnet-5";
 
 let client: Anthropic | null = null;
 function getClient(): Anthropic {
