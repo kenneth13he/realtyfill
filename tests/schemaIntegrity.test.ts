@@ -12,6 +12,7 @@ import path from "node:path";
 import { test, describe } from "node:test";
 
 import { getIntakeFormSchema, getRawFormSchema } from "../lib/schemas";
+import { mapIntakeToFormFields } from "../lib/profileMapper";
 import { FORM_SETS, FORM_SET_IDS, FORM_LABELS, ALL_FORM_IDS, BLANK_ONLY_FORM_IDS, SHARED_FORM_IDS, blankTemplateDir, filterSchemaForSet, type FormId } from "../lib/formTypes";
 
 const TEMPLATES_DIR = path.join(process.cwd(), "forms", "blank_templates");
@@ -381,5 +382,25 @@ describe("every box a set prints can be filled by that set", () => {
       }
     }
     assert.deepEqual(unreachable, [], `\n  ${unreachable.join("\n  ")}`);
+  });
+});
+
+// A realtor can reach Generate with nothing filled in — the review page lets
+// them, and the extractor can leave most fields untouched on a short update.
+// The whole set must still produce valid PDFs, and must never write an empty
+// string over a template field: that is not the same as leaving it alone, and
+// on a form with a printed default it would erase it.
+describe("a deal with no answers at all", () => {
+  test("every form still maps, and nothing is written as blank", () => {
+    for (const setId of FORM_SET_IDS) {
+      const visible = filterSchemaForSet(schema, setId);
+      for (const formId of FORM_SETS[setId].formIds as FormId[]) {
+        const filled = mapIntakeToFormFields({}, formId, visible, getRawFormSchema(formId));
+        for (const f of filled) {
+          assert.notEqual(f.value, "", `${setId}/${formId}: ${f.field_id} would be written as an empty string`);
+          assert.ok(f.page > 0, `${setId}/${formId}: ${f.field_id} has no page`);
+        }
+      }
+    }
   });
 });
