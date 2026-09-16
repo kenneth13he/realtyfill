@@ -140,7 +140,8 @@ describe("mapIntakeToFormFields", () => {
     assert.equal(letter.value, "A");
 
     const onePage = mapIntakeToFormFields({}, "form_101", schema);
-    assert.equal(onePage.find((f) => f.field_id === "txtp_state")?.value, "Ontario");
+    // "ON", not "Ontario": these boxes carry /MaxLen 2.
+    assert.equal(onePage.find((f) => f.field_id === "txtp_state")?.value, "ON");
   });
 
   test("an explicit answer still beats the default", () => {

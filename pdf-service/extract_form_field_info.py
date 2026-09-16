@@ -76,6 +76,18 @@ def get_field_info(reader: PdfReader):
             if field_id in field_info_by_id:
                 field_info_by_id[field_id]["page"] = page_index + 1
                 field_info_by_id[field_id]["rect"] = ann.get('/Rect')
+                # /MaxLen is the only thing standing between a value and a
+                # silently clipped form. Nothing in the pipeline enforces it:
+                # pypdf stores whatever it is handed and the PDF reader shows
+                # the first N characters, so "Ontario" in a 2-character
+                # province box simply prints as "On" with no error anywhere.
+                # Recording it here is what lets the tests check fixed values
+                # fit, and scripts/fill_audit.py report the ones that don't.
+                max_len = ann.get('/MaxLen')
+                if max_len is None and ann.get('/Parent'):
+                    max_len = ann.get('/Parent').get_object().get('/MaxLen')
+                if max_len is not None:
+                    field_info_by_id[field_id]["max_len"] = int(max_len)
             elif field_id in possible_radio_names:
                 try:
                     on_values = [v for v in ann["/AP"]["/N"] if v != "/Off"]

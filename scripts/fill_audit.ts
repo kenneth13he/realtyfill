@@ -72,7 +72,41 @@ function syntheticAnswers(): { answers: Record<string, string>; tokenOf: Record<
   return { answers, tokenOf };
 }
 
-const { answers, tokenOf } = syntheticAnswers();
+// Trim each answer to the narrowest box it has to fit.
+//
+// Without this the fixture's own 4-character token overflows every 2- and
+// 3-character box (the province abbreviations, holdover days) and buries the
+// CLIPPED findings that matter under noise the fixture invented. Dates and
+// option codes are left alone — they are already the right shape, and a
+// truncated ISO date would fail to parse into its parts.
+function fitToNarrowestBox(answers: Record<string, string>): Record<string, string> {
+  const narrowest = new Map<string, number>();
+  for (const group of schema.groups) {
+    for (const field of group.fields) {
+      for (const [formId, ids] of Object.entries(field.targets)) {
+        const raw = getRawFormSchema(formId as FormId);
+        for (const id of ids ?? []) {
+          const cap = raw.find((f) => f.field_id === id)?.max_len;
+          if (cap === undefined) continue;
+          narrowest.set(field.key, Math.min(narrowest.get(field.key) ?? Infinity, cap));
+        }
+      }
+    }
+  }
+  const out = { ...answers };
+  for (const group of schema.groups) {
+    for (const field of group.fields) {
+      if (field.type === "date" || field.type === "radio" || field.type === "checkbox") continue;
+      const cap = narrowest.get(field.key);
+      const v = out[field.key];
+      if (cap !== undefined && v && v.length > cap) out[field.key] = v.slice(0, cap);
+    }
+  }
+  return out;
+}
+
+const { answers: rawAnswers, tokenOf } = syntheticAnswers();
+const answers = fitToNarrowestBox(rawAnswers);
 const computed = withComputedValues(answers);
 
 const report: Record<string, unknown> = {

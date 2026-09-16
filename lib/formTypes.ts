@@ -76,6 +76,15 @@ export interface RawFieldInfo {
   type: "text" | "checkbox" | "radio_group" | "choice";
   page: number;
   rect?: number[];
+  /**
+   * The box's /MaxLen, when it declares one.
+   *
+   * The VIEWER enforces this, not us: pypdf stores whatever it is handed and
+   * the PDF reader renders the first N characters. A value that is too long
+   * is therefore not an error anywhere in the pipeline — it is just a form
+   * that prints "On" where it should say "ON".
+   */
+  max_len?: number;
   checked_value?: string;
   unchecked_value?: string;
   radio_options?: { value: string; rect: number[] }[];

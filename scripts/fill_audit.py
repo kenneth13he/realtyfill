@@ -92,6 +92,18 @@ def main() -> int:
             caps = max_lengths(blank)
             wrote = miss = trunc = 0
 
+            # A value longer than the box's /MaxLen is stored intact by pypdf
+            # and clipped by the reader, so the read-back below sees nothing
+            # wrong. This is the only place it shows up. It is what printed
+            # "On" in nine province boxes for as long as they had a default.
+            for t in targets:
+                cap = caps.get(t["field_id"])
+                if cap is not None and len(t["value"]) > cap:
+                    problems[f"{set_id}/{form_id}"].append(
+                        f"CLIPPED: {t['field_id']} (from {owner.get(t['field_id'], '?')}) holds "
+                        f"{cap} chars, got {len(t['value'])} — prints {t['value'][:cap]!r}"
+                    )
+
             for t in targets:
                 fid, expected = t["field_id"], t["value"]
                 actual = values.get(fid)

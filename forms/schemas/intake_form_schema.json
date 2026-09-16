@@ -250,7 +250,7 @@
           "key": "landlord_address_province",
           "label": "Landlord's Address — Province",
           "type": "text",
-          "default": "Ontario",
+          "default": "ON",
           "targets": {
             "2229e": [
               "txtS_state"
@@ -261,7 +261,8 @@
           },
           "sets": [
             "lease_tenant"
-          ]
+          ],
+          "note": "The province boxes on these forms carry /MaxLen 2 — they are built for the postal abbreviation, and 'Ontario' printed as 'On'."
         },
         {
           "key": "landlord_address_postal_code",
@@ -507,7 +508,7 @@
           "key": "property_province",
           "label": "Province",
           "type": "text",
-          "default": "Ontario",
+          "default": "ON",
           "profile": "property_province",
           "targets": {
             "form_400": [
@@ -540,7 +541,8 @@
             "form_401": [
               "txtp_state"
             ]
-          }
+          },
+          "note": "The province boxes on these forms carry /MaxLen 2 — they are built for the postal abbreviation, and 'Ontario' printed as 'On'."
         },
         {
           "key": "property_postal_code",
@@ -829,10 +831,25 @@
           "type": "currency",
           "targets": {
             "form_400": [
-              "txtp_Deposit",
+              "txtp_Deposit"
+            ]
+          },
+          "sets": [
+            "lease_tenant"
+          ]
+        },
+        {
+          "key": "deposit_amount_400_words",
+          "label": "",
+          "type": "text",
+          "hidden": true,
+          "derived_from": "deposit_amount_400",
+          "targets": {
+            "form_400": [
               "txtp_depo_writ"
             ]
           },
+          "note": "txtp_depo_writ is the words half of 'in the amount of ____ Dollars (CDN$) ____'. The digits were being written into both, so the line read '2500.00 Dollars (CDN$) 2500.00'. Computed by withComputedValues, like the other amounts in words.",
           "sets": [
             "lease_tenant"
           ]
@@ -855,13 +872,44 @@
           "targets": {
             "2229e": [
               "txtLeaseStartDate"
-            ],
-            "form_400": [
-              "txtp_closedate_mmmm",
-              "txtp_closedate_d",
-              "txtp_closedate_yyyy"
             ]
           }
+        },
+        {
+          "key": "lease_start_date_day",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_400": [
+              "txtp_closedate_d"
+            ]
+          },
+          "hidden": true,
+          "note": "The raw ISO date used to be aimed at all three part boxes at once, so the form printed '2028-05-18' in the month box and clipped fragments of the same string into the day and year boxes."
+        },
+        {
+          "key": "lease_start_date_month",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_400": [
+              "txtp_closedate_mmmm"
+            ]
+          },
+          "hidden": true,
+          "note": "The raw ISO date used to be aimed at all three part boxes at once, so the form printed '2028-05-18' in the month box and clipped fragments of the same string into the day and year boxes."
+        },
+        {
+          "key": "lease_start_date_year_full",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_400": [
+              "txtp_closedate_yyyy"
+            ]
+          },
+          "hidden": true,
+          "note": "The raw ISO date used to be aimed at all three part boxes at once, so the form printed '2028-05-18' in the month box and clipped fragments of the same string into the day and year boxes."
         },
         {
           "key": "lease_end_date",
@@ -1533,28 +1581,99 @@
       "fields": [
         {
           "key": "authority_start_date",
-          "label": "Authority Start Date/Time",
+          "label": "Authority start date",
+          "type": "date",
+          "targets": {},
+          "note": "Was a free-text 'Date/Time' field aimed at three date-part boxes and a time box at once. The time is now its own question."
+        },
+        {
+          "key": "authority_start_date_day",
+          "label": "",
           "type": "text",
           "targets": {
             "form_372": [
-              "txtp_listdate_d",
-              "txtp_listdate_mmmm",
-              "txtp_listdate_yy",
+              "txtp_listdate_d"
+            ]
+          },
+          "hidden": true,
+          "note": "The raw ISO date used to be aimed at all three part boxes at once, so the form printed '2028-05-18' in the month box and clipped fragments of the same string into the day and year boxes."
+        },
+        {
+          "key": "authority_start_date_month",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_372": [
+              "txtp_listdate_mmmm"
+            ]
+          },
+          "hidden": true,
+          "note": "The raw ISO date used to be aimed at all three part boxes at once, so the form printed '2028-05-18' in the month box and clipped fragments of the same string into the day and year boxes."
+        },
+        {
+          "key": "authority_start_date_year",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_372": [
+              "txtp_listdate_yy"
+            ]
+          },
+          "hidden": true,
+          "note": "The raw ISO date used to be aimed at all three part boxes at once, so the form printed '2028-05-18' in the month box and clipped fragments of the same string into the day and year boxes."
+        },
+        {
+          "key": "authority_start_time",
+          "label": "Authority start time",
+          "type": "text",
+          "targets": {
+            "form_372": [
               "txtp_exec_t"
             ]
-          }
+          },
+          "note": "Split out of the old free-text 'Authority Start Date/Time'."
         },
         {
           "key": "authority_expiry_date",
-          "label": "Authority Expiry Date",
+          "label": "Authority expiry date",
+          "type": "date",
+          "targets": {}
+        },
+        {
+          "key": "authority_expiry_date_day",
+          "label": "",
           "type": "text",
           "targets": {
             "form_372": [
-              "txtp_expiredate_d",
-              "txtp_expiredate_mmmm",
+              "txtp_expiredate_d"
+            ]
+          },
+          "hidden": true,
+          "note": "The raw ISO date used to be aimed at all three part boxes at once, so the form printed '2028-05-18' in the month box and clipped fragments of the same string into the day and year boxes."
+        },
+        {
+          "key": "authority_expiry_date_month",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_372": [
+              "txtp_expiredate_mmmm"
+            ]
+          },
+          "hidden": true,
+          "note": "The raw ISO date used to be aimed at all three part boxes at once, so the form printed '2028-05-18' in the month box and clipped fragments of the same string into the day and year boxes."
+        },
+        {
+          "key": "authority_expiry_date_year",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_372": [
               "txtp_expiredate_yy"
             ]
-          }
+          },
+          "hidden": true,
+          "note": "The raw ISO date used to be aimed at all three part boxes at once, so the form printed '2028-05-18' in the month box and clipped fragments of the same string into the day and year boxes."
         },
         {
           "key": "property_type_use",
@@ -1589,13 +1708,44 @@
         },
         {
           "key": "tenant_address",
-          "label": "Tenant's Address",
+          "label": "Tenant's address (street)",
           "type": "text",
           "targets": {
             "form_372": [
-              "txtb_street",
-              "txtb_city",
+              "txtb_street"
+            ]
+          },
+          "note": "Was written into the street, city AND province boxes at once, so the form printed the whole address twice and its first two characters in the 2-character province box. Split into the boxes 372 actually prints."
+        },
+        {
+          "key": "tenant_municipality",
+          "label": "Tenant's city / town",
+          "type": "text",
+          "targets": {
+            "form_372": [
+              "txtb_city"
+            ]
+          }
+        },
+        {
+          "key": "tenant_province",
+          "label": "Tenant's province",
+          "type": "text",
+          "default": "ON",
+          "targets": {
+            "form_372": [
               "txtb_state"
+            ]
+          },
+          "note": "/MaxLen 2 — the postal abbreviation."
+        },
+        {
+          "key": "tenant_postal_code",
+          "label": "Tenant's postal code",
+          "type": "text",
+          "targets": {
+            "form_372": [
+              "txtb_zipcode"
             ]
           }
         },
@@ -1726,8 +1876,27 @@
           "type": "text",
           "targets": {
             "form_410": [
-              "txtl1_addr1",
-              "txtFromDate",
+              "txtl1_addr1"
+            ]
+          },
+          "note": "Was also written into the From and To boxes beneath it, so the application said the applicant lived at their address from their address to their address."
+        },
+        {
+          "key": "applicant1_residence_from",
+          "label": "Applicant 1 — at this address from",
+          "type": "text",
+          "targets": {
+            "form_410": [
+              "txtFromDate"
+            ]
+          }
+        },
+        {
+          "key": "applicant1_residence_to",
+          "label": "Applicant 1 — until",
+          "type": "text",
+          "targets": {
+            "form_410": [
               "txtToDate"
             ]
           }
@@ -1738,7 +1907,17 @@
           "type": "text",
           "targets": {
             "form_410": [
-              "txtlastLandlord1",
+              "txtlastLandlord1"
+            ]
+          },
+          "note": "Was also written into the Telephone box beneath it."
+        },
+        {
+          "key": "applicant1_present_landlord_phone",
+          "label": "Applicant 1 — landlord's telephone",
+          "type": "text",
+          "targets": {
+            "form_410": [
               "txtlastLndLrdPh1"
             ]
           }
@@ -1749,8 +1928,27 @@
           "type": "text",
           "targets": {
             "form_410": [
-              "txtl2_addr1",
-              "txtFromDate1",
+              "txtl2_addr1"
+            ]
+          },
+          "note": "Was also written into the From and To boxes beneath it, so the application said the applicant lived at their address from their address to their address."
+        },
+        {
+          "key": "applicant2_residence_from",
+          "label": "Applicant 2 — at this address from",
+          "type": "text",
+          "targets": {
+            "form_410": [
+              "txtFromDate1"
+            ]
+          }
+        },
+        {
+          "key": "applicant2_residence_to",
+          "label": "Applicant 2 — until",
+          "type": "text",
+          "targets": {
+            "form_410": [
               "txtToDate1"
             ]
           }
@@ -1761,7 +1959,17 @@
           "type": "text",
           "targets": {
             "form_410": [
-              "txtlastLandlord2",
+              "txtlastLandlord2"
+            ]
+          },
+          "note": "Was also written into the Telephone box beneath it."
+        },
+        {
+          "key": "applicant2_present_landlord_phone",
+          "label": "Applicant 2 — landlord's telephone",
+          "type": "text",
+          "targets": {
+            "form_410": [
               "txtlastLndLrdPh2"
             ]
           }

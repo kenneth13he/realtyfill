@@ -282,3 +282,70 @@ describe("questions reach a box in every set that asks them", () => {
     }
   });
 });
+
+// The split-date test above asks whether every part of a date is mapped. It
+// says nothing about WHAT is mapped to them, and that is a second bug with
+// the same consequences: Form 400 aimed the raw `lease_start_date` at all
+// three of txtp_closedate_mmmm / _d / _yyyy at once, so the Agreement to
+// Lease printed its commencement date as "2028-05-18 / 2028- / 2028". Form
+// 372 did the same with both of its authority dates. Nine boxes, and every
+// completeness check passed the whole time.
+describe("date-part boxes get date parts", () => {
+  const BOX_PART = /_(d|dd|m|mm|mmmm|y|yy|yyyy)$/;
+  const KEY_PART = /_(day|month|year|day_num|month_num|year_full)$/;
+
+  test("no raw date or plain text is aimed at a box that wants one part of a date", () => {
+    const bad: string[] = [];
+    for (const group of schema.groups) {
+      for (const field of group.fields) {
+        if (KEY_PART.test(field.key)) continue;
+        for (const [formId, ids] of Object.entries(field.targets)) {
+          for (const id of ids ?? []) {
+            if (BOX_PART.test(id)) bad.push(`${field.key} (${field.type}) -> ${formId}.${id}`);
+          }
+        }
+      }
+    }
+    assert.deepEqual(bad, [], `these write a whole value into one box of a split date:\n  ${bad.join("\n  ")}`);
+  });
+
+  test("a date's parts never all point at the same box", () => {
+    for (const group of schema.groups) {
+      for (const field of group.fields) {
+        for (const [formId, ids] of Object.entries(field.targets)) {
+          const parts = (ids ?? []).filter((i) => BOX_PART.test(i));
+          assert.ok(
+            parts.length <= 1,
+            `${field.key} targets ${parts.length} date-part boxes on ${formId} (${parts.join(", ")}) — one value cannot be the day AND the month AND the year`
+          );
+        }
+      }
+    }
+  });
+});
+
+// A box's /MaxLen is enforced by the viewer, not by us: pypdf stores whatever
+// it is given and the PDF reader shows the first N characters. So a value
+// that is too long is not an error anywhere in the pipeline — it is simply a
+// form that prints "On" where it should say "ON", which is what the province
+// default did on nine forms.
+describe("fixed values fit the boxes they are written into", () => {
+  test("every schema default fits its targets' /MaxLen", () => {
+    for (const group of schema.groups) {
+      for (const field of group.fields) {
+        if (!field.default) continue;
+        for (const [formId, ids] of Object.entries(field.targets)) {
+          const raw = getRawFormSchema(formId as FormId);
+          for (const id of ids ?? []) {
+            const box = raw.find((f) => f.field_id === id);
+            if (!box?.max_len) continue;
+            assert.ok(
+              field.default.length <= box.max_len,
+              `${field.key}'s default ${JSON.stringify(field.default)} is ${field.default.length} characters but ${formId}.${id} holds ${box.max_len} — it would print as ${JSON.stringify(field.default.slice(0, box.max_len))}`
+            );
+          }
+        }
+      }
+    }
+  });
+});

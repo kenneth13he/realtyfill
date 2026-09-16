@@ -80,6 +80,9 @@ export function withComputedValues(answers: Record<string, string>): Record<stri
     // 271/272 print the list price in words beside the digits, the same way
     // 101 prints the purchase price.
     ["listing_price", "listing_price_words"],
+    // Form 400's "in the amount of ____ Dollars (CDN$) ____" — the digits
+    // were going into both halves.
+    ["deposit_amount_400", "deposit_amount_400_words"],
   ] as const) {
     if (answers[key] && !out[target]) out[target] = numberToWords(answers[key]);
   }
