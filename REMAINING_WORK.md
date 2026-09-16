@@ -16,8 +16,13 @@ Status markers: ✅ done and verified · ⚠️ done but unverified · ❌ not s
 
 ## Where things actually stand
 
-**Live at:** https://realtyfill.vercel.app — public, verified serving the app
-to a cookie-less request (see Blocker 1)
+**Live at:** https://realtyfill.ca — the real domain, registered September 15,
+2026. `realtyfill.vercel.app` still serves and stays as a fallback.
+
+The app needed no code change to move: `lib/siteOrigin.ts` derives every auth
+redirect from the request's own host, so production, previews and localhost
+each get the right callback with nothing to keep in sync. Only DNS, the
+Supabase redirect allow-list and this document mention the hostname at all.
 
 **All four form sets now generate.** Lease–tenant (5 forms), lease–landlord
 (2), sale–buyer (5), sale–seller (3). "Coming soon" is gone. The blank
@@ -101,8 +106,12 @@ this to a tester.
 
 ### 3. ✅ Supabase URL configuration — verified correct
 Confirmed via the management API:
-- `site_url`: `https://realtyfill.vercel.app`
-- `uri_allow_list`: `https://realtyfill.vercel.app/**`
+- `site_url`: `https://realtyfill.vercel.app` — switch to `https://realtyfill.ca`
+  once DNS resolves. It is the fallback Supabase uses when a redirect target
+  isn't allow-listed, so pointing it at a domain that doesn't answer yet
+  would break password reset for everyone.
+- `uri_allow_list`: `https://realtyfill.vercel.app/**`, `http://localhost:3000/**`,
+  `https://realtyfill.ca/**`, `https://www.realtyfill.ca/**`
 
 One gap: `http://localhost:3000/**` is **not** in the allow list, so password
 reset and OAuth redirects will bounce to production when testing locally.

@@ -190,6 +190,6 @@ Quick start: `npm install && npm run dev`, visit `http://localhost:3000`, sign u
 
 ## Not yet started
 
-- ~~Step 9: choosing/deploying to a real host~~ — done: Vercel, live at https://realtyfill.vercel.app, HTTPS automatic. The Render/Docker config is still in the repo unused (`REMAINING_WORK.md` item 13).
+- ~~Step 9: choosing/deploying to a real host~~ — done: Vercel, live at https://realtyfill.ca, HTTPS automatic. The Render/Docker config is still in the repo unused (`REMAINING_WORK.md` item 13).
 - Billing (Stripe) — explicitly deferred out of this pass by design.
 - Any LLM use beyond the one scoped listing-extraction endpoint — deal-specific fields remain direct realtor entry by design (see `mvp-build-plan.md`'s Phase 1 "Design decision" note).

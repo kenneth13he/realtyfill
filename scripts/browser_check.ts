@@ -5,7 +5,7 @@
 //   npx tsx scripts/browser_check.ts                 # desktop, headless
 //   npx tsx scripts/browser_check.ts --mobile        # 375px iPhone SE viewport
 //   npx tsx scripts/browser_check.ts --headed --slow # watch it happen
-//   npx tsx scripts/browser_check.ts --url https://realtyfill.vercel.app
+//   npx tsx scripts/browser_check.ts --url https://realtyfill.ca
 //
 // What it checks that a person can't reliably catch:
 //
