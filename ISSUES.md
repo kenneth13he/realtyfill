@@ -1,10 +1,15 @@
 # Issues — what stands between here and a production launch
 
-A prioritized, actionable list. Deliberately short: this is the "what do I do
-next" doc, not the "what is the state of everything" doc — that's
-`REMAINING_WORK.md`, which is exhaustive and stays the source of truth for
-status. Where an item has a fuller write-up there, it's cross-referenced;
-don't duplicate detail between the two files, link instead.
+A prioritized, actionable list of what is **still open**. Deliberately short:
+this is the "what do I do next" doc, not the "what is the state of
+everything" doc — that's `REMAINING_WORK.md`, which is exhaustive and stays
+the source of truth for status. Where an item has a fuller write-up there,
+it's cross-referenced; don't duplicate detail between the two files, link
+instead.
+
+Solved items are removed from this file rather than struck through, so its
+length is a real measure of what's left. `REMAINING_WORK.md` and the git log
+are where the history lives.
 
 Owners follow the standing split: **Kenneth** frontend (`components/`, `app/`
 pages), **Chris** infra and backend (`app/api/`, `lib/`, `supabase/`, config,
@@ -109,33 +114,16 @@ See `REMAINING_WORK.md` items 11 and 25.
 
 ## P2 — before it costs money
 
-### 8. `/api/deals/[dealId]/generate` has no rate limit — Chris
-Every other meaningful endpoint is covered — sign-in, sign-up, password
-reset, password change, extract, support, health all call `checkRateLimit`.
-Generate doesn't.
+### 8. No spend cap on the Anthropic account — Chris
+Listing extraction runs on `claude-sonnet-5` with prefix caching and per-call
+cost logging, so the per-call cost is known and low. What's missing is the
+ceiling: the per-user cap is 60 extractions/hour, so twenty active realtors
+have a theoretical ceiling of 1,200 calls an hour against one key, and
+nothing anywhere stops it.
 
-It's a `maxDuration = 120` endpoint that does five PDF fills and five Storage
-uploads per call (the 2229E alone is ~700KB), and any signed-in user can call
-it in a loop. That's unbounded Storage growth plus pdf-service compute, on a
-free tier.
+**Fix:** a spend alert (and ideally a hard cap) on the Anthropic account.
 
-**Fix:** a `checkRateLimit` guard keyed on the user id at the top of the
-handler, matching the shape used in `app/api/extract-listing/route.ts`.
-
-### 9. Extraction runs on the most expensive model — Chris
-`lib/claude.ts:14` pins `claude-opus-5` for listing extraction. That's the
-top-tier model on what is probably the least demanding task in the app —
-structured field extraction with a forced tool schema.
-
-The per-user cap is 60 extractions/hour, so twenty active realtors have a
-theoretical ceiling of 1,200 Opus calls an hour against one key. There is no
-global spend cap anywhere.
-
-**Fix:** try Sonnet and validate against `scripts/extraction_eval.ts` — we
-already have the eval, so this is measurable rather than a guess. Add a
-spend alert on the Anthropic account either way.
-
-### 10. No retention policy for generated PDFs — Chris
+### 9. No retention policy for generated PDFs — Chris
 Generated forms accumulate in Storage forever. Deal deletion and account
 deletion both clean up properly, so this is only about PDFs nobody deletes —
 which is most of them. Invisible at a handful of testers; it's the first
@@ -146,24 +134,26 @@ cost explicitly.
 
 See `REMAINING_WORK.md` item 17.
 
-### 11. Logging exists, alerting doesn't — Chris
+### 10. Logging exists, alerting doesn't — Chris
 Errors are logged. Nothing tells us when they happen. The first we'd hear of
 a broken generate pipeline is a user saying so.
 
 See `REMAINING_WORK.md` item 16.
 
-### 12. CI's dependency audit is red on `main` — Chris
-`pdf-service/requirements.txt` pins `fastapi==0.117.1`, which resolves
-`starlette 0.48.0`, which has 12 published advisories. Dependabot PRs #8 and
-#9 both bump to `fastapi==0.141.1` and are fully green including the audit
-job — they're byte-identical duplicates because `dependabot.yml` has pip
-entries for both `/` and `/pdf-service`.
+### 11. Two stale Dependabot PRs, and a config that produces duplicates — Chris
+PRs #8 and #9 both bump `fastapi` only. The advisories that were making CI
+red were against `python-multipart`, which is now pinned at `0.0.32` on
+`main`, so both PRs are superseded and neither would fix anything.
 
-**Fix:** merge either PR; drop the `/` pip entry so we stop getting doubles.
+The two are byte-identical because `dependabot.yml` has pip entries for both
+`/` and `/pdf-service`, and the root scan reaches into the subdirectory.
+
+**Fix:** close #8 and #9; drop the `/` pip entry (root `requirements.txt`
+holds only `pypdf` and audits clean either way).
 
 See `REMAINING_WORK.md` item 15g.
 
-### 13. Two deployment paths, one in use — Chris
+### 12. Two deployment paths, one in use — Chris
 Vercel is live. The Render/Docker path still exists, and its `node:24-slim`
 image has never been build-tested. Either it's a real fallback and gets
 tested, or it's dead weight and gets deleted. Right now it's neither.
@@ -174,7 +164,7 @@ See `REMAINING_WORK.md` item 13.
 
 ## P3 — product decisions and polish
 
-### 14. Form 400 utility checkboxes — blocked on a real form
+### 13. Form 400 utility checkboxes — blocked on a real form
 The `/1` suffix semantics on the utility checkboxes can't be confirmed from
 the blank PDF alone. **This must not be guessed** — wrong checkbox semantics
 on an Agreement to Lease is a wrong legal document, not a cosmetic bug.
@@ -183,24 +173,23 @@ on an Agreement to Lease is a wrong legal document, not a cosmetic bug.
 
 See `REMAINING_WORK.md` item 9.
 
-### 15. Form 410 is 11/121 fields — product decision
+### 14. Form 410 is 11/121 fields — product decision
 It needs a tenant-facing flow to be worth anything; a realtor can't supply
 most of those fields. Either build that flow or drop the form from the set.
 
-### 16. Frontend polish — Kenneth
+### 15. Frontend polish — Kenneth
 None of this stops a realtor from using the product. In rough order of how
 much it's missed:
 
 - Toasts — errors are currently inline text only
 - Collapsible / auto-collapsing intake sections
 - Illustrated dashboard empty state
-- `--color-text-muted` contrast audit (never checked against WCAG)
 - Keyboard-only pass
 - Dark mode
 
 See `REMAINING_WORK.md` items 22, 21, 23, 26, 27.
 
-### 17. `docs/PROJECT_STRUCTURE.md` is stale — either
+### 16. `docs/PROJECT_STRUCTURE.md` is stale — either
 It carries a staleness banner and four corrections, but it predates the
 Vercel deploy, `pdf-service/`, three of the four form sets, `tests/`, and
 most of `app/`. It's the only per-file index we have, which is why it was

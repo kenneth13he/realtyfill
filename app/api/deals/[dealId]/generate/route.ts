@@ -26,6 +26,7 @@ import { mapIntakeToFormFields } from "@/lib/profileMapper";
 import { fillPdf } from "@/lib/pdfFill";
 import { createClient } from "@/lib/supabase/server";
 import { getOwnedDeal } from "@/lib/supabase/getOwnedDeal";
+import { checkRateLimit } from "@/lib/rateLimit";
 import { logError, userFacingError } from "@/lib/logger";
 
 // A five-form set means five sequential fill round-trips to pdf-service plus
@@ -95,6 +96,32 @@ export async function POST(request: Request, { params }: { params: Promise<{ dea
     return NextResponse.json({ error: "No intake data found — fill out intake first" }, { status: 400 });
   }
   const intakeAnswers = intakeRow.answers as Record<string, string>;
+
+  // Everything above this line is cheap — auth, an ownership check and one
+  // row read. Everything below it is five pdf-service round-trips and five
+  // Storage uploads, so the limiter sits here rather than at the top of the
+  // handler: a request that fails validation costs nothing and shouldn't
+  // spend someone's quota, and a request that gets this far is going to do
+  // the expensive work.
+  //
+  // Keyed per user, not per IP: this is behind auth, and two realtors sharing
+  // a brokerage's outbound IP shouldn't limit each other.
+  //
+  // 30/hour is well clear of honest use — a deal is generated once and
+  // regenerated a handful of times after edits — while capping a loop at 150
+  // fills and ~100MB of uploads an hour per account instead of unbounded.
+  //
+  // failOpen is left at its default. Unlike extract-listing, nothing here
+  // bills a third party, and every step below writes to Supabase — if the
+  // limiter can't reach the database, the generate itself is going to fail
+  // anyway, so refusing here would only replace a real error with a
+  // misleading one.
+  if (!(await checkRateLimit(`generate:${user.id}`, 30, 60 * 60 * 1000))) {
+    return NextResponse.json(
+      { error: "You've generated a lot of forms in the past hour — please wait a while before trying again." },
+      { status: 429 }
+    );
+  }
 
   const results: { form: FormId; downloadUrl: string }[] = [];
   try {
