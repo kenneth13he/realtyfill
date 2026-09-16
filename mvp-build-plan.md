@@ -1,6 +1,8 @@
 # RealtyFill — MVP Build Plan (Step by Step)
 
-Source context: `project-context.md`. This breaks Phase 1 (Demo) and Phase 2 (MVP) into concrete, ordered build steps. Each step lists the goal, what to actually do, and the "done" condition.
+This breaks Phase 1 (Demo) and Phase 2 (MVP) into concrete, ordered build steps. Each step lists the goal, what to actually do, and the "done" condition.
+
+**Read this as the original plan plus how each step actually turned out** — it is kept for the reasoning behind the design decisions, not as a live task list. For what's outstanding today, see `REMAINING_WORK.md`. (An earlier `project-context.md` is referenced in a few places below; it is no longer in the repo.)
 
 ---
 
