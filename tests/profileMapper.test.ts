@@ -120,8 +120,32 @@ describe("mapIntakeToFormFields", () => {
   });
 
   test("skips empty answers instead of writing blanks over the template", () => {
+    // property_city has no default, so an empty answer writes nothing. Asserted
+    // on its own target rather than on the whole form, because a form can also
+    // carry fields that DO have a default — see the next test.
     const filled = mapIntakeToFormFields({ property_city: "" }, "form_303", schema);
-    assert.equal(filled.length, 0);
+    assert.equal(filled.filter((f) => f.field_id === "txts_broker").length, 0);
+    assert.equal(filled.some((f) => f.value === ""), false, "wrote an empty string into the template");
+  });
+
+  test("an unanswered field with a schema default still prints its default", () => {
+    // The default used to be display-only: IntakeFieldsEditor rendered it, but
+    // unless the realtor edited the field onChange never fired, so it never
+    // reached the answers, Postgres, or the PDF. The province box on ten forms
+    // and the "Schedule ___" heading on three all printed blank while the
+    // intake showed Ontario and A.
+    const filled = mapIntakeToFormFields({}, "form_303", schema);
+    const letter = filled.find((f) => f.field_id === "txtSchedule");
+    assert.ok(letter, "schedule_letter's default did not reach form_303");
+    assert.equal(letter.value, "A");
+
+    const onePage = mapIntakeToFormFields({}, "form_101", schema);
+    assert.equal(onePage.find((f) => f.field_id === "txtp_state")?.value, "Ontario");
+  });
+
+  test("an explicit answer still beats the default", () => {
+    const filled = mapIntakeToFormFields({ schedule_letter: "B" }, "form_303", schema);
+    assert.equal(filled.find((f) => f.field_id === "txtSchedule")?.value, "B");
   });
 
   test("resolves each target to the page the field actually lives on", () => {

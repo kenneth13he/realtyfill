@@ -241,6 +241,32 @@ export const ALL_FORM_IDS: FormId[] = FORM_SET_IDS.flatMap((setId) => FORM_SETS[
  * key apply everywhere (property address, brokerage), which keeps the common
  * ones from having to list every set.
  */
+/**
+ * Fill in any answer the schema declares a `default` for.
+ *
+ * components/IntakeFieldsEditor renders `value={value || field.default}`, so
+ * before this existed the realtor saw "Ontario" in the province box and "A"
+ * in the schedule-letter box, but the value lived only in the DOM: onChange
+ * never fired, so nothing was ever stored, and the saved answers disagreed
+ * with what the page showed.
+ *
+ * lib/profileMapper applies the same fallback at map time, which is what
+ * guarantees the PDF is right whatever path the answers arrived by. This one
+ * keeps the record the realtor can see honest.
+ */
+export function withSchemaDefaults(
+  schema: IntakeFormSchema,
+  answers: Record<string, string>
+): Record<string, string> {
+  const out = { ...answers };
+  for (const group of schema.groups) {
+    for (const field of group.fields) {
+      if (field.default && !out[field.key]) out[field.key] = field.default;
+    }
+  }
+  return out;
+}
+
 export function filterSchemaForSet(schema: IntakeFormSchema, setId: FormSetId): IntakeFormSchema {
   const applies = (sets?: FormSetId[]) => !sets || sets.includes(setId);
   return {

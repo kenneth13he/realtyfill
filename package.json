@@ -11,6 +11,7 @@
     "test:py": "python -m unittest discover -s pdf-service -p \"test_*.py\"",
     "typecheck": "tsc --noEmit",
     "audit:fill": "tsx scripts/fill_audit.ts && python scripts/fill_audit.py",
+    "test:e2e": "tsx scripts/e2e_fill_check.ts",
     "check": "npm run typecheck && npm test && npm run test:py && npm run audit:fill"
   },
   "dependencies": {

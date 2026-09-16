@@ -9,7 +9,7 @@
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import { getIntakeFormSchema } from "@/lib/schemas";
-import { FORM_SETS, filterSchemaForSet, toFormSetId, type FormId } from "@/lib/formTypes";
+import { FORM_SETS, filterSchemaForSet, toFormSetId, withSchemaDefaults, type FormId } from "@/lib/formTypes";
 import { createClient } from "@/lib/supabase/server";
 import ReviewForm from "./ReviewForm";
 
@@ -30,7 +30,9 @@ export default async function ReviewPage({ params }: { params: Promise<{ dealId:
 
   const formSet = FORM_SETS[toFormSetId(deal.form_set)];
   const schema = filterSchemaForSet(fullSchema, formSet.id);
-  const answers = (intakeRow?.answers as Record<string, string>) ?? {};
+  // Same defaults the intake page seeds, so the review list and its
+  // missing-field markers show what the generated PDF will actually say.
+  const answers = withSchemaDefaults(schema, (intakeRow?.answers as Record<string, string>) ?? {});
   const initialResults = (generatedRows ?? []).map((row) => ({
     form: row.form_id as FormId,
     downloadUrl: `/api/deals/${dealId}/download/${row.form_id}`,

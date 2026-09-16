@@ -9,7 +9,7 @@
 
 import { notFound } from "next/navigation";
 import { getIntakeFormSchema } from "@/lib/schemas";
-import { FORM_SETS, filterSchemaForSet, toFormSetId } from "@/lib/formTypes";
+import { FORM_SETS, filterSchemaForSet, toFormSetId, withSchemaDefaults } from "@/lib/formTypes";
 import { createClient } from "@/lib/supabase/server";
 import Header from "@/components/Header";
 import IntakeForm from "./IntakeForm";
@@ -32,8 +32,10 @@ export default async function IntakePage({ params }: { params: Promise<{ dealId:
   // rent, utilities or tenant-insurance questions.
   const formSet = FORM_SETS[toFormSetId(deal.form_set)];
   const schema = filterSchemaForSet(fullSchema, formSet.id);
-  const initialAnswers = (intakeRow?.answers as Record<string, string>) ?? {};
-  const isEditing = Object.keys(initialAnswers).length > 0;
+  const savedAnswers = (intakeRow?.answers as Record<string, string>) ?? {};
+  // Before the defaults go in, or a brand-new deal would look like an edit.
+  const isEditing = Object.keys(savedAnswers).length > 0;
+  const initialAnswers = withSchemaDefaults(schema, savedAnswers);
 
   return (
     <>

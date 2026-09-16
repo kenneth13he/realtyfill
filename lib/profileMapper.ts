@@ -171,8 +171,19 @@ export function mapIntakeToFormFields(
       const targetIds = field.targets[formId];
       if (!targetIds) continue;
 
-      const answer = answers[field.key];
-      if (answer === undefined || answer === null || answer === "") continue;
+      // `default` had been display-only. components/IntakeFieldsEditor renders
+      // `value={value || field.default}`, so the realtor saw "Ontario" in the
+      // province box and "A" in the schedule-letter box — but unless they
+      // edited the field, onChange never fired, the default never entered
+      // `answers`, and the PDF printed those boxes blank. Four fields across
+      // thirteen targets, including the Schedule heading whose whole point is
+      // to identify the schedule.
+      //
+      // Applied here rather than seeded into the intake page's state because
+      // generation reads whatever is in Postgres: answers written straight by
+      // the extraction endpoint never pass through that component at all.
+      const answer = answers[field.key] || field.default || "";
+      if (!answer) continue;
 
       for (const fieldId of targetIds) {
         if (isSignatureField(fieldId)) continue;
