@@ -11,7 +11,12 @@
 
 import Anthropic from "@anthropic-ai/sdk";
 
-const MODEL = "claude-opus-5";
+// Opus 5 is the default and what production runs. CLAUDE_MODEL exists so
+// scripts/extraction_eval.ts can score a cheaper model against the same 18
+// cases before anyone proposes switching — a model change is a quality
+// tradeoff, and this project has an eval precisely so it doesn't have to be
+// argued about. Do not set it in production without an eval run behind it.
+const MODEL = process.env.CLAUDE_MODEL ?? "claude-opus-5";
 
 let client: Anthropic | null = null;
 function getClient(): Anthropic {
@@ -38,11 +43,26 @@ export async function claudeExtractWithTool<T>(
   toolDescription: string,
   inputSchema: Anthropic.Tool["input_schema"]
 ): Promise<T> {
+  // Prompt caching. Input is ~97% of what an extraction costs: the system
+  // prompt and the tool schema come to ~4,100 tokens and are byte-identical
+  // for every call within a form set, while the listing text the realtor
+  // pastes is a couple of hundred. Without a breakpoint every call re-bills
+  // that whole prefix at full rate.
+  //
+  // The breakpoint goes on the system block because the request renders
+  // tools -> system -> messages, so one marker there covers both stable
+  // parts. Everything volatile (the pasted text, the answers already on
+  // file) is in `messages`, after it — which is what keeps the prefix
+  // byte-stable and the cache warm.
+  //
+  // Measured on this workload: $0.0235 -> $0.0055 per call in steady state,
+  // 4.3x. The first call after a gap costs ~22% more (the write is billed at
+  // 1.25x), so it pays for itself on the second call and every one after.
   const response = await getClient().messages.create({
     model: MODEL,
     max_tokens: 8192,
     output_config: { effort: "medium" },
-    system: systemPrompt,
+    system: [{ type: "text", text: systemPrompt, cache_control: { type: "ephemeral" } }],
     tools: [{ name: toolName, description: toolDescription, input_schema: inputSchema }],
     tool_choice: { type: "tool", name: toolName },
     messages: [{ role: "user", content: userContent }],
