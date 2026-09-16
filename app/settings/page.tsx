@@ -4,6 +4,7 @@
 import Header from "@/components/Header";
 import { createClient } from "@/lib/supabase/server";
 import SettingsForm, { type Profile } from "./SettingsForm";
+import ChangePassword from "./ChangePassword";
 import DeleteAccount from "./DeleteAccount";
 
 export default async function SettingsPage() {
@@ -22,6 +23,13 @@ export default async function SettingsPage() {
     brokerage_address: data?.brokerage_address ?? "",
   };
 
+  // A Google-only account has no RealtyFill password to change. `identities`
+  // is what distinguishes that from an email/password account that also
+  // linked Google; if it's missing entirely, show the form and let the
+  // action report the real problem rather than hiding a control that works.
+  const identities = user?.identities;
+  const hasPasswordLogin = identities === undefined || identities.some((i) => i.provider === "email");
+
   return (
     <>
       <Header />
@@ -29,6 +37,9 @@ export default async function SettingsPage() {
         <h1 className="text-3xl font-semibold tracking-tight text-[var(--color-text)]">Settings</h1>
         <div className="mt-8">
           <SettingsForm initialProfile={initialProfile} />
+        </div>
+        <div className="mt-6">
+          <ChangePassword hasPasswordLogin={hasPasswordLogin} />
         </div>
         <div className="mt-10">
           <DeleteAccount />

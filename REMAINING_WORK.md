@@ -5,6 +5,11 @@ which predated the Vercel deployment and has now been deleted — every item
 in it was either done (deploy, legal pages, forgot-password, account
 deletion, feedback channel) or restated below.
 
+`ISSUES.md` is the short companion to this file: the same problems, ordered
+by what to do next and scoped to launch. This file stays the place where
+status lives — keep the detail here and cross-reference it from there, so the
+two can't drift into disagreeing about the same item.
+
 Status markers: ✅ done and verified · ⚠️ done but unverified · ❌ not started
 
 ---

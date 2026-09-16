@@ -505,10 +505,28 @@ export default function ReviewForm({
                   </div>
                   {isOpen && (
                     <>
+                      {/* `view=FitH` is what actually makes this readable.
+                          The frame is far wider than it is tall, and a
+                          letter page is the opposite, so the viewer was
+                          scaling to fit the *height* and leaving wide grey
+                          margins either side — the page rendered at roughly
+                          three-quarters of the width available to it.
+                          Fitting the width instead uses the whole frame, at
+                          the cost of scrolling down inside it to reach the
+                          bottom of the page. Both parameters are PDF open
+                          parameters, understood by Chrome's built-in viewer
+                          and by Firefox's pdf.js respectively; a viewer that
+                          knows neither ignores the fragment and renders as
+                          it did before.
+
+                          Height is capped by the viewport no matter what, so
+                          88vh is close to the most this can be without the
+                          surrounding page disappearing entirely. "Open in
+                          new tab" above stays the route to a full window. */}
                       <iframe
                         title={`Preview of ${FORM_LABELS[r.form]}`}
-                        src={`${r.downloadUrl}?inline=1`}
-                        className="hidden h-[80vh] w-full border-t border-green-200 sm:block"
+                        src={`${r.downloadUrl}?inline=1#view=FitH&zoom=page-width`}
+                        className="hidden h-[88vh] w-full border-t border-green-200 sm:block"
                       />
                       <p className="border-t border-green-200 px-3 py-3 text-xs text-green-800 sm:hidden">
                         PDF previews don&apos;t work well on a small screen — use{" "}

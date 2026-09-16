@@ -160,6 +160,77 @@ export async function updatePassword(formData: FormData) {
   redirect("/dashboard");
 }
 
+/**
+ * Change the password of an already-signed-in user, from Settings.
+ *
+ * Distinct from `updatePassword` above, which serves the emailed-recovery
+ * flow: there, possession of the link IS the proof of identity, and there is
+ * no old password to check because the point is that the user has forgotten
+ * it. Here the user is already signed in, so the session alone proves
+ * nothing about who is at the keyboard — an unlocked laptop would otherwise
+ * be enough to lock the owner out of their own account. Hence the
+ * re-authentication below. Supabase can enforce this server-side too
+ * ("Secure password change" in Auth settings); this does not depend on that
+ * being switched on, and does no harm if it is.
+ *
+ * Returns its result instead of redirecting because Settings is a page the
+ * user is already on and should stay on — a redirect back to itself would
+ * throw away the rest of the form's unsaved state.
+ */
+export type ChangePasswordState = { ok: boolean; message: string } | null;
+
+export async function changePassword(
+  _prevState: ChangePasswordState,
+  formData: FormData
+): Promise<ChangePasswordState> {
+  const fail = (message: string) => ({ ok: false, message });
+
+  if (!(await checkRateLimit(`changepw:${await clientIp()}`, 10, 15 * 60 * 1000))) {
+    return fail("Too many attempts — please wait a while and try again.");
+  }
+
+  const currentPassword = String(formData.get("current_password") ?? "");
+  const newPassword = String(formData.get("new_password") ?? "");
+  const confirmPassword = String(formData.get("confirm_password") ?? "");
+
+  if (newPassword !== confirmPassword) {
+    return fail("The two new passwords don't match.");
+  }
+  const weak = checkPassword(newPassword);
+  if (weak) {
+    return fail(weak);
+  }
+  if (newPassword === currentPassword) {
+    return fail("That's already your password — pick a different one.");
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user?.email) {
+    return fail("You're signed out — sign in again and retry.");
+  }
+
+  // Re-authenticate. This writes a fresh session cookie for the same user,
+  // so the caller stays signed in either way.
+  const { error: reauthError } = await supabase.auth.signInWithPassword({
+    email: user.email,
+    password: currentPassword,
+  });
+  if (reauthError) {
+    logError({ route: "changepw", reason: reauthError.message }, reauthError);
+    return fail("That current password isn't right.");
+  }
+
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+  if (error) {
+    logError({ route: "changepw", reason: error.message }, error);
+    return fail(error.message);
+  }
+  return { ok: true, message: "Password updated." };
+}
+
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
