@@ -118,7 +118,12 @@ const report: Record<string, unknown> = {
 
 for (const setId of FORM_SET_IDS) {
   const visible = filterSchemaForSet(schema, setId);
-  const visibleKeys = new Set(visible.groups.flatMap((g) => g.fields.map((f) => f.key)));
+  // Hidden fields are computed, not asked. Counting them as questions made
+  // the intake look 20 questions longer than it is every time a derived date
+  // part was added.
+  const visibleKeys = new Set(
+    visible.groups.flatMap((g) => g.fields.filter((f) => !f.hidden).map((f) => f.key))
+  );
 
   // The extraction tool schema for this set, built exactly as the route does.
   const toolSchema = buildFieldSchema(setId);

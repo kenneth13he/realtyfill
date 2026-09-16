@@ -2169,100 +2169,6 @@
           }
         },
         {
-          "key": "schedules_attached",
-          "label": "Schedule(s) attached",
-          "type": "text",
-          "targets": {
-            "form_101": [
-              "txtAttachedSchedule"
-            ],
-            "form_371": [
-              "txtAttachedSchedule"
-            ],
-            "form_271": [
-              "txtAttachedSchedule"
-            ],
-            "form_272": [
-              "txtAttachedSchedule"
-            ]
-          }
-        },
-        {
-          "key": "agreement_date",
-          "label": "Agreement date",
-          "type": "date",
-          "targets": {}
-        },
-        {
-          "key": "agreement_date_day",
-          "label": "",
-          "type": "text",
-          "targets": {
-            "form_101": [
-              "txtp_OfferDate_d"
-            ],
-            "form_303": [
-              "txtp_OfferDate_d"
-            ],
-            "form_801": [
-              "txtp_OfferDate_d"
-            ],
-            "form_203": [
-              "txtp_OfferDate_d"
-            ],
-            "form_401": [
-              "txtp_OfferDate_d"
-            ]
-          },
-          "hidden": true
-        },
-        {
-          "key": "agreement_date_month",
-          "label": "",
-          "type": "text",
-          "targets": {
-            "form_101": [
-              "txtp_OfferDate_mmmm"
-            ],
-            "form_303": [
-              "txtp_OfferDate_mmmm"
-            ],
-            "form_801": [
-              "txtp_OfferDate_mmmm"
-            ],
-            "form_203": [
-              "txtp_OfferDate_mmmm"
-            ],
-            "form_401": [
-              "txtp_OfferDate_mmmm"
-            ]
-          },
-          "hidden": true
-        },
-        {
-          "key": "agreement_date_year",
-          "label": "",
-          "type": "text",
-          "targets": {
-            "form_101": [
-              "txtp_OfferDate_yy"
-            ],
-            "form_303": [
-              "txtp_OfferDate_yy"
-            ],
-            "form_801": [
-              "txtp_OfferDate_yy"
-            ],
-            "form_203": [
-              "txtp_OfferDate_yy"
-            ],
-            "form_401": [
-              "txtp_OfferDate_yy"
-            ]
-          },
-          "hidden": true
-        },
-        {
           "key": "irrevocable_by",
           "label": "Offer irrevocable by (Seller/Buyer)",
           "type": "text",
@@ -3351,7 +3257,7 @@
     },
     {
       "group": "schedule_dates",
-      "label": "Schedule Date",
+      "label": "Schedule and agreement details",
       "sets": [
         "lease_landlord",
         "sale_buyer",
@@ -3375,8 +3281,103 @@
             ]
           },
           "note": "The blank in the 'Schedule ____' heading. A schedule exists to be attached to and identified by another agreement, so generating one with a nameless heading left the realtor writing it in by hand every time."
+        },
+        {
+          "key": "schedules_attached",
+          "label": "Schedule(s) attached",
+          "type": "text",
+          "targets": {
+            "form_101": [
+              "txtAttachedSchedule"
+            ],
+            "form_371": [
+              "txtAttachedSchedule"
+            ],
+            "form_271": [
+              "txtAttachedSchedule"
+            ],
+            "form_272": [
+              "txtAttachedSchedule"
+            ]
+          }
+        },
+        {
+          "key": "agreement_date",
+          "label": "Agreement date",
+          "type": "date",
+          "targets": {}
+        },
+        {
+          "key": "agreement_date_day",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_101": [
+              "txtp_OfferDate_d"
+            ],
+            "form_303": [
+              "txtp_OfferDate_d"
+            ],
+            "form_801": [
+              "txtp_OfferDate_d"
+            ],
+            "form_203": [
+              "txtp_OfferDate_d"
+            ],
+            "form_401": [
+              "txtp_OfferDate_d"
+            ]
+          },
+          "hidden": true
+        },
+        {
+          "key": "agreement_date_month",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_101": [
+              "txtp_OfferDate_mmmm"
+            ],
+            "form_303": [
+              "txtp_OfferDate_mmmm"
+            ],
+            "form_801": [
+              "txtp_OfferDate_mmmm"
+            ],
+            "form_203": [
+              "txtp_OfferDate_mmmm"
+            ],
+            "form_401": [
+              "txtp_OfferDate_mmmm"
+            ]
+          },
+          "hidden": true
+        },
+        {
+          "key": "agreement_date_year",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_101": [
+              "txtp_OfferDate_yy"
+            ],
+            "form_303": [
+              "txtp_OfferDate_yy"
+            ],
+            "form_801": [
+              "txtp_OfferDate_yy"
+            ],
+            "form_203": [
+              "txtp_OfferDate_yy"
+            ],
+            "form_401": [
+              "txtp_OfferDate_yy"
+            ]
+          },
+          "hidden": true
         }
-      ]
+      ],
+      "note": "Forms 203, 303 and 401 each print 'Schedule ___ ... dated the ___ day of ___', and 271/272 print 'Schedule A, ___'. These questions used to live in the Offer Terms group, which is scoped to sale_buyer only, so group filtering hid them from the two sets that print those very boxes — Form 203's schedule generated with no date on it, and 271/272's schedule list was always blank."
     },
     {
       "group": "reco_acknowledgement",

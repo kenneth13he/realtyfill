@@ -349,3 +349,37 @@ describe("fixed values fit the boxes they are written into", () => {
     }
   });
 });
+
+// The mirror of "questions reach a box": a box whose question exists but is
+// not asked in the set that prints it. Group filtering makes this easy to do
+// by accident — a field in a group scoped to one set cannot appear in another
+// no matter what it targets.
+//
+// This shipped on eight boxes. Forms 203 and 401 print "Schedule ___ ...
+// dated the ___ day of ___", and the agreement_date questions lived in the
+// Offer Terms group, which is sale_buyer only — so a schedule generated for a
+// seller or a landlord carried no date identifying the agreement it attaches
+// to. Forms 271 and 272 print "Schedule A, ___" with the same problem.
+describe("every box a set prints can be filled by that set", () => {
+  test("no form has a target whose question the set never asks", () => {
+    const unreachable: string[] = [];
+    for (const setId of FORM_SET_IDS) {
+      const inSet = new Set<FormId>(FORM_SETS[setId].formIds);
+      const asked = new Set(
+        filterSchemaForSet(schema, setId).groups.flatMap((g) => g.fields.map((f) => f.key))
+      );
+      for (const group of schema.groups) {
+        for (const field of group.fields) {
+          if (asked.has(field.key)) continue;
+          for (const [formId, ids] of Object.entries(field.targets)) {
+            if (!inSet.has(formId as FormId)) continue;
+            for (const id of ids ?? []) {
+              unreachable.push(`${setId}: ${formId}.${id} needs "${field.key}", which ${setId} never asks`);
+            }
+          }
+        }
+      }
+    }
+    assert.deepEqual(unreachable, [], `\n  ${unreachable.join("\n  ")}`);
+  });
+});
