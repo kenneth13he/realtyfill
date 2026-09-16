@@ -1,68 +1,112 @@
 [
   {
-    "field_id": "p1_schedule",
+    "field_id": "txtSchedule",
     "type": "text",
     "page": 1,
     "rect": [
-      259.46,
-      739.09,
-      307.46,
-      760.62
+      259.6627,
+      742.6674,
+      307.3286,
+      757.6672
     ]
   },
   {
-    "field_id": "p1_brokerage",
+    "field_id": "txts_broker",
     "type": "text",
     "page": 1,
     "rect": [
-      98.3,
-      658.5,
-      551.7,
-      670.5
+      98.66516,
+      661.6686,
+      551.9916,
+      674.3351
     ]
   },
   {
-    "field_id": "p1_buyer",
+    "field_id": "txtbuyer1",
     "type": "text",
     "page": 1,
     "rect": [
-      73.8,
-      635.5,
-      571.5,
-      647.5
+      73.99887,
+      638.669,
+      308.3286,
+      651.6688
     ]
   },
   {
-    "field_id": "p1_dated_the",
+    "field_id": "hidband",
     "type": "text",
     "page": 1,
     "rect": [
-      75.8,
-      612.5,
-      194,
-      624.5
+      308.662,
+      638.669,
+      347.9947,
+      651.6688
     ]
   },
   {
-    "field_id": "p1_day_of",
+    "field_id": "txtbuyer2",
     "type": "text",
     "page": 1,
     "rect": [
-      221.5,
-      612.5,
-      485.2,
-      624.5
+      348.6613,
+      638.669,
+      571.3246,
+      651.6688
     ]
   },
   {
-    "field_id": "p1_20",
+    "field_id": "txtp_OfferDate_d",
     "type": "text",
     "page": 1,
     "rect": [
-      500,
-      612.5,
-      571.5,
-      624.5
+      75.99884,
+      615.6694,
+      194.3304,
+      628.6692
+    ]
+  },
+  {
+    "field_id": "txtp_OfferDate_mmmm",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      221.9966,
+      615.6694,
+      484.9926,
+      628.6692
+    ]
+  },
+  {
+    "field_id": "txtp_OfferDate_yy",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      500.659,
+      615.6694,
+      570.9913,
+      628.6692
+    ]
+  },
+  {
+    "field_id": "hidDynamicPage",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      1.33331,
+      597.3363,
+      42.99934,
+      610.0028
+    ]
+  },
+  {
+    "field_id": "txtAddSchedule",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      43.99933,
+      128.0101,
+      578.9911,
+      610.6694
     ]
   }
 ]

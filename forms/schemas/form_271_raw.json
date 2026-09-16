@@ -1,590 +1,533 @@
 [
   {
-    "field_id": "p1_brokerage",
+    "field_id": "txtl_brkaddr",
     "type": "text",
     "page": 1,
     "rect": [
-      98.4,
-      635.3,
-      571.5,
-      647.3
-    ],
-    "label_hint": "BROKERAGE"
+      39.80283,
+      620.6176,
+      165.7903,
+      633.1177
+    ]
   },
   {
-    "field_id": "p1_cont",
+    "field_id": "txtl_brkcity",
     "type": "text",
     "page": 1,
     "rect": [
-      40.5,
-      617.3,
-      321.4,
-      629.3
-    ],
-    "label_hint": ""
+      165.7903,
+      620.6176,
+      253.6197,
+      633.1177
+    ]
   },
   {
-    "field_id": "p1_the_listing_brokerage_tel_no",
+    "field_id": "txtl_brkstate",
     "type": "text",
     "page": 1,
     "rect": [
-      437.8,
-      617.3,
-      570.9,
-      629.3
-    ],
-    "label_hint": "(the \u201cListing Brokerage\u201d) Tel. No"
+      253.6197,
+      620.6176,
+      277.9619,
+      633.1177
+    ]
   },
   {
-    "field_id": "p1_seller",
+    "field_id": "txtl_brkzipcode",
     "type": "text",
     "page": 1,
     "rect": [
-      72.4,
-      599.3,
-      528.2,
-      611.3
-    ],
-    "label_hint": "SELLER"
+      277.9619,
+      620.6176,
+      321.3831,
+      633.1177
+    ]
   },
   {
-    "field_id": "p1_designated_representative_s",
+    "field_id": "txtl_brkphone",
     "type": "text",
     "page": 1,
     "rect": [
-      179.4,
-      581.3,
-      571.2,
-      593.3
-    ],
-    "label_hint": "DESIGNATED REPRESENTATIVE(S)"
+      435.1995,
+      620.6176,
+      570.3975,
+      633.1177
+    ]
   },
   {
-    "field_id": "p1_cont_2",
+    "field_id": "txtDesRep1",
     "type": "text",
     "page": 1,
     "rect": [
-      40.5,
-      560.3,
-      570.3,
-      572.3
-    ],
-    "label_hint": ""
+      179.6061,
+      584.1042,
+      570.7264,
+      596.2753
+    ]
   },
   {
-    "field_id": "p1_ting_the_real_property_for_sale_known_as",
+    "field_id": "txtDesRep2",
     "type": "text",
     "page": 1,
     "rect": [
-      325.1,
-      532.3,
-      571.5,
-      544.3
-    ],
-    "label_hint": "isting Brokerage listing the real property for sale known as"
+      41.44757,
+      563.3804,
+      569.7396,
+      575.2227
+    ]
   },
   {
-    "field_id": "p1_cont_3",
+    "field_id": "txtComAt",
     "type": "text",
     "page": 1,
     "rect": [
-      40.5,
-      515.3,
-      518.5,
-      527.3
-    ],
-    "label_hint": ""
+      95.06625,
+      489.3669,
+      173.6851,
+      500.8802
+    ]
   },
   {
-    "field_id": "p1_commencing_at",
+    "field_id": "txtp_listdate_d",
     "type": "text",
     "page": 1,
     "rect": [
-      95.1,
-      486.3,
-      173.9,
-      498.3
-    ],
-    "label_hint": "commencing at"
+      200.9878,
+      489.3669,
+      266.4487,
+      501.2091
+    ]
   },
   {
-    "field_id": "p1_on_the",
+    "field_id": "txtp_listdate_mmmm",
     "type": "text",
     "page": 1,
     "rect": [
-      200.3,
-      486.3,
-      266.9,
-      498.3
-    ],
-    "label_hint": "commencing at ................................ on the"
+      294.7383,
+      489.3669,
+      501.6472,
+      501.2091
+    ]
   },
   {
-    "field_id": "p1_n_the_day_of",
+    "field_id": "txtp_listdate_yy",
     "type": "text",
     "page": 1,
     "rect": [
-      294.2,
-      486.3,
-      501.1,
-      498.3
-    ],
-    "label_hint": ".................. on the ........................... day of"
+      519.4104,
+      489.3669,
+      567.7659,
+      501.2091
+    ]
   },
   {
-    "field_id": "p1_20",
+    "field_id": "chkOpt_dated2_ampm",
+    "type": "radio_group",
+    "page": 1,
+    "radio_options": [
+      {
+        "value": "/1",
+        "rect": [
+          118.4216,
+          473.5774,
+          128.619,
+          481.4722
+        ]
+      },
+      {
+        "value": "/2",
+        "rect": [
+          136.8428,
+          473.5774,
+          147.0402,
+          481.4722
+        ]
+      }
+    ]
+  },
+  {
+    "field_id": "txtp_expiredate_d",
     "type": "text",
     "page": 1,
     "rect": [
-      518.4,
-      486.3,
-      567.7,
-      498.3
-    ],
-    "label_hint": "....................................................... , 20"
+      163.4876,
+      468.3142,
+      227.3037,
+      480.4853
+    ]
   },
   {
-    "field_id": "p1_and_expiring_at_11_59_p_m_on_the",
+    "field_id": "txtp_expiredate_mmmm",
     "type": "text",
     "page": 1,
     "rect": [
-      163.1,
-      465.3,
-      227.2,
-      477.3
-    ],
-    "label_hint": "and expiring at 11:59 p.m. on the"
+      254.9355,
+      468.3142,
+      442.1074,
+      480.4853
+    ]
   },
   {
-    "field_id": "p1_on_the_day_of",
+    "field_id": "txtp_expiredate_yy",
     "type": "text",
     "page": 1,
     "rect": [
-      254.5,
-      465.3,
-      441.7,
-      477.3
-    ],
-    "label_hint": "iring at 11:59 p.m. on the .......................... day of"
+      457.568,
+      468.3142,
+      498.6866,
+      480.4853
+    ]
   },
   {
-    "field_id": "p1_20_2",
+    "field_id": "txtp_listprice",
     "type": "text",
     "page": 1,
     "rect": [
-      456.5,
-      465.3,
-      498.4,
-      477.3
-    ],
-    "label_hint": "........................................................, 20"
+      466.7786,
+      418.6429,
+      571.0554,
+      431.143
+    ]
   },
   {
-    "field_id": "p1_dollars_cdn",
+    "field_id": "txtp_listpricewords",
     "type": "text",
     "page": 1,
     "rect": [
-      466.8,
-      415.3,
-      570.3,
-      427.3
-    ],
-    "label_hint": "Dollars (CDN$)"
+      41.11862,
+      401.5376,
+      542.7658,
+      414.6955
+    ]
   },
   {
-    "field_id": "p1_cont_4",
+    "field_id": "txtAttachedSchedule",
     "type": "text",
     "page": 1,
     "rect": [
-      40.5,
-      398.3,
-      543.2,
-      410.3
-    ],
-    "label_hint": ""
+      82.23724,
+      346.6031,
+      244.0801,
+      358.1163
+    ]
   },
   {
-    "field_id": "p1_schedule_a",
+    "field_id": "txtListBrkComm",
     "type": "text",
     "page": 1,
     "rect": [
-      82.3,
-      343.3,
-      244.9,
-      355.3
-    ],
-    "label_hint": "Schedule A"
+      290.7909,
+      225.2209,
+      326.9753,
+      237.0631
+    ]
   },
   {
-    "field_id": "p1_ay_the_listing_brokerage_a_commission_of",
+    "field_id": "txtcommis_writ",
     "type": "text",
     "page": 1,
     "rect": [
-      290.5,
-      222.3,
-      327.4,
-      234.3
-    ],
-    "label_hint": "e Seller agrees to pay the Listing Brokerage a commission of"
+      59.53976,
+      211.734,
+      281.9093,
+      223.5762
+    ]
   },
   {
-    "field_id": "p1_of_the_sale_price_of_the_property_or",
+    "field_id": "txtCBrokComm",
     "type": "text",
     "page": 1,
     "rect": [
-      460.6,
-      222.3,
-      571.5,
-      234.3
-    ],
-    "label_hint": "ion of ...............% of the sale price of the Property or"
+      209.8694,
+      173.247,
+      247.3696,
+      185.747
+    ]
   },
   {
-    "field_id": "p1_cont_5",
+    "field_id": "txtSPComm",
     "type": "text",
     "page": 1,
     "rect": [
-      58.5,
-      208.3,
-      282.7,
-      220.3
-    ],
-    "label_hint": ""
+      376.9755,
+      173.247,
+      573.358,
+      186.076
+    ]
   },
   {
-    "field_id": "p1_e_co_operating_brokerage_a_commission_of",
+    "field_id": "txtp_bal1stdeed123",
     "type": "text",
     "page": 1,
     "rect": [
-      208.4,
-      170.3,
-      247.8,
-      182.3
-    ],
-    "label_hint": "the co-operating brokerage a commission of"
+      157.5666,
+      105.4835,
+      227.6327,
+      117.9836
+    ]
   },
   {
-    "field_id": "p1_of_the_sale_price_of_the_property_or_2",
-    "type": "text",
-    "page": 1,
-    "rect": [
-      374.4,
-      170.3,
-      571.5,
-      182.3
-    ],
-    "label_hint": "ion of................% of the sale price of the Property or"
-  },
-  {
-    "field_id": "p1_on_the_seller_s_behalf_within",
-    "type": "text",
-    "page": 1,
-    "rect": [
-      156.8,
-      102.3,
-      228.2,
-      114.3
-    ],
-    "label_hint": "on the Seller\u2019s behalf within"
-  },
-  {
-    "field_id": "p3_cont",
+    "field_id": "txtl_brkagentsig",
     "type": "text",
     "page": 3,
     "rect": [
-      40.5,
-      373.4,
-      269.7,
-      385.4
-    ],
-    "label_hint": ""
+      391.4493,
+      377.1953,
+      570.3975,
+      387.7217
+    ]
   },
   {
-    "field_id": "p3_cont_2",
+    "field_id": "txts_phone1",
     "type": "text",
     "page": 3,
     "rect": [
-      282.0,
-      373.4,
-      378.1,
-      385.4
-    ],
-    "label_hint": ""
+      427.3047,
+      306.8003,
+      571.7133,
+      319.6293
+    ]
   },
   {
-    "field_id": "p3_cont_3",
+    "field_id": "txts2_phone1",
     "type": "text",
     "page": 3,
     "rect": [
-      390.5,
-      373.4,
-      570.4,
-      385.4
-    ],
-    "label_hint": ""
+      427.3047,
+      286.7344,
+      571.7133,
+      298.2476
+    ]
   },
   {
-    "field_id": "p3_cont_4",
+    "field_id": "txtspouse_phone",
     "type": "text",
     "page": 3,
     "rect": [
-      40.5,
-      303.4,
-      269.7,
-      315.4
-    ],
-    "label_hint": ""
+      427.3047,
+      241.0105,
+      573.358,
+      254.4974
+    ]
   },
   {
-    "field_id": "p3_cont_5",
+    "field_id": "txtsp_sig1",
     "type": "text",
     "page": 3,
     "rect": [
-      303.8,
-      303.4,
-      417.2,
-      315.4
-    ],
-    "label_hint": ""
+      67.76349,
+      229.8262,
+      269.7382,
+      240.3526
+    ]
   },
   {
-    "field_id": "p3_cont_6",
+    "field_id": "txtl_brkname",
     "type": "text",
     "page": 3,
     "rect": [
-      426.1,
-      303.4,
-      571.5,
-      315.4
-    ],
-    "label_hint": ""
+      196.3825,
+      196.2734,
+      564.1475,
+      208.1156
+    ]
   },
   {
-    "field_id": "p3_cont_7",
+    "field_id": "txtSignerSig",
     "type": "text",
     "page": 3,
     "rect": [
-      40.5,
-      283.4,
-      269.7,
-      295.4
-    ],
-    "label_hint": ""
+      446.3838,
+      155.1548,
+      569.4107,
+      164.0364
+    ]
   },
   {
-    "field_id": "p3_cont_8",
+    "field_id": "txtcopy_d",
     "type": "text",
     "page": 3,
     "rect": [
-      303.8,
-      283.4,
-      417.2,
-      295.4
-    ],
-    "label_hint": ""
+      64.80295,
+      114.6941,
+      138.4875,
+      127.1941
+    ]
   },
   {
-    "field_id": "p3_cont_9",
+    "field_id": "txtcopy_m",
     "type": "text",
     "page": 3,
     "rect": [
-      426.1,
-      283.4,
-      571.5,
-      295.4
-    ],
-    "label_hint": ""
+      165.1324,
+      114.6941,
+      417.7652,
+      127.1941
+    ]
   },
   {
-    "field_id": "p3_cont_10",
+    "field_id": "txtcopy_y",
     "type": "text",
     "page": 3,
     "rect": [
-      40.5,
-      237.4,
-      269.7,
-      249.4
-    ],
-    "label_hint": ""
+      434.5416,
+      114.6941,
+      571.0554,
+      127.1941
+    ]
   },
   {
-    "field_id": "p3_cont_11",
+    "field_id": "txtsellersig1",
     "type": "text",
     "page": 3,
     "rect": [
-      303.8,
-      237.4,
-      417.2,
-      249.4
-    ],
-    "label_hint": ""
+      100.3294,
+      85.4176,
+      419.081,
+      95.28607
+    ]
   },
   {
-    "field_id": "p3_cont_12",
+    "field_id": "txtsellersig2",
     "type": "text",
     "page": 3,
     "rect": [
-      426.1,
-      237.4,
-      571.5,
-      249.4
-    ],
-    "label_hint": ""
+      100.3294,
+      63.37802,
+      419.081,
+      73.57544
+    ]
   },
   {
-    "field_id": "p3_the_salesperson_broker_broker_of_record",
-    "type": "text",
-    "page": 3,
-    "rect": [
-      197.6,
-      193.4,
-      564.8,
-      205.4
-    ],
-    "label_hint": "The Salesperson/Broker/Broker of Record"
-  },
-  {
-    "field_id": "p3_cont_13",
-    "type": "text",
-    "page": 3,
-    "rect": [
-      158.4,
-      161.4,
-      562.5,
-      173.4
-    ],
-    "label_hint": ""
-  },
-  {
-    "field_id": "p3_on_the",
-    "type": "text",
-    "page": 3,
-    "rect": [
-      80.2,
-      111.4,
-      138.0,
-      123.4
-    ],
-    "label_hint": "on the \u2026\u2026"
-  },
-  {
-    "field_id": "p3_day_of",
-    "type": "text",
-    "page": 3,
-    "rect": [
-      204.8,
-      111.4,
-      327.3,
-      123.4
-    ],
-    "label_hint": "on the \u2026\u2026......................... day of \u2026\u2026\u2026\u2026\u2026"
-  },
-  {
-    "field_id": "p3_cont_14",
-    "type": "text",
-    "page": 3,
-    "rect": [
-      335.3,
-      111.4,
-      386.2,
-      123.4
-    ],
-    "label_hint": " \u2026\u2026\u2026\u2026\u2026.....................................................\u2026"
-  },
-  {
-    "field_id": "p3_20",
-    "type": "text",
-    "page": 3,
-    "rect": [
-      442.2,
-      111.4,
-      555.5,
-      123.4
-    ],
-    "label_hint": "...........................\u2026......................\u2026\u2026\u2026\u2026, 20 \u2026"
-  },
-  {
-    "field_id": "p3_cont_15",
-    "type": "text",
-    "page": 3,
-    "rect": [
-      40.5,
-      93.4,
-      420.0,
-      105.4
-    ],
-    "label_hint": ""
-  },
-  {
-    "field_id": "p3_cont_16",
-    "type": "text",
-    "page": 3,
-    "rect": [
-      427.3,
-      93.4,
-      570.3,
-      105.4
-    ],
-    "label_hint": ""
-  },
-  {
-    "field_id": "p3_cont_17",
-    "type": "text",
-    "page": 3,
-    "rect": [
-      40.5,
-      71.4,
-      420.0,
-      83.4
-    ],
-    "label_hint": ""
-  },
-  {
-    "field_id": "p3_cont_18",
-    "type": "text",
-    "page": 3,
-    "rect": [
-      427.3,
-      71.4,
-      570.3,
-      83.4
-    ],
-    "label_hint": ""
-  },
-  {
-    "field_id": "p4_brokerage",
+    "field_id": "txtl_broker",
     "type": "text",
     "page": 4,
     "rect": [
-      93.9,
-      648.5,
-      555.0,
-      660.5
-    ],
-    "label_hint": "BROKERAGE"
+      94.7373,
+      651.5388,
+      555.2659,
+      665.0257
+    ]
   },
   {
-    "field_id": "p4_seller",
+    "field_id": "txtseller1",
     "type": "text",
     "page": 4,
     "rect": [
-      73.8,
-      625.5,
-      571.5,
-      637.5
-    ],
-    "label_hint": "SELLER"
+      73.35562,
+      628.1834,
+      308.8831,
+      641.9993
+    ]
   },
   {
-    "field_id": "p4_property",
+    "field_id": "hidsand",
     "type": "text",
     "page": 4,
     "rect": [
-      86.1,
-      602.5,
-      571.5,
-      614.5
-    ],
-    "label_hint": "PROPERTY"
+      309.212,
+      628.1834,
+      345.7254,
+      641.9993
+    ]
+  },
+  {
+    "field_id": "txtseller2",
+    "type": "text",
+    "page": 4,
+    "rect": [
+      346.0543,
+      628.1834,
+      570.7264,
+      641.9993
+    ]
+  },
+  {
+    "field_id": "txtp_streetnum",
+    "type": "text",
+    "page": 4,
+    "rect": [
+      87.50043,
+      605.4859,
+      130.5927,
+      619.3018
+    ]
+  },
+  {
+    "field_id": "txtp_street",
+    "type": "text",
+    "page": 4,
+    "rect": [
+      130.9217,
+      605.4859,
+      322.6989,
+      619.3018
+    ]
+  },
+  {
+    "field_id": "txtp_UnitNumber",
+    "type": "text",
+    "page": 4,
+    "rect": [
+      323.0279,
+      605.4859,
+      345.3964,
+      619.3018
+    ]
+  },
+  {
+    "field_id": "txtp_city",
+    "type": "text",
+    "page": 4,
+    "rect": [
+      345.7254,
+      605.4859,
+      480.2655,
+      619.3018
+    ]
+  },
+  {
+    "field_id": "txtp_state",
+    "type": "text",
+    "page": 4,
+    "rect": [
+      480.5945,
+      605.4859,
+      520.0684,
+      619.3018
+    ]
+  },
+  {
+    "field_id": "txtp_zipcode",
+    "type": "text",
+    "page": 4,
+    "rect": [
+      520.3973,
+      605.4859,
+      571.0554,
+      619.3018
+    ]
+  },
+  {
+    "field_id": "hidDynamicPage",
+    "type": "text",
+    "page": 4,
+    "rect": [
+      0.98685,
+      576.2095,
+      37.50018,
+      588.7095
+    ]
+  },
+  {
+    "field_id": "txtAddSchedule",
+    "type": "text",
+    "page": 4,
+    "rect": [
+      38.81598,
+      130.8126,
+      575.0028,
+      562.7225
+    ]
   }
 ]

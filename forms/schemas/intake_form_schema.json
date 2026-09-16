@@ -56,7 +56,7 @@
               "txtbuyersig1"
             ],
             "form_401": [
-              "p1_tenant"
+              "txtbuyer1"
             ]
           }
         },
@@ -109,6 +109,9 @@
             "form_372": [
               "txtbuyer2",
               "txtbuyersig2"
+            ],
+            "form_401": [
+              "txtbuyer2"
             ]
           }
         },
@@ -131,13 +134,13 @@
               "txtseller1",
               "txtsellersig1"
             ],
-            "form_401": [
-              "p1_landlord"
+            "form_292": [
+              "txtseller1"
             ],
             "form_272": [
-              "p1_landlord"
+              "txtseller1"
             ],
-            "form_292": [
+            "form_401": [
               "txtseller1"
             ]
           }
@@ -274,6 +277,30 @@
             ],
             "form_292": [
               "txtp_streetnum"
+            ],
+            "form_101": [
+              "txtp_streetnum"
+            ],
+            "form_320": [
+              "txtp_streetnum"
+            ],
+            "form_801": [
+              "txtp_streetnum"
+            ],
+            "form_203": [
+              "txtp_streetnum"
+            ],
+            "form_244": [
+              "txtp_streetnum"
+            ],
+            "form_271": [
+              "txtp_streetnum"
+            ],
+            "form_272": [
+              "txtp_streetnum"
+            ],
+            "form_401": [
+              "txtp_streetnum"
             ]
           }
         },
@@ -299,6 +326,30 @@
               "txtp_street"
             ],
             "form_292": [
+              "txtp_street"
+            ],
+            "form_101": [
+              "txtp_street"
+            ],
+            "form_320": [
+              "txtp_street"
+            ],
+            "form_801": [
+              "txtp_street"
+            ],
+            "form_203": [
+              "txtp_street"
+            ],
+            "form_244": [
+              "txtp_street"
+            ],
+            "form_271": [
+              "txtp_street"
+            ],
+            "form_272": [
+              "txtp_street"
+            ],
+            "form_401": [
               "txtp_street"
             ]
           }
@@ -326,6 +377,30 @@
             ],
             "form_292": [
               "txtp_unitNumber"
+            ],
+            "form_101": [
+              "txtp_unitNumber"
+            ],
+            "form_320": [
+              "txtp_UnitNumber"
+            ],
+            "form_801": [
+              "txtp_UnitNumber"
+            ],
+            "form_203": [
+              "txtp_UnitNumber"
+            ],
+            "form_244": [
+              "txtp_UnitNumber"
+            ],
+            "form_271": [
+              "txtp_UnitNumber"
+            ],
+            "form_272": [
+              "txtp_UnitNumber"
+            ],
+            "form_401": [
+              "txtp_UnitNumber"
             ]
           }
         },
@@ -352,6 +427,30 @@
             ],
             "form_292": [
               "txtmunicipal"
+            ],
+            "form_101": [
+              "txtp_city"
+            ],
+            "form_320": [
+              "txtp_city"
+            ],
+            "form_801": [
+              "txtp_city"
+            ],
+            "form_203": [
+              "txtp_city"
+            ],
+            "form_244": [
+              "txtp_city"
+            ],
+            "form_271": [
+              "txtp_city"
+            ],
+            "form_272": [
+              "txtp_city"
+            ],
+            "form_401": [
+              "txtp_city"
             ]
           }
         },
@@ -366,6 +465,30 @@
               "txtp_state"
             ],
             "form_324": [
+              "txtp_state"
+            ],
+            "form_101": [
+              "txtp_state"
+            ],
+            "form_320": [
+              "txtp_state"
+            ],
+            "form_801": [
+              "txtp_state"
+            ],
+            "form_203": [
+              "txtp_state"
+            ],
+            "form_244": [
+              "txtp_state"
+            ],
+            "form_271": [
+              "txtp_state"
+            ],
+            "form_272": [
+              "txtp_state"
+            ],
+            "form_401": [
               "txtp_state"
             ]
           }
@@ -392,6 +515,30 @@
               "txtp_zipcode"
             ],
             "form_292": [
+              "txtp_zipcode"
+            ],
+            "form_101": [
+              "txtp_zipcode"
+            ],
+            "form_320": [
+              "txtp_zipcode"
+            ],
+            "form_801": [
+              "txtp_zipcode"
+            ],
+            "form_203": [
+              "txtp_zipcode"
+            ],
+            "form_244": [
+              "txtp_zipcode"
+            ],
+            "form_271": [
+              "txtp_zipcode"
+            ],
+            "form_272": [
+              "txtp_zipcode"
+            ],
+            "form_401": [
               "txtp_zipcode"
             ]
           }
@@ -434,32 +581,7 @@
           "key": "property_address_oneline",
           "label": "Property address (one line)",
           "type": "text",
-          "targets": {
-            "form_401": [
-              "p1_for_the_lease_of"
-            ],
-            "form_203": [
-              "p1_for_the_property_known_as"
-            ],
-            "form_244": [
-              "p1_property_address"
-            ],
-            "form_801": [
-              "p1_real_property_address"
-            ],
-            "form_320": [
-              "p1_the_transaction_on_the_property_known_as"
-            ],
-            "form_272": [
-              "p1_ing_the_real_property_for_lease_known_as"
-            ],
-            "form_271": [
-              "p1_ting_the_real_property_for_sale_known_as"
-            ],
-            "form_101": [
-              "p1_located_at"
-            ]
-          },
+          "targets": {},
           "hidden": true,
           "note": "Assembled from the address fields above by lib/profileMapper.ts."
         }
@@ -998,26 +1120,32 @@
             "form_324": [
               "txtl_broker"
             ],
-            "form_272": [
-              "p1_brokerage"
-            ],
-            "form_271": [
-              "p1_brokerage"
-            ],
-            "form_203": [
-              "p1_brokerage"
-            ],
-            "form_244": [
-              "p1_listing_brokerage"
-            ],
-            "form_801": [
-              "p1_listing_brokerage"
-            ],
             "form_291": [
               "txtNoMapListBrok"
             ],
             "form_292": [
               "txtNoMapListBrok"
+            ],
+            "form_101": [
+              "txtl_broker"
+            ],
+            "form_320": [
+              "txtl_broker"
+            ],
+            "form_801": [
+              "txtl_broker"
+            ],
+            "form_203": [
+              "txtl_broker"
+            ],
+            "form_244": [
+              "txtl_broker"
+            ],
+            "form_271": [
+              "txtl_broker"
+            ],
+            "form_272": [
+              "txtl_broker"
             ]
           }
         },
@@ -1033,14 +1161,20 @@
             "form_324": [
               "txtl_brkagent"
             ],
-            "form_801": [
-              "p1_sales_representative_broker_2"
-            ],
             "form_291": [
               "txtNoMapListAgt"
             ],
             "form_292": [
               "txtNoMapListAgt"
+            ],
+            "form_101": [
+              "txtl_brkagent"
+            ],
+            "form_320": [
+              "txtl_brkagent"
+            ],
+            "form_801": [
+              "txtl_brkagent"
             ]
           }
         },
@@ -1056,16 +1190,22 @@
             "form_324": [
               "txtl_brkphone"
             ],
-            "form_272": [
-              "p1_brokerage_tel_no"
-            ],
-            "form_271": [
-              "p1_the_listing_brokerage_tel_no"
-            ],
             "form_291": [
               "txtl_brkphone"
             ],
             "form_292": [
+              "txtl_brkphone"
+            ],
+            "form_101": [
+              "txtl_brkphone"
+            ],
+            "form_320": [
+              "txtl_brkphone"
+            ],
+            "form_271": [
+              "txtl_brkphone"
+            ],
+            "form_272": [
               "txtl_brkphone"
             ]
           }
@@ -1085,14 +1225,20 @@
             "form_372": [
               "txts_broker"
             ],
+            "form_101": [
+              "txts_broker"
+            ],
             "form_303": [
-              "p1_brokerage"
+              "txts_broker"
+            ],
+            "form_320": [
+              "txts_broker"
             ],
             "form_371": [
-              "p1_brokerage"
+              "txts_broker"
             ],
             "form_801": [
-              "p1_brokerage"
+              "txts_broker"
             ]
           }
         },
@@ -1112,8 +1258,17 @@
               "txts_brkagentsig",
               "txts_brkname"
             ],
+            "form_101": [
+              "txts_brkagent"
+            ],
+            "form_320": [
+              "txts_brkagent"
+            ],
+            "form_371": [
+              "txts_brkagent"
+            ],
             "form_801": [
-              "p1_sales_representative_broker"
+              "txts_brkagent"
             ]
           }
         },
@@ -1132,8 +1287,14 @@
             "form_372": [
               "txts_brkphone"
             ],
+            "form_101": [
+              "txts_brkphone"
+            ],
+            "form_320": [
+              "txts_brkphone"
+            ],
             "form_371": [
-              "p1_tel_no"
+              "txts_brkphone"
             ]
           }
         },
@@ -1148,9 +1309,6 @@
             ],
             "form_372": [
               "txts_brkaddr"
-            ],
-            "form_371": [
-              "p1_address"
             ]
           }
         },
@@ -1176,17 +1334,14 @@
             "form_372": [
               "txtAgreeDays"
             ],
-            "form_271": [
-              "p1_on_the_seller_s_behalf_within"
-            ],
-            "form_272": [
-              "p1_on_the_landlord_s_behalf_within"
-            ],
             "form_291": [
               "txtHODays"
             ],
             "form_292": [
               "txtHODays"
+            ],
+            "form_371": [
+              "txtholdover"
             ]
           }
         }
@@ -1518,20 +1673,19 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_buyer"
+              "txtbuyer1"
             ],
             "form_303": [
-              "p1_buyer"
+              "txtbuyer1"
             ],
             "form_320": [
-              "p1_buyer"
+              "txtbuyer1"
             ],
             "form_371": [
-              "p1_buyer"
+              "txtbuyer1"
             ],
             "form_801": [
-              "p1_i_we",
-              "p1_i_we_2"
+              "txtbuyer1"
             ]
           }
         },
@@ -1540,25 +1694,25 @@
           "label": "Seller - Full Name",
           "type": "text",
           "targets": {
+            "form_291": [
+              "txtseller1"
+            ],
             "form_101": [
-              "p1_seller"
-            ],
-            "form_203": [
-              "p1_seller"
-            ],
-            "form_244": [
-              "p1_seller"
-            ],
-            "form_271": [
-              "p1_seller"
+              "txtseller1"
             ],
             "form_320": [
-              "p1_seller"
+              "txtseller1"
             ],
             "form_801": [
-              "p1_seller_s"
+              "txtseller1"
             ],
-            "form_291": [
+            "form_203": [
+              "txtseller1"
+            ],
+            "form_244": [
+              "txtseller1"
+            ],
+            "form_271": [
               "txtseller1"
             ]
           }
@@ -1567,41 +1721,25 @@
           "key": "seller_contact",
           "label": "Seller - Contact (phone / email)",
           "type": "text",
-          "targets": {
-            "form_801": [
-              "p1_seller_s_contact"
-            ]
-          }
+          "targets": {}
         },
         {
           "key": "buyer_address",
           "label": "Buyer - Address",
           "type": "text",
-          "targets": {
-            "form_371": [
-              "p1_address_2"
-            ]
-          }
+          "targets": {}
         },
         {
           "key": "buyer_municipality",
           "label": "Buyer - Municipality",
           "type": "text",
-          "targets": {
-            "form_371": [
-              "p1_municipality"
-            ]
-          }
+          "targets": {}
         },
         {
           "key": "buyer_postal_code",
           "label": "Buyer - Postal Code",
           "type": "text",
-          "targets": {
-            "form_371": [
-              "p1_postal_code"
-            ]
-          }
+          "targets": {}
         }
       ]
     },
@@ -1618,7 +1756,7 @@
           "type": "currency",
           "targets": {
             "form_101": [
-              "p1_dollars_cdn"
+              "txtp_price"
             ]
           }
         },
@@ -1628,7 +1766,7 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_cont"
+              "txtp_priceWords"
             ]
           },
           "hidden": true,
@@ -1640,7 +1778,7 @@
           "type": "currency",
           "targets": {
             "form_101": [
-              "p1_dollars_cdn_2"
+              "txtp_deposit"
             ]
           }
         },
@@ -1650,7 +1788,7 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_cont_2"
+              "txtp_depositwords"
             ]
           },
           "hidden": true,
@@ -1660,11 +1798,7 @@
           "key": "purchase_deposit_timing",
           "label": "Deposit submitted",
           "type": "text",
-          "targets": {
-            "form_101": [
-              "p1_deposit_buyer_submits"
-            ]
-          },
+          "targets": {},
           "note": "Herewith / Upon Acceptance / as otherwise described."
         },
         {
@@ -1673,7 +1807,7 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_by_negotiable_cheque_payable_to"
+              "txtpayableto"
             ]
           }
         },
@@ -1683,7 +1817,16 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_schedule_s_a"
+              "txtAttachedSchedule"
+            ],
+            "form_371": [
+              "txtAttachedSchedule"
+            ],
+            "form_271": [
+              "txtAttachedSchedule"
+            ],
+            "form_272": [
+              "txtAttachedSchedule"
             ]
           }
         },
@@ -1699,10 +1842,19 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_greement_of_purchase_and_sale_dated_this"
+              "txtp_OfferDate_d"
+            ],
+            "form_303": [
+              "txtp_OfferDate_d"
             ],
             "form_801": [
-              "p1_greement_of_purchase_and_sale_dated_the"
+              "txtp_OfferDate_d"
+            ],
+            "form_203": [
+              "txtp_OfferDate_d"
+            ],
+            "form_401": [
+              "txtp_OfferDate_d"
             ]
           },
           "hidden": true
@@ -1713,10 +1865,19 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_ted_this_day_of"
+              "txtp_OfferDate_mmmm"
+            ],
+            "form_303": [
+              "txtp_OfferDate_mmmm"
             ],
             "form_801": [
-              "p1_sale_dated_the_day_of"
+              "txtp_OfferDate_mmmm"
+            ],
+            "form_203": [
+              "txtp_OfferDate_mmmm"
+            ],
+            "form_401": [
+              "txtp_OfferDate_mmmm"
             ]
           },
           "hidden": true
@@ -1727,10 +1888,19 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_20"
+              "txtp_OfferDate_yy"
+            ],
+            "form_303": [
+              "txtp_OfferDate_yy"
             ],
             "form_801": [
-              "p1_20"
+              "txtp_OfferDate_yy"
+            ],
+            "form_203": [
+              "txtp_OfferDate_yy"
+            ],
+            "form_401": [
+              "txtp_OfferDate_yy"
             ]
           },
           "hidden": true
@@ -1739,11 +1909,7 @@
           "key": "irrevocable_by",
           "label": "Offer irrevocable by (Seller/Buyer)",
           "type": "text",
-          "targets": {
-            "form_101": [
-              "p1_lity_this_offer_shall_be_irrevocable_by"
-            ]
-          }
+          "targets": {}
         },
         {
           "key": "irrevocable_until_time",
@@ -1751,7 +1917,7 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_until"
+              "txtp_irrev_t"
             ]
           }
         },
@@ -1767,7 +1933,10 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_ntil_on_the"
+              "txtp_OfferExpireDate_d"
+            ],
+            "form_801": [
+              "txtp_OfferExpireDate_d"
             ]
           },
           "hidden": true
@@ -1778,7 +1947,10 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_day_of"
+              "txtp_OfferExpireDate_mmmm"
+            ],
+            "form_801": [
+              "txtp_OfferExpireDate_mmmm"
             ]
           },
           "hidden": true
@@ -1789,7 +1961,10 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_20_2"
+              "txtp_OfferExpireDate_yy"
+            ],
+            "form_801": [
+              "txtp_OfferExpireDate_yy"
             ]
           },
           "hidden": true
@@ -1806,7 +1981,7 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_pleted_by_no_later_than_6_00_p_m_on_the"
+              "txtp_closedate_d"
             ]
           },
           "hidden": true
@@ -1817,7 +1992,7 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_than_6_00_p_m_on_the_day_of"
+              "txtp_closedate_mmmm"
             ]
           },
           "hidden": true
@@ -1828,7 +2003,7 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_20_3"
+              "txtp_closedate_yy"
             ]
           },
           "hidden": true
@@ -1848,7 +2023,7 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_nit_in_the_condominium_property_known_as"
+              "hidlockers_1"
             ]
           }
         },
@@ -1856,21 +2031,13 @@
           "key": "condo_apt_unit_no",
           "label": "Apartment / Suite No.",
           "type": "text",
-          "targets": {
-            "form_101": [
-              "p1_no"
-            ]
-          }
+          "targets": {}
         },
         {
           "key": "condo_municipality",
           "label": "Municipality",
           "type": "text",
-          "targets": {
-            "form_101": [
-              "p1_in_the"
-            ]
-          }
+          "targets": {}
         },
         {
           "key": "condo_corporation_name",
@@ -1878,7 +2045,7 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_being"
+              "txtlegalNameCondo"
             ]
           }
         },
@@ -1888,7 +2055,7 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_condominium_plan_no"
+              "txtp_condoplan"
             ]
           }
         },
@@ -1898,7 +2065,7 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_unit_number"
+              "txtbuildnum"
             ]
           }
         },
@@ -1908,7 +2075,7 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_level_no"
+              "txtp_level"
             ]
           }
         },
@@ -1918,7 +2085,7 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_building_no"
+              "txtp_apartno"
             ]
           }
         },
@@ -1928,7 +2095,7 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_or_exclusive_use_of_parking_space_s"
+              "txtp_ParkingSpaces"
             ]
           }
         },
@@ -1938,7 +2105,7 @@
           "type": "text",
           "targets": {
             "form_101": [
-              "p1_locker_s"
+              "txtlockers_2"
             ]
           }
         }
@@ -1957,7 +2124,7 @@
           "type": "text",
           "targets": {
             "form_371": [
-              "p1_designated_representative_s"
+              "txtDesRep1"
             ]
           }
         },
@@ -1967,7 +2134,7 @@
           "type": "text",
           "targets": {
             "form_371": [
-              "p1_property_type_use"
+              "txtp_type"
             ]
           }
         },
@@ -1977,7 +2144,7 @@
           "type": "text",
           "targets": {
             "form_371": [
-              "p1_geographic_location"
+              "txtp_location"
             ]
           }
         },
@@ -1987,7 +2154,7 @@
           "type": "text",
           "targets": {
             "form_371": [
-              "p1_e_is_entitled_to_be_paid_a_commission_of"
+              "txtp_commision"
             ]
           }
         },
@@ -2003,7 +2170,7 @@
           "type": "text",
           "targets": {
             "form_371": [
-              "p1_on_the"
+              "txtCommencingDate_d"
             ]
           },
           "hidden": true
@@ -2014,7 +2181,7 @@
           "type": "text",
           "targets": {
             "form_371": [
-              "p1_n_the_day_of"
+              "txtCommencingDate_m"
             ]
           },
           "hidden": true
@@ -2025,7 +2192,7 @@
           "type": "text",
           "targets": {
             "form_371": [
-              "p1_20"
+              "txtCommencingDate_yy"
             ]
           },
           "hidden": true
@@ -2042,7 +2209,7 @@
           "type": "text",
           "targets": {
             "form_371": [
-              "p1_on_the_day_of"
+              "txtExpiringDate_d"
             ]
           },
           "hidden": true
@@ -2053,7 +2220,7 @@
           "type": "text",
           "targets": {
             "form_371": [
-              "p1_20_2"
+              "txtExpiringDate_yy"
             ]
           },
           "hidden": true
@@ -2074,10 +2241,10 @@
           "type": "text",
           "targets": {
             "form_271": [
-              "p1_designated_representative_s"
+              "txtDesRep1"
             ],
             "form_272": [
-              "p1_designated_representative_s"
+              "txtDesRep1"
             ]
           }
         },
@@ -2086,13 +2253,13 @@
           "label": "List price / rent",
           "type": "currency",
           "targets": {
+            "form_291": [
+              "txtp_listprice"
+            ],
             "form_271": [
-              "p1_dollars_cdn"
+              "txtp_listprice"
             ],
             "form_272": [
-              "p1_dollars_cdn"
-            ],
-            "form_291": [
               "txtp_listprice"
             ]
           }
@@ -2103,10 +2270,10 @@
           "type": "text",
           "targets": {
             "form_271": [
-              "p1_ay_the_listing_brokerage_a_commission_of"
+              "txtListBrkComm"
             ],
             "form_272": [
-              "p1_ay_the_listing_brokerage_a_commission_of"
+              "txtLBCommPer"
             ]
           }
         },
@@ -2116,10 +2283,10 @@
           "type": "text",
           "targets": {
             "form_271": [
-              "p1_e_co_operating_brokerage_a_commission_of"
+              "txtCBrokComm"
             ],
             "form_272": [
-              "p1_e_co_operating_brokerage_a_commission_of"
+              "txtCBrokComm"
             ]
           }
         },
@@ -2134,17 +2301,17 @@
           "label": "",
           "type": "text",
           "targets": {
-            "form_271": [
-              "p1_on_the"
-            ],
-            "form_272": [
-              "p1_on_the"
-            ],
             "form_291": [
               "txtp_listdate_dd"
             ],
             "form_292": [
               "txtp_listdate_dd"
+            ],
+            "form_271": [
+              "txtp_listdate_d"
+            ],
+            "form_272": [
+              "txtp_listdate_d"
             ]
           },
           "hidden": true
@@ -2155,10 +2322,10 @@
           "type": "text",
           "targets": {
             "form_271": [
-              "p1_n_the_day_of"
+              "txtp_listdate_mmmm"
             ],
             "form_272": [
-              "p1_n_the_day_of"
+              "txtp_listdate_mmmm"
             ]
           },
           "hidden": true
@@ -2168,17 +2335,17 @@
           "label": "",
           "type": "text",
           "targets": {
-            "form_271": [
-              "p1_20"
-            ],
-            "form_272": [
-              "p1_20"
-            ],
             "form_291": [
               "txtp_listdate_yyyy"
             ],
             "form_292": [
               "txtp_listdate_yyyy"
+            ],
+            "form_271": [
+              "txtp_listdate_yy"
+            ],
+            "form_272": [
+              "txtp_listdate_yy"
             ]
           },
           "hidden": true
@@ -2194,17 +2361,17 @@
           "label": "",
           "type": "text",
           "targets": {
-            "form_271": [
-              "p1_on_the_day_of"
-            ],
-            "form_272": [
-              "p1_on_the_day_of"
-            ],
             "form_291": [
               "txtp_expiredate_dd"
             ],
             "form_292": [
               "txtp_expiredate_dd"
+            ],
+            "form_271": [
+              "txtp_expiredate_d"
+            ],
+            "form_272": [
+              "txtp_expiredate_d"
             ]
           },
           "hidden": true
@@ -2214,17 +2381,17 @@
           "label": "",
           "type": "text",
           "targets": {
-            "form_271": [
-              "p1_20_2"
-            ],
-            "form_272": [
-              "p1_20_2"
-            ],
             "form_291": [
               "txtp_expiredate_yyyy"
             ],
             "form_292": [
               "txtp_expiredate_yyyy"
+            ],
+            "form_271": [
+              "txtp_expiredate_yy"
+            ],
+            "form_272": [
+              "txtp_expiredate_yy"
             ]
           },
           "hidden": true
@@ -2244,7 +2411,7 @@
           "type": "text",
           "targets": {
             "form_244": [
-              "p1_mls_number_s"
+              "txtmlsnumber"
             ]
           }
         },
@@ -2254,7 +2421,7 @@
           "type": "text",
           "targets": {
             "form_244": [
-              "p1_l_br_id"
+              "txtl_brokerid"
             ]
           }
         },
@@ -2264,7 +2431,7 @@
           "type": "text",
           "targets": {
             "form_244": [
-              "p1_interboard_mls_number"
+              "txtinterboardmls"
             ]
           }
         },
@@ -2274,7 +2441,7 @@
           "type": "text",
           "targets": {
             "form_244": [
-              "p1_board"
+              "txtboard"
             ]
           }
         },
@@ -2284,7 +2451,7 @@
           "type": "text",
           "targets": {
             "form_244": [
-              "p1_listing_commencement_date"
+              "txtp_listdate"
             ]
           }
         },
@@ -2294,7 +2461,7 @@
           "type": "text",
           "targets": {
             "form_244": [
-              "p1_ce_of_any_written_signed_offers_prior_to"
+              "txttimelimit_time"
             ]
           }
         },
@@ -2308,33 +2475,21 @@
           "key": "offer_conveyance_date_day",
           "label": "",
           "type": "text",
-          "targets": {
-            "form_244": [
-              "p1_fers_prior_to_on_the"
-            ]
-          },
+          "targets": {},
           "hidden": true
         },
         {
           "key": "offer_conveyance_date_month",
           "label": "",
           "type": "text",
-          "targets": {
-            "form_244": [
-              "p1_on_the_day_of"
-            ]
-          },
+          "targets": {},
           "hidden": true
         },
         {
           "key": "offer_conveyance_date_year",
           "label": "",
           "type": "text",
-          "targets": {
-            "form_244": [
-              "p1_day_of_20"
-            ]
-          },
+          "targets": {},
           "hidden": true
         },
         {
@@ -2343,7 +2498,7 @@
           "type": "long_text",
           "targets": {
             "form_244": [
-              "p1_other_directions"
+              "txtotherdirection"
             ]
           }
         },
@@ -2353,7 +2508,7 @@
           "type": "long_text",
           "targets": {
             "form_244": [
-              "p1_other_directions_2"
+              "txtotherdirection1"
             ]
           }
         }
@@ -2375,13 +2530,13 @@
           "default": "A",
           "targets": {
             "form_401": [
-              "p1_schedule"
-            ],
-            "form_203": [
-              "p1_schedule"
+              "txtSchedule"
             ],
             "form_303": [
-              "p1_schedule"
+              "txtSchedule"
+            ],
+            "form_203": [
+              "txtschedule"
             ]
           },
           "note": "The blank in the 'Schedule ____' heading. A schedule exists to be attached to and identified by another agreement, so generating one with a nameless heading left the realtor writing it in by hand every time."
@@ -2396,51 +2551,21 @@
           "key": "schedule_date_day",
           "label": "",
           "type": "text",
-          "targets": {
-            "form_401": [
-              "p1_dated_the"
-            ],
-            "form_303": [
-              "p1_dated_the"
-            ],
-            "form_203": [
-              "p1_dated_the"
-            ]
-          },
+          "targets": {},
           "hidden": true
         },
         {
           "key": "schedule_date_month",
           "label": "",
           "type": "text",
-          "targets": {
-            "form_401": [
-              "p1_dated_the_day_of"
-            ],
-            "form_303": [
-              "p1_day_of"
-            ],
-            "form_203": [
-              "p1_dated_the_day_of"
-            ]
-          },
+          "targets": {},
           "hidden": true
         },
         {
           "key": "schedule_date_year",
           "label": "",
           "type": "text",
-          "targets": {
-            "form_401": [
-              "p1_20"
-            ],
-            "form_303": [
-              "p1_20"
-            ],
-            "form_203": [
-              "p1_20"
-            ]
-          },
+          "targets": {},
           "hidden": true
         }
       ]

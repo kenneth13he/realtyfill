@@ -1,90 +1,200 @@
 [
   {
-    "field_id": "p1_schedule",
+    "field_id": "txtSchedule",
     "type": "text",
     "page": 1,
     "rect": [
-      259.46,
-      739.09,
-      307.46,
-      760.63
+      258.6627,
+      742.6674,
+      307.662,
+      757.6672
     ]
   },
   {
-    "field_id": "p1_tenant",
+    "field_id": "txtbuyer1",
     "type": "text",
     "page": 1,
     "rect": [
-      78.2,
-      658.5,
-      553.8,
-      670.5
+      76.99883,
+      661.6686,
+      306.9953,
+      675.0018
     ]
   },
   {
-    "field_id": "p1_landlord",
+    "field_id": "hidband",
     "type": "text",
     "page": 1,
     "rect": [
-      91,
-      635.5,
-      571.5,
-      647.5
+      307.3286,
+      661.6686,
+      344.6614,
+      675.0018
     ]
   },
   {
-    "field_id": "p1_for_the_lease_of",
+    "field_id": "txtbuyer2",
     "type": "text",
     "page": 1,
     "rect": [
-      93.5,
-      612.5,
-      571.5,
-      624.5
+      344.9948,
+      661.6686,
+      553.9916,
+      675.0018
     ]
   },
   {
-    "field_id": "p1_cont",
+    "field_id": "txtseller1",
     "type": "text",
     "page": 1,
     "rect": [
-      40.5,
-      589.5,
-      274.6,
-      601.5
+      90.33195,
+      638.669,
+      321.3284,
+      652.0021
     ]
   },
   {
-    "field_id": "p1_dated_the",
+    "field_id": "hidsand",
     "type": "text",
     "page": 1,
     "rect": [
-      311.3,
-      589.5,
-      348.3,
-      601.5
+      321.6618,
+      638.669,
+      359.3279,
+      652.0021
     ]
   },
   {
-    "field_id": "p1_dated_the_day_of",
+    "field_id": "txtseller2",
     "type": "text",
     "page": 1,
     "rect": [
-      374.7,
-      589.5,
-      520,
-      601.5
+      359.6612,
+      638.669,
+      570.658,
+      652.0021
     ]
   },
   {
-    "field_id": "p1_20",
+    "field_id": "txtp_streetnum",
     "type": "text",
     "page": 1,
     "rect": [
-      534.5,
-      589.5,
-      571.5,
-      601.5
+      93.33191,
+      615.6694,
+      139.3312,
+      629.3358
+    ]
+  },
+  {
+    "field_id": "txtp_street",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      139.6645,
+      615.6694,
+      362.6611,
+      629.3358
+    ]
+  },
+  {
+    "field_id": "txtp_UnitNumber",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      362.9944,
+      615.6694,
+      411.6604,
+      629.3358
+    ]
+  },
+  {
+    "field_id": "txtp_city",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      412.327,
+      615.6694,
+      570.9913,
+      629.3358
+    ]
+  },
+  {
+    "field_id": "txtp_state",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      40.99937,
+      592.6697,
+      91.66527,
+      607.0028
+    ]
+  },
+  {
+    "field_id": "txtp_zipcode",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      92.33192,
+      592.6697,
+      273.9958,
+      607.0028
+    ]
+  },
+  {
+    "field_id": "txtp_OfferDate_d",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      311.3286,
+      592.6697,
+      347.328,
+      607.0028
+    ]
+  },
+  {
+    "field_id": "txtp_OfferDate_mmmm",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      374.3276,
+      592.6697,
+      519.9921,
+      607.0028
+    ]
+  },
+  {
+    "field_id": "txtp_OfferDate_yy",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      535.3251,
+      592.6697,
+      571.9913,
+      607.0028
+    ]
+  },
+  {
+    "field_id": "hidDynamicPage",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      7.99988,
+      570.0034,
+      32.9995,
+      584.0032
+    ]
+  },
+  {
+    "field_id": "txtAddSchedule",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      40.33272,
+      129.3434,
+      574.3246,
+      584.3365
     ]
   }
 ]

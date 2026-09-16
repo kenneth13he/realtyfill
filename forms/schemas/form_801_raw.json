@@ -1,590 +1,780 @@
 [
   {
-    "field_id": "p1_real_property_address",
+    "field_id": "txtp_streetnum",
     "type": "text",
     "page": 1,
     "rect": [
-      181.4,
-      616.2,
-      277.5,
-      628.2
-    ],
-    "label_hint": "REAL PROPERTY ADDRESS: \u2026\u2026\u2026\u2026"
+      149.6718,
+      619.6307,
+      187.5009,
+      632.7887
+    ]
   },
   {
-    "field_id": "p1_greement_of_purchase_and_sale_dated_the",
+    "field_id": "txtp_street",
     "type": "text",
     "page": 1,
     "rect": [
-      245.9,
-      590.2,
-      285.4,
-      602.2
-    ],
-    "label_hint": "for an Agreement of Purchase and Sale dated: the"
+      187.8299,
+      619.6307,
+      311.8436,
+      632.7887
+    ]
   },
   {
-    "field_id": "p1_sale_dated_the_day_of",
+    "field_id": "txtp_UnitNumber",
     "type": "text",
     "page": 1,
     "rect": [
-      311.2,
-      590.2,
-      488.6,
-      602.2
-    ],
-    "label_hint": "ment of Purchase and Sale dated: the ................ day of"
+      312.1726,
+      619.6307,
+      351.6465,
+      632.7887
+    ]
   },
   {
-    "field_id": "p1_20",
+    "field_id": "txtp_city",
     "type": "text",
     "page": 1,
     "rect": [
-      504.9,
-      590.2,
-      541.9,
-      602.2
-    ],
-    "label_hint": "....................................................... , 20"
+      351.9754,
+      619.6307,
+      445.3969,
+      632.7887
+    ]
   },
   {
-    "field_id": "p1_brokerage",
+    "field_id": "txtp_state",
     "type": "text",
     "page": 1,
     "rect": [
-      96.9,
-      569.2,
-      570.0,
-      581.2
-    ],
-    "label_hint": "BROKERAGE"
+      446.0548,
+      619.6307,
+      469.4102,
+      632.7887
+    ]
   },
   {
-    "field_id": "p1_sales_representative_broker",
+    "field_id": "txtp_zipcode",
     "type": "text",
     "page": 1,
     "rect": [
-      179.6,
-      548.2,
-      571.4,
-      560.2
-    ],
-    "label_hint": "SALES REPRESENTATIVE/BROKER"
+      469.7391,
+      619.6307,
+      518.0947,
+      632.7887
+    ]
   },
   {
-    "field_id": "p1_i_we",
+    "field_id": "txtp_OfferDate_d",
     "type": "text",
     "page": 1,
     "rect": [
-      63.5,
-      527.2,
-      440.5,
-      539.2
-    ],
-    "label_hint": "I/We"
+      245.067,
+      593.6438,
+      284.5409,
+      607.1307
+    ]
   },
   {
-    "field_id": "p1_cont",
+    "field_id": "txtp_OfferDate_mmmm",
     "type": "text",
     "page": 1,
     "rect": [
-      40.5,
-      501.2,
-      205.6,
-      513.2
-    ],
-    "label_hint": ""
+      310.8568,
+      593.6438,
+      487.1734,
+      607.1307
+    ]
   },
   {
-    "field_id": "p1_cont_2",
+    "field_id": "txtp_OfferDate_yy",
     "type": "text",
     "page": 1,
     "rect": [
-      212.6,
-      501.2,
-      301.3,
-      513.2
-    ],
-    "label_hint": ""
+      505.2656,
+      593.6438,
+      541.121,
+      607.1307
+    ]
   },
   {
-    "field_id": "p1_cont_3",
+    "field_id": "txts_broker",
     "type": "text",
     "page": 1,
     "rect": [
-      310.7,
-      501.2,
-      475.8,
-      513.2
-    ],
-    "label_hint": "   "
+      95.06625,
+      572.591,
+      570.7264,
+      585.42
+    ]
   },
   {
-    "field_id": "p1_cont_4",
+    "field_id": "txts_brkagent",
     "type": "text",
     "page": 1,
     "rect": [
-      482.8,
-      501.2,
-      571.5,
-      513.2
-    ],
-    "label_hint": "   ....................................    "
+      178.6193,
+      551.8672,
+      571.7133,
+      565.3542
+    ]
   },
   {
-    "field_id": "p1_this_offer_was_submitted",
+    "field_id": "txtbuyer1",
     "type": "text",
     "page": 1,
     "rect": [
-      128.4,
-      475.2,
-      300.9,
-      487.2
-    ],
-    "label_hint": "This offer was submitted"
+      61.51346,
+      530.1566,
+      226.3169,
+      543.6435
+    ]
   },
   {
-    "field_id": "p1_to_the_listing_brokerage_at",
+    "field_id": "hidBand2",
     "type": "text",
     "page": 1,
     "rect": [
-      395.8,
-      475.2,
-      459.9,
-      487.2
-    ],
-    "label_hint": "................................ to the Listing Brokerage at"
+      226.6458,
+      530.1566,
+      269.4092,
+      543.6435
+    ]
   },
   {
-    "field_id": "p1_age_at_on_the",
+    "field_id": "txtbuyer2",
     "type": "text",
     "page": 1,
     "rect": [
-      486.3,
-      475.2,
-      545.5,
-      487.2
-    ],
-    "label_hint": "o the Listing Brokerage at .......................... on the"
+      269.7382,
+      530.1566,
+      439.4758,
+      543.6435
+    ]
   },
   {
-    "field_id": "p1_cont_5",
+    "field_id": "txtOfferHour",
     "type": "text",
     "page": 1,
     "rect": [
-      40.5,
-      449.2,
-      151.4,
-      461.2
-    ],
-    "label_hint": ""
+      396.0546,
+      478.5116,
+      459.5417,
+      491.9985
+    ]
   },
   {
-    "field_id": "p1_20_2",
+    "field_id": "txtOfferDate123_d",
     "type": "text",
     "page": 1,
     "rect": [
-      166.1,
-      449.2,
-      195.6,
-      461.2
-    ],
-    "label_hint": " 20"
+      487.1734,
+      478.5116,
+      544.7395,
+      491.9985
+    ]
   },
   {
-    "field_id": "p1_irrevocable_until",
+    "field_id": "txtSubmittedBy",
     "type": "text",
     "page": 1,
     "rect": [
-      262.1,
-      449.2,
-      318.8,
-      461.2
-    ],
-    "label_hint": " 20............    Irrevocable until"
+      128.619,
+      478.1827,
+      300.6594,
+      491.3406
+    ]
   },
   {
-    "field_id": "p1_ble_until_on_the",
-    "type": "text",
+    "field_id": "chkOpt_AMPM1",
+    "type": "radio_group",
     "page": 1,
-    "rect": [
-      345.0,
-      449.2,
-      384.4,
-      461.2
-    ],
-    "label_hint": "........    Irrevocable until ....................... on the"
+    "radio_options": [
+      {
+        "value": "/1",
+        "rect": [
+          416.4494,
+          464.6958,
+          426.3179,
+          471.2747
+        ]
+      },
+      {
+        "value": "/2",
+        "rect": [
+          435.8574,
+          464.6958,
+          445.068,
+          471.2747
+        ]
+      }
+    ]
   },
   {
-    "field_id": "p1_on_the_day_of",
+    "field_id": "txtOfferDate123_m",
     "type": "text",
     "page": 1,
     "rect": [
-      411.4,
-      449.2,
-      524.8,
-      461.2
-    ],
-    "label_hint": "until ....................... on the ................ day of"
+      41.44757,
+      452.1957,
+      151.3165,
+      465.6826
+    ]
   },
   {
-    "field_id": "p1_20_3",
+    "field_id": "txtOfferDate123_y",
     "type": "text",
     "page": 1,
     "rect": [
-      539.5,
-      449.2,
-      571.5,
-      461.2
-    ],
-    "label_hint": ".. day of .............................................., 20"
+      165.7903,
+      452.1957,
+      198.3562,
+      465.6826
+    ]
   },
   {
-    "field_id": "p1_i_we_2",
+    "field_id": "txtExpireHour",
     "type": "text",
     "page": 1,
     "rect": [
-      63.5,
-      404.2,
-      440.5,
-      416.2
-    ],
-    "label_hint": "I/We"
+      262.1723,
+      452.1957,
+      318.7516,
+      465.6826
+    ]
   },
   {
-    "field_id": "p1_cont_6",
+    "field_id": "txtp_OfferExpireDate_d",
     "type": "text",
     "page": 1,
     "rect": [
-      40.5,
-      378.2,
-      205.6,
-      390.2
-    ],
-    "label_hint": ""
+      345.0675,
+      452.1957,
+      385.1992,
+      465.6826
+    ]
   },
   {
-    "field_id": "p1_cont_7",
+    "field_id": "txtp_OfferExpireDate_mmmm",
     "type": "text",
     "page": 1,
     "rect": [
-      212.6,
-      378.2,
-      301.3,
-      390.2
-    ],
-    "label_hint": ""
+      411.1862,
+      452.1957,
+      524.6736,
+      465.6826
+    ]
   },
   {
-    "field_id": "p1_cont_8",
+    "field_id": "txtp_OfferExpireDate_yy",
     "type": "text",
     "page": 1,
     "rect": [
-      310.7,
-      378.2,
-      475.8,
-      390.2
-    ],
-    "label_hint": "   "
+      540.1342,
+      452.1957,
+      572.7001,
+      465.6826
+    ]
   },
   {
-    "field_id": "p1_cont_9",
-    "type": "text",
+    "field_id": "chkOpt_AMPM2",
+    "type": "radio_group",
     "page": 1,
-    "rect": [
-      482.8,
-      378.2,
-      571.5,
-      390.2
-    ],
-    "label_hint": "   ....................................    "
+    "radio_options": [
+      {
+        "value": "/1",
+        "rect": [
+          277.304,
+          435.0904,
+          285.1988,
+          444.3009
+        ]
+      },
+      {
+        "value": "/2",
+        "rect": [
+          295.7251,
+          435.0904,
+          303.291,
+          444.3009
+        ]
+      }
+    ]
   },
   {
-    "field_id": "p1_an_offer_was_submitted",
+    "field_id": "txtCounter1",
     "type": "text",
     "page": 1,
     "rect": [
-      124.9,
-      352.2,
-      299.9,
-      364.2
-    ],
-    "label_hint": "An offer was submitted"
+      65.46085,
+      408.1165,
+      228.6195,
+      421.2745
+    ]
   },
   {
-    "field_id": "p1_to_the_listing_brokerage_at_2",
+    "field_id": "hidBand3",
     "type": "text",
     "page": 1,
     "rect": [
-      394.7,
-      352.2,
-      463.7,
-      364.2
-    ],
-    "label_hint": "................................ to the Listing Brokerage at"
+      228.9485,
+      408.1165,
+      271.7119,
+      421.2745
+    ]
   },
   {
-    "field_id": "p1_e_at_on_the",
+    "field_id": "txtCounter2",
     "type": "text",
     "page": 1,
     "rect": [
-      490.0,
-      352.2,
-      546.7,
-      364.2
-    ],
-    "label_hint": "the Listing Brokerage at ............................ on the"
+      272.0408,
+      408.1165,
+      441.4495,
+      421.2745
+    ]
   },
   {
-    "field_id": "p1_cont_10",
+    "field_id": "txtSubmittedBy2",
     "type": "text",
     "page": 1,
     "rect": [
-      40.5,
-      326.2,
-      151.4,
-      338.2
-    ],
-    "label_hint": ""
+      125.0006,
+      355.4847,
+      300.0015,
+      367.9848
+    ]
   },
   {
-    "field_id": "p1_20_4",
+    "field_id": "txtCounterOfferHour",
     "type": "text",
     "page": 1,
     "rect": [
-      166.1,
-      326.2,
-      195.6,
-      338.2
-    ],
-    "label_hint": " 20"
+      396.0546,
+      355.4847,
+      463.1602,
+      367.9848
+    ]
   },
   {
-    "field_id": "p1_irrevocable_until_2",
+    "field_id": "txtp_CounterOfferDate_d",
     "type": "text",
     "page": 1,
     "rect": [
-      262.1,
-      326.2,
-      318.8,
-      338.2
-    ],
-    "label_hint": " 20............    Irrevocable until"
+      490.4629,
+      355.4847,
+      547.3711,
+      367.9848
+    ]
   },
   {
-    "field_id": "p1_ble_until_on_the_2",
-    "type": "text",
+    "field_id": "chkOpt_AMPM3",
+    "type": "radio_group",
     "page": 1,
-    "rect": [
-      345.0,
-      326.2,
-      384.4,
-      338.2
-    ],
-    "label_hint": "........    Irrevocable until ....................... on the"
+    "radio_options": [
+      {
+        "value": "/1",
+        "rect": [
+          415.4626,
+          341.6689,
+          424.3442,
+          348.2478
+        ]
+      },
+      {
+        "value": "/2",
+        "rect": [
+          433.5547,
+          341.6689,
+          442.1074,
+          348.5768
+        ]
+      }
+    ]
   },
   {
-    "field_id": "p1_on_the_day_of_2",
+    "field_id": "txtp_CounterOfferDate_mmmm",
     "type": "text",
     "page": 1,
     "rect": [
-      411.4,
-      326.2,
-      524.8,
-      338.2
-    ],
-    "label_hint": "until ....................... on the ................ day of"
+      38.81598,
+      329.4977,
+      151.3165,
+      342.3268
+    ]
   },
   {
-    "field_id": "p1_20_5",
+    "field_id": "txtp_CounterOfferDate_yy",
     "type": "text",
     "page": 1,
     "rect": [
-      539.5,
-      326.2,
-      571.5,
-      338.2
-    ],
-    "label_hint": ".. day of .............................................., 20"
+      166.7771,
+      329.4977,
+      195.7246,
+      342.3268
+    ]
   },
   {
-    "field_id": "p1_seller_s",
+    "field_id": "txtCounterOfferExpireHour",
     "type": "text",
     "page": 1,
     "rect": [
-      83.4,
-      270.2,
-      571.2,
-      282.2
-    ],
-    "label_hint": "SELLER(S)"
+      262.1723,
+      329.4977,
+      318.7516,
+      342.3268
+    ]
   },
   {
-    "field_id": "p1_seller_s_contact",
+    "field_id": "txtp_CounterOfferExpireDate_d",
     "type": "text",
     "page": 1,
     "rect": [
-      124.8,
-      247.2,
-      570.8,
-      259.2
-    ],
-    "label_hint": "SELLER(S) CONTACT"
+      345.0675,
+      329.4977,
+      384.5414,
+      342.3268
+    ]
   },
   {
-    "field_id": "p1_listing_brokerage",
+    "field_id": "txtp_CounterOfferExpireDate_mmmm",
     "type": "text",
     "page": 1,
     "rect": [
-      132.1,
-      221.2,
-      570.7,
-      233.2
-    ],
-    "label_hint": "LISTING BROKERAGE"
+      411.5152,
+      329.4977,
+      524.3447,
+      342.3268
+    ]
   },
   {
-    "field_id": "p1_sales_representative_broker_2",
+    "field_id": "txtp_CounterOfferExpireDate_yy",
     "type": "text",
     "page": 1,
     "rect": [
-      179.7,
-      198.2,
-      571.5,
-      210.2
-    ],
-    "label_hint": "SALES REPRESENTATIVE/BROKER"
+      540.1342,
+      329.4977,
+      572.7001,
+      342.3268
+    ]
   },
   {
-    "field_id": "p1_this_offer_was_received",
-    "type": "text",
+    "field_id": "chkOpt_AMPM4",
+    "type": "radio_group",
     "page": 1,
-    "rect": [
-      124.5,
-      175.2,
-      220.6,
-      187.2
-    ],
-    "label_hint": "This offer was received"
+    "radio_options": [
+      {
+        "value": "/1",
+        "rect": [
+          276.3171,
+          312.3924,
+          286.1856,
+          322.2609
+        ]
+      },
+      {
+        "value": "/2",
+        "rect": [
+          294.7383,
+          312.3924,
+          304.6068,
+          322.5898
+        ]
+      }
+    ]
   },
   {
-    "field_id": "p1_by_the_listing_brokerage_at",
+    "field_id": "txtseller1",
     "type": "text",
     "page": 1,
     "rect": [
-      316.8,
-      175.2,
-      371.0,
-      187.2
-    ],
-    "label_hint": "................................ by the Listing Brokerage at"
+      82.56619,
+      273.2475,
+      316.7779,
+      286.0765
+    ]
   },
   {
-    "field_id": "p1_okerage_at_on_the",
+    "field_id": "hidSand",
     "type": "text",
     "page": 1,
     "rect": [
-      397.0,
-      175.2,
-      424.1,
-      187.2
-    ],
-    "label_hint": ".. by the Listing Brokerage at ...................... on the"
+      317.1068,
+      273.2475,
+      355.9228,
+      286.0765
+    ]
   },
   {
-    "field_id": "p1_on_the_day_of_3",
+    "field_id": "txtseller2",
     "type": "text",
     "page": 1,
     "rect": [
-      451.0,
-      175.2,
-      542.1,
-      187.2
-    ],
-    "label_hint": "rokerage at ...................... on the ........... day of"
+      356.2517,
+      273.2475,
+      571.3844,
+      286.0765
+    ]
   },
   {
-    "field_id": "p1_20_6",
+    "field_id": "txtS_phone1",
     "type": "text",
     "page": 1,
     "rect": [
-      556.8,
-      175.2,
-      571.6,
-      187.2
-    ],
-    "label_hint": "........... day of ....................................., 20"
+      124.3427,
+      250.221,
+      299.6725,
+      263.05
+    ]
   },
   {
-    "field_id": "p1_this_offer_was_presented",
+    "field_id": "txtS_email",
     "type": "text",
     "page": 1,
     "rect": [
-      129.4,
-      145.2,
-      235.3,
-      157.2
-    ],
-    "label_hint": "This offer was presented"
+      300.0015,
+      250.221,
+      493.4235,
+      263.05
+    ]
   },
   {
-    "field_id": "p1_to_the_seller_s_at",
+    "field_id": "txtS_fax",
     "type": "text",
     "page": 1,
     "rect": [
-      300.2,
-      145.2,
-      354.5,
-      157.2
-    ],
-    "label_hint": "........................................ to the Seller(s) at"
+      493.7524,
+      250.221,
+      571.3844,
+      263.05
+    ]
   },
   {
-    "field_id": "p1_on_the",
+    "field_id": "txtl_broker",
     "type": "text",
     "page": 1,
     "rect": [
-      380.9,
-      145.2,
-      417.8,
-      157.2
-    ],
-    "label_hint": "......... to the Seller(s) at  ...................... on the"
+      131.2506,
+      224.2341,
+      570.3975,
+      237.392
+    ]
   },
   {
-    "field_id": "p1_on_the_day_of_4",
+    "field_id": "txtl_brkagent",
     "type": "text",
     "page": 1,
     "rect": [
-      445.1,
-      145.2,
-      536.3,
-      157.2
-    ],
-    "label_hint": "(s) at  ...................... on the ............... day of"
+      179.6061,
+      201.2076,
+      572.0423,
+      214.0367
+    ]
   },
   {
-    "field_id": "p1_20_7",
+    "field_id": "txtReceivedBy",
     "type": "text",
     "page": 1,
     "rect": [
-      551.1,
-      145.2,
-      570.8,
-      157.2
-    ],
-    "label_hint": "........... day of ....................................., 20"
+      124.0138,
+      178.1812,
+      221.3827,
+      191.0102
+    ]
   },
   {
-    "field_id": "p1_comments",
+    "field_id": "txtOfferReceivedHr",
     "type": "text",
     "page": 1,
     "rect": [
-      91.0,
-      78.2,
-      571.5,
-      90.2
-    ],
-    "label_hint": "Comments"
+      317.1068,
+      178.1812,
+      371.3834,
+      191.0102
+    ]
+  },
+  {
+    "field_id": "txtOfferReceivedDate_d",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      397.6993,
+      178.1812,
+      424.0152,
+      191.0102
+    ]
+  },
+  {
+    "field_id": "txtOfferReceivedDate_m",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      450.3311,
+      178.1812,
+      542.4369,
+      191.0102
+    ]
+  },
+  {
+    "field_id": "txtOfferReceivedDate_y",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      556.9106,
+      178.1812,
+      572.0423,
+      191.0102
+    ]
+  },
+  {
+    "field_id": "chkOpt_AMPM5",
+    "type": "radio_group",
+    "page": 1,
+    "radio_options": [
+      {
+        "value": "/1",
+        "rect": [
+          329.9358,
+          161.0759,
+          339.8043,
+          170.9443
+        ]
+      },
+      {
+        "value": "/2",
+        "rect": [
+          348.357,
+          161.0759,
+          357.5675,
+          170.9443
+        ]
+      }
+    ]
+  },
+  {
+    "field_id": "txtPresentedBy",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      129.2769,
+      147.9179,
+      234.5406,
+      161.0759
+    ]
+  },
+  {
+    "field_id": "txtOfferPresentedHr",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      300.6594,
+      147.9179,
+      354.9359,
+      161.0759
+    ]
+  },
+  {
+    "field_id": "txtOfferPresentedDate_d",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      381.5808,
+      147.9179,
+      417.1073,
+      161.0759
+    ]
+  },
+  {
+    "field_id": "txtOfferPresentedDate_m",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      445.7259,
+      147.9179,
+      536.1868,
+      161.0759
+    ]
+  },
+  {
+    "field_id": "txtOfferPresentedDate_y",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      550.9895,
+      147.9179,
+      570.0685,
+      161.0759
+    ]
+  },
+  {
+    "field_id": "chkOpt_AMPM6",
+    "type": "radio_group",
+    "page": 1,
+    "radio_options": [
+      {
+        "value": "/1",
+        "rect": [
+          313.1594,
+          131.7994,
+          323.3568,
+          140.681
+        ]
+      },
+      {
+        "value": "/2",
+        "rect": [
+          330.5937,
+          131.7994,
+          340.7911,
+          140.681
+        ]
+      }
+    ]
+  },
+  {
+    "field_id": "chkOpt_OfferWas1",
+    "type": "radio_group",
+    "page": 1,
+    "radio_options": [
+      {
+        "value": "/1",
+        "rect": [
+          88.15833,
+          110.7467,
+          99.34259,
+          121.602
+        ]
+      },
+      {
+        "value": "/2",
+        "rect": [
+          151.6455,
+          110.7467,
+          162.8297,
+          121.602
+        ]
+      },
+      {
+        "value": "/3",
+        "rect": [
+          269.0803,
+          110.7467,
+          279.2777,
+          121.602
+        ]
+      }
+    ]
+  },
+  {
+    "field_id": "txt801Comments",
+    "type": "text",
+    "page": 1,
+    "rect": [
+      90.78992,
+      81.14127,
+      573.0291,
+      93.97028
+    ]
   }
 ]

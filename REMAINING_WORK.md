@@ -31,9 +31,15 @@ Supabase redirect allow-list and this document mention the hostname at all.
 (2), sale–buyer (5), sale–seller (3). "Coming soon" is gone. The blank
 templates for the three new sets arrived as flat PDFs with zero AcroForm
 fields, so `scripts/add_form_fields.py` synthesizes fields over the dot-leader
-blanks — 395 across 10 forms. **Those field positions are inferred, not
-authoritative**; each template folder's README says what to redo if a real
-WEBForms export ever arrives. PropTx 291/292 remain deliberately out of scope.
+blanks. **That is all gone** — real fillable exports arrived for all ten on
+2026-09-16, plus PropTx 291/292, so every template in the app now carries its
+own field definitions rather than positions I measured off the page. The only
+synthesized template left is the RECO guide, which has no fillable version
+(10 fields, verified by rendering).
+
+scripts/add_form_fields.py, add_box_fields.py and add_underscore_fields.py
+stay in the repo: they are what makes a flat PDF usable, and the next form
+that arrives flat will need them.
 
 **Verified working in production** (tested end-to-end via real HTTP requests
 against the deployed site, with `pypdf` inspection of the output PDF — not
