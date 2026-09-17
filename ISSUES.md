@@ -88,7 +88,7 @@ nothing anywhere stops it.
 
 **Fix:** a spend alert (and ideally a hard cap) on the Anthropic account.
 
-### 7. No retention policy for generated PDFs — Chris
+### 6. No retention policy for generated PDFs — Chris
 Generated forms accumulate in Storage forever. Deal deletion and account
 deletion both clean up properly, so this is only about PDFs nobody deletes —
 which is most of them. Invisible at a handful of testers; it's the first
@@ -99,13 +99,13 @@ cost explicitly.
 
 See `REMAINING_WORK.md` item 17.
 
-### 8. Logging exists, alerting doesn't — Chris
+### 7. Logging exists, alerting doesn't — Chris
 Errors are logged. Nothing tells us when they happen. The first we'd hear of
 a broken generate pipeline is a user saying so.
 
 See `REMAINING_WORK.md` item 16.
 
-### 9. Two stale Dependabot PRs still open — Kenneth or Chris
+### 8. Two stale Dependabot PRs still open — Kenneth or Chris
 PRs #8 and #9 both bump `fastapi` only. The advisories that were making CI
 red were against `python-multipart`, now pinned at `0.0.32`, so both PRs are
 superseded and neither would have fixed anything on its own.
@@ -120,7 +120,7 @@ click it; it can't be done from here.
 
 See `REMAINING_WORK.md` item 15g.
 
-### 10. Two deployment paths, one in use — Chris
+### 9. Two deployment paths, one in use — Chris
 Vercel is live. The Render/Docker path still exists, and its `node:24-slim`
 image has never been build-tested. Either it's a real fallback and gets
 tested, or it's dead weight and gets deleted. Right now it's neither.
@@ -131,7 +131,7 @@ See `REMAINING_WORK.md` item 13.
 
 ## P3 — product decisions and polish
 
-### 11. Form 400 utility checkboxes — blocked on a real form
+### 10. Form 400 utility checkboxes — blocked on a real form
 The `/1` suffix semantics on the utility checkboxes can't be confirmed from
 the blank PDF alone. **This must not be guessed** — wrong checkbox semantics
 on an Agreement to Lease is a wrong legal document, not a cosmetic bug.
@@ -140,11 +140,11 @@ on an Agreement to Lease is a wrong legal document, not a cosmetic bug.
 
 See `REMAINING_WORK.md` item 9.
 
-### 12. Form 410 is 11/121 fields — product decision
+### 11. Form 410 is 11/121 fields — product decision
 It needs a tenant-facing flow to be worth anything; a realtor can't supply
 most of those fields. Either build that flow or drop the form from the set.
 
-### 13. Collapsible intake sections — Kenneth
+### 12. Collapsible intake sections — Kenneth
 The last item left from the frontend polish list. Toasts, the illustrated
 empty state, the keyboard pass, the contrast audit and dark mode are all
 done; the app was also re-themed onto a token + primitive layer in
@@ -162,7 +162,7 @@ a `<details>` around each group.
 
 See `REMAINING_WORK.md` items 22, 21, 23, 26, 27.
 
-### 14. PropTx 291/292 are mapped on page 1 only — product decision
+### 13. PropTx 291/292 are mapped on page 1 only — product decision
 Page 1 (LOCATION + AMOUNTS/DATES, the identifying block) is now 34/54 and
 35/52. Everything still blank there is a checkbox whose meaning isn't on a
 listing — lot shape, lot size code, winterized, waterfront, and on 292 the
@@ -184,13 +184,13 @@ because the denominator is ~900 fields.
 reads it and these are genuinely in a REALM printout), or accept that the
 realtor finishes those pages in WEBForms.
 
-### 15. Second landlord / seller name — nowhere to put it
+### 14. Second landlord / seller name — nowhere to put it
 292 prints two LANDLORD NAME boxes (`txtseller1`, `txtseller2`) and the
 intake has only `landlord_full_name`. A co-owned unit fills one and leaves
 the other blank. Same shape on 291, 203, 271, 272 and 401 for a second
 seller, and on 303/320/371 (`txtbuyer2`) for a second buyer.
 
-### 16. Form 101's acknowledgement block is half-addressed — Chris
+### 15. Form 101's acknowledgement block is half-addressed — Chris
 Page 5 prints an Address for Service and a Tel. No. for each side, plus name,
 address, email, phone and fax for each side's lawyer. Only the seller's phone
 has an intake answer (`seller_contact`). Eleven lawyer boxes and three
@@ -200,14 +200,14 @@ Lawyer details are known at the agreement stage and a realtor would expect
 them filled. **Decide:** add a lawyers section to the intake, or accept that
 the block is completed by hand.
 
-### 17. Listing/co-op brokerage street address — partly unmapped
+### 16. Listing/co-op brokerage street address — partly unmapped
 `coop_brokerage_address` now reaches 320 and 371 as well as 324/372. There is
 no equivalent question for the *listing* brokerage, so `txtl_brkaddr` on 271,
 272 and 320 stays blank — even though Settings already stores a
 `brokerage_address` per user. Both forms also print city / province / postal
 as separate boxes and the intake holds the address as one line.
 
-### 18. Three boxes cannot hold a realistic Ontario value — form limits
+### 17. Three boxes cannot hold a realistic Ontario value — form limits
 Not our bugs; the forms are simply this narrow, and Chrome truncates silently
 rather than warning. Worth knowing before a realtor reports it:
 
@@ -222,7 +222,7 @@ rather than warning. Worth knowing before a realtor reports it:
 `scripts/overflow_check.py` reports text wider than its box even when it fits
 the character limit. Both are worth a look after any mapping change.
 
-### 19. Unmapped "or ..." alternatives beside the commission percentages
+### 18. Unmapped "or ..." alternatives beside the commission percentages
 Forms 271, 272 and 371 each print "a commission of ____% of the sale price of
 the Property **or** ____". We fill the percentage; the alternative box
 (`txtcommis_writ` and `txtSPComm` on 271, `txtMoreComm` and `txtPurchase` on
@@ -231,22 +231,22 @@ the Property **or** ____". We fill the percentage; the alternative box
 **Decide:** add a second commission question, or accept that flat-fee
 arrangements are written in by hand.
 
-### 20. Form 244's a.m./p.m. control — deliberately unmapped
+### 19. Form 244's a.m./p.m. control — deliberately unmapped
 `chkOpt_SofferTime` sits beside the "no conveyance of offers prior to ____"
 time box, and its two options draw no visible glyph on the blank form, so
 which is a.m. and which is p.m. could not be confirmed. Same rule as Form
-400's utility checkboxes (issue 11): not guessed. The time box itself holds
+400's utility checkboxes (issue 10): not guessed. The time box itself holds
 only 5 characters, so the question now asks for "7:00" rather than "7:00 p.m."
 
 **Unblocks when:** we see a real completed Form 244.
 
-### 21. Second salesperson, fax and open-house fields — no questions
+### 20. Second salesperson, fax and open-house fields — no questions
 291/292 page 10 prints salespersons 2–4 with their own brokerage and phone,
 a brokerage fax, open-house date/time, and showing instructions. Form 101
 prints a fax for each side. None of these have intake questions. They are
 genuinely optional; listing them so it is a decision rather than an oversight.
 
-### 22. Google's sign-in screen says "supabase.co", not RealtyFill — Chris
+### 21. Google's sign-in screen says "supabase.co", not RealtyFill — Chris
 The account chooser reads **"to continue to wxtyyakxasxsftjneqgl.supabase.co"**.
 Sign-in works; this is trust, and it is the wrong kind of wrong for a product
 holding client financial data — a random 20-character hostname on a login
