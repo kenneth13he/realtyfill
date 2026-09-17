@@ -38,6 +38,17 @@ export async function signInWithGoogle(formData: FormData) {
     provider: "google",
     options: {
       redirectTo: await authCallbackUrl(redirectTo),
+      // Always show Google's account chooser. Without prompt=select_account
+      // Google silently reuses the one session the browser already has, so
+      // clicking "Continue with Google" signs you straight in with no way to
+      // pick — and a realtor with a personal address and a brokerage one has
+      // no signal about which they just used. Landing in the wrong account
+      // means a different set of deals, or silently creating a second
+      // account on first use, with no error to explain either.
+      //
+      // select_account, not consent: this asks which account, it does not
+      // re-ask for permissions the user has already granted.
+      queryParams: { prompt: "select_account" },
     },
   });
 
