@@ -251,6 +251,39 @@ a brokerage fax, open-house date/time, and showing instructions. Form 101
 prints a fax for each side. None of these have intake questions. They are
 genuinely optional; listing them so it is a decision rather than an oversight.
 
+### 22. Google's sign-in screen says "supabase.co", not RealtyFill — Chris
+The account chooser reads **"to continue to wxtyyakxasxsftjneqgl.supabase.co"**.
+Sign-in works; this is trust, and it is the wrong kind of wrong for a product
+holding client financial data — a random 20-character hostname on a login
+screen reads exactly like phishing.
+
+Google names the owner of the OAuth client, and our redirect is
+`https://wxtyyakxasxsftjneqgl.supabase.co/auth/v1/callback`. Setting an App
+name on the consent screen was tried on September 16 and the screen still
+showed the host an hour later, checked by loading Google's actual page rather
+than our own parameters.
+
+Three possible causes, in the order worth checking:
+
+1. **Propagation.** Google caches the consent screen for up to a day.
+2. **Wrong Google Cloud project.** Supabase uses client
+   `496367422992-cfe9nuk0...apps.googleusercontent.com`, so the consent screen
+   that matters belongs to project **496367422992**. Editing another project's
+   changes nothing and warns about nothing.
+3. **`supabase.co` cannot be an Authorized domain.** Google only shows an App
+   name for a redirect domain you have verified ownership of, and nobody can
+   verify `supabase.co`. If this is the cause, no consent-screen edit fixes
+   it — only a Supabase **custom auth domain** (`auth.realtyfill.ca`) will,
+   which needs Pro, and then the Google redirect URI has to be repointed.
+
+Re-check with the loop in this file's git history: drive /login in a real
+Chrome, click through, and read the "to continue to" line off Google's page.
+
+**Related, already done:** `prompt=select_account` is now sent, so Google
+always shows the chooser instead of silently reusing the one signed-in
+session; and the header now shows which account you are in, so landing in the
+wrong one is visible rather than looking like lost data.
+
 ---
 
 ## Not verified from here

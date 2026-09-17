@@ -61,7 +61,12 @@ export default async function Header({
             </Link>
           )}
         </div>
-        <div className="flex items-center gap-4">
+        {/* flex-wrap, not a fixed row: the email added below is the widest
+            thing here, and at 375px the row was 487px wide and scrolled the
+            whole page sideways. Wrapping keeps it legible on a phone, which
+            is exactly where someone signs in quickly with whichever account
+            Google offered them. */}
+        <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1">
           {active && dealId && (
             <nav className="flex gap-1 text-sm">
               {steps(dealId).map((step) => (
@@ -86,6 +91,28 @@ export default async function Header({
           )}
           {user && (
             <div className="flex items-center gap-3 text-sm">
+              {/* Which account you are in.
+                  Nothing else in the signed-in app said this. A realtor
+                  usually has a personal Google address and a brokerage one,
+                  and those are two RealtyFill accounts holding two different
+                  sets of deals — so picking the wrong one at the Google
+                  chooser showed an empty dashboard, and the obvious reading
+                  of an empty dashboard is "my deals are gone", not "I am
+                  signed in as the wrong person". One line makes that
+                  self-evident instead of alarming.
+
+                  Truncated rather than hidden on narrow screens: a phone is
+                  exactly where someone signs in quickly with whichever
+                  account Google offered, so it has to be legible there too.
+                  title= gives the full address on hover for a long one. */}
+              {user.email && (
+                <span
+                  title={user.email}
+                  className="max-w-[9rem] truncate text-white/40 sm:max-w-[14rem]"
+                >
+                  {user.email}
+                </span>
+              )}
               {/* Only rendered for an admin. The page and its API both check
                   again — this link is a convenience, not the gate. */}
               {isAdminUser(user) && (
@@ -102,7 +129,9 @@ export default async function Header({
               <form action={signOut}>
                 <button
                   type="submit"
-                  className="rf-meta text-white/55 transition-colors hover:text-white"
+                  // nowrap: once the bar wraps on a phone, "Sign out" is the
+                  // item most likely to break across two lines on its own.
+                  className="rf-meta whitespace-nowrap text-white/55 transition-colors hover:text-white"
                 >
                   Sign out
                 </button>
