@@ -12,6 +12,16 @@
 // the copy beside it advances. It carries the headline and CTAs, so this page
 // has no separate hero block of its own.
 //
+// Copy rule for this page: every section makes one argument nobody else makes.
+// An earlier pass had the hero's scroll panels restating How-it-works and the
+// form list almost word for word, so a visitor read the same three sentences
+// three times on the way down. The division now is — hero: what it does and
+// why one source of truth beats five typed copies; mockup: what the screen
+// looks like; statement: the stake; How it works: the three steps; Forms: what
+// each of the five documents is actually *for*; Trust: the boundaries; CTA:
+// the ask. If a new line here could move to another section without loss, it
+// belongs in that section, not both.
+//
 // Footer links to /terms and /privacy, which landed alongside this redesign
 // (REMAINING_WORK.md item 5). They were held back while those pages didn't
 // exist — a dead footer link reads worse than a shorter footer.
@@ -22,28 +32,61 @@ import { createClient } from "@/lib/supabase/server";
 import Wordmark from "@/components/Wordmark";
 import LandingNav from "@/components/landing/LandingNav";
 import ScrollStage from "@/components/landing/ScrollStage";
-import VisualProof from "@/components/landing/VisualProof";
 import Marquee from "@/components/landing/Marquee";
 import FadeIn from "@/components/landing/FadeIn";
 
 const STEPS: [string, string, string][] = [
-  ["01", "Drop the listing", "Upload a listing PDF or paste the text. Property details fill themselves in."],
-  ["02", "Check what we found", "Every field is editable. Anything genuinely unclear gets flagged — never guessed silently."],
-  ["03", "Download the set", "Preview and edit each filled PDF right in the browser, then download."],
+  ["01", "Drop the listing in", "Upload the listing PDF, or paste the text. Property, rent and term come back already filled."],
+  ["02", "Correct what we read", "Every field is yours to change. Where the listing was genuinely ambiguous, we leave it empty and say why rather than guess."],
+  ["03", "Take the whole set", "Read each filled PDF in the browser, fix anything still wrong, then download them together as one zip."],
 ];
 
-const FORMS: [string, string][] = [
-  ["2229E", "Residential Tenancy Agreement (Standard Lease)"],
-  ["Form 400", "Agreement to Lease (Residential)"],
-  ["Form 410", "Rental Application (Residential)"],
-  ["Form 324", "Confirmation of Co-operation and Representation"],
-  ["Form 372", "Tenant Designated Representation Agreement"],
+// Code, form name, and what the form is actually for. The third line is the
+// point of this section: the hero already checks the same five codes off as
+// the tower tops out, so repeating just codes and names here would say
+// nothing new. Descriptions are drawn from the fields the intake schema
+// actually collects for each form — see forms/schemas/intake_form_schema.json.
+const FORMS: [string, string, string][] = [
+  [
+    "2229E",
+    "Residential Tenancy Agreement (Standard Lease)",
+    "Ontario's mandatory standard lease. The document the tenancy itself runs on.",
+  ],
+  [
+    "Form 400",
+    "Agreement to Lease (Residential)",
+    "The offer: rent, term, deposit, and the date it stays irrevocable until.",
+  ],
+  [
+    "Form 410",
+    "Rental Application (Residential)",
+    "Who the applicants are: occupation, current address, current landlord, pets.",
+  ],
+  [
+    "Form 324",
+    "Confirmation of Co-operation and Representation",
+    "Who represents whom, and which brokerage pays which commission.",
+  ],
+  [
+    "Form 372",
+    "Tenant Designated Representation Agreement",
+    "Your authority to act for the tenant: dates, area, and services included.",
+  ],
 ];
 
 const TRUST: [string, string][] = [
-  ["Your data stays yours", "Row-level security means only you can read your own deals — enforced at the database, not just in the interface."],
-  ["Signature fields stay blank", "Every generated PDF leaves signatures untouched. Always. No exceptions."],
-  ["Nothing ships unreviewed", "You see and confirm every field before a single PDF gets generated."],
+  [
+    "Only you can read your deals",
+    "Access is enforced by the database itself, row by row. Not by the screen in front of you but by the layer underneath it, which cannot be talked around.",
+  ],
+  [
+    "We never fill a signature",
+    "Not a name in a signature box, not the date beside one. Those stay blank on every form we generate, with no setting to change it.",
+  ],
+  [
+    "Nothing is generated unseen",
+    "You read every field, and change any of them, before the first PDF is written. There is no step where the software decides on its own.",
+  ],
 ];
 
 export default async function HomePage() {
@@ -65,24 +108,27 @@ export default async function HomePage() {
           Collapses to a plain stacked hero below `lg` — see ScrollStage. */}
       <ScrollStage />
 
-      {/* ---------------- PRODUCT MOCKUP ---------------- */}
-      <section className="mx-auto max-w-7xl px-6 pb-24 pt-12">
-        <FadeIn>
-          <VisualProof />
-        </FadeIn>
-      </section>
-
+      {/* The tonal product mockup used to sit here. It showed the same five
+          codes with the same tick chips as the hero's checklist, one screen
+          apart, so a visitor read the set twice before reaching the section
+          that actually says what each form is for. Removed rather than
+          reworded — the duplication was the picture, not the caption.
+          components/landing/VisualProof.tsx went with it; recoverable from
+          git if a screenshot-style proof block is wanted again. */}
 
       {/* ---------------- STATEMENT + TICKER ---------------- */}
       <section className="px-6 py-28 text-center">
         <FadeIn>
           <h2 className="mx-auto max-w-5xl text-[2.75rem] font-semibold leading-[0.98] tracking-tight text-white sm:text-6xl xl:text-7xl">
-            Built so you can get back to <span className="text-[var(--lime)]">closing deals</span>
+            The paperwork is the last hour of a deal. It shouldn&apos;t be{" "}
+            <span className="text-[var(--lime)]">the worst one.</span>
           </h2>
+          {/* The ticker names the fields you'd otherwise copy across five PDFs,
+              ending on the punchline. Decorative and aria-hidden — see Marquee. */}
           <div className="mt-12 flex justify-center">
             <Marquee
               className="max-w-md border border-white/25 text-white/70"
-              items={["Keep scrolling", "Five forms", "One intake", "Zero retyping"]}
+              items={["Unit number", "Start date", "Monthly rent", "Deposit", "Brokerage", "Again"]}
             />
           </div>
         </FadeIn>
@@ -94,7 +140,7 @@ export default async function HomePage() {
           <FadeIn>
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--brand)]">How it works</p>
             <h2 className="mt-5 max-w-3xl text-[2.5rem] font-semibold leading-[1] tracking-tight text-[var(--brand-deep)] sm:text-6xl">
-              Three steps. That&apos;s the whole job.
+              Three steps, and you sign off on every one.
             </h2>
           </FadeIn>
 
@@ -116,24 +162,24 @@ export default async function HomePage() {
       <section className="bg-[var(--brand-deep)] py-28">
         <div className="mx-auto max-w-7xl px-6">
           <FadeIn>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--lime)]">The set</p>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--lime)]">What&apos;s in the zip</p>
             <h2 className="mt-5 max-w-3xl text-[2.5rem] font-semibold leading-[1] tracking-tight text-white sm:text-6xl">
-              Every form a lease needs.
+              An Ontario residential lease, start to finish.
             </h2>
+            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/60">
+              Five forms, and each one needs the deal spelled out again from the top. That&apos;s the part we take.
+            </p>
           </FadeIn>
 
           <div className="mt-14 divide-y divide-white/10 border-y border-white/10">
-            {FORMS.map(([code, name], i) => (
+            {FORMS.map(([code, name, purpose], i) => (
               <FadeIn key={code} delayMs={i * 70}>
-                <div className="group flex flex-col gap-2 py-7 transition-colors sm:flex-row sm:items-center sm:gap-8">
+                <div className="group flex flex-col gap-2 py-7 transition-colors sm:flex-row sm:items-baseline sm:gap-8">
                   <span className="w-32 shrink-0 text-2xl font-semibold text-[var(--lime)]">{code}</span>
-                  <span className="text-lg text-white/70 transition-colors group-hover:text-white">{name}</span>
-                  <span
-                    aria-hidden
-                    className="ml-auto hidden text-white/25 transition-all group-hover:translate-x-1 group-hover:text-[var(--lime)] sm:block"
-                  >
-                    →
-                  </span>
+                  <div className="min-w-0">
+                    <span className="block text-lg text-white/70 transition-colors group-hover:text-white">{name}</span>
+                    <span className="mt-1.5 block text-sm leading-relaxed text-white/40">{purpose}</span>
+                  </div>
                 </div>
               </FadeIn>
             ))}
@@ -144,6 +190,16 @@ export default async function HomePage() {
       {/* ---------------- TRUST (white) ---------------- */}
       <section className="bg-white py-28">
         <div className="mx-auto max-w-7xl px-6">
+          {/* These three cards previously floated with no heading over them,
+              which read as filler. Named, they're the section that answers the
+              question a realtor actually has about handing us a client's file. */}
+          <FadeIn>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--brand)]">Where we stop</p>
+            <h2 className="mt-5 mb-16 max-w-3xl text-[2.5rem] font-semibold leading-[1] tracking-tight text-[var(--brand-deep)] sm:text-6xl">
+              Three lines we don&apos;t cross.
+            </h2>
+          </FadeIn>
+
           <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
             {TRUST.map(([title, body], i) => (
               <FadeIn key={title} delayMs={i * 120}>
@@ -162,8 +218,11 @@ export default async function HomePage() {
       <section className="bg-[var(--brand)] py-32">
         <FadeIn className="mx-auto max-w-4xl px-6 text-center">
           <h2 className="text-[2.75rem] font-semibold leading-[0.98] tracking-tight text-white sm:text-7xl">
-            Stop typing the same deal <span className="text-[var(--lime)]">five times.</span>
+            Give it one listing. <span className="text-[var(--lime)]">Get the hour back.</span>
           </h2>
+          <p className="mx-auto mt-7 max-w-xl text-lg leading-relaxed text-white/70">
+            Signing up takes an email and a password. Bring one listing and see what comes back.
+          </p>
           <Link
             href="/login?mode=signup"
             className="group mt-12 inline-flex items-center gap-2 rounded-full bg-[var(--lime)] px-10 py-5 text-lg font-semibold text-[var(--brand-deep)] transition-transform hover:-translate-y-0.5"
