@@ -2169,75 +2169,6 @@
           }
         },
         {
-          "key": "irrevocable_by",
-          "label": "Offer irrevocable by (Seller/Buyer)",
-          "type": "text",
-          "targets": {
-            "form_101": [
-              "hidirrev_v_p"
-            ]
-          },
-          "note": "hidirrev_v_p. The hid prefix is WEBForms naming, not a hidden field - it prints on page 1, verified by render."
-        },
-        {
-          "key": "irrevocable_until_time",
-          "label": "Irrevocable until (time)",
-          "type": "text",
-          "targets": {
-            "form_101": [
-              "txtp_irrev_t"
-            ]
-          }
-        },
-        {
-          "key": "irrevocable_date",
-          "label": "Irrevocable until (date)",
-          "type": "date",
-          "targets": {}
-        },
-        {
-          "key": "irrevocable_date_day",
-          "label": "",
-          "type": "text",
-          "targets": {
-            "form_101": [
-              "txtp_OfferExpireDate_d"
-            ],
-            "form_801": [
-              "txtp_OfferExpireDate_d"
-            ]
-          },
-          "hidden": true
-        },
-        {
-          "key": "irrevocable_date_month",
-          "label": "",
-          "type": "text",
-          "targets": {
-            "form_101": [
-              "txtp_OfferExpireDate_mmmm"
-            ],
-            "form_801": [
-              "txtp_OfferExpireDate_mmmm"
-            ]
-          },
-          "hidden": true
-        },
-        {
-          "key": "irrevocable_date_year",
-          "label": "",
-          "type": "text",
-          "targets": {
-            "form_101": [
-              "txtp_OfferExpireDate_yy"
-            ],
-            "form_801": [
-              "txtp_OfferExpireDate_yy"
-            ]
-          },
-          "hidden": true
-        },
-        {
           "key": "completion_date",
           "label": "Completion date",
           "type": "date",
@@ -3257,13 +3188,8 @@
       ]
     },
     {
-      "group": "schedule_dates",
-      "label": "Schedule and agreement details",
-      "sets": [
-        "lease_landlord",
-        "sale_buyer",
-        "sale_seller"
-      ],
+      "group": "agreement_and_schedule",
+      "label": "Agreement date, irrevocability and schedules",
       "fields": [
         {
           "key": "schedule_letter",
@@ -3281,7 +3207,12 @@
               "txtschedule"
             ]
           },
-          "note": "The blank in the 'Schedule ____' heading. A schedule exists to be attached to and identified by another agreement, so generating one with a nameless heading left the realtor writing it in by hand every time."
+          "note": "The blank in the 'Schedule ____' heading. A schedule exists to be attached to and identified by another agreement, so generating one with a nameless heading left the realtor writing it in by hand every time.",
+          "sets": [
+            "lease_landlord",
+            "sale_buyer",
+            "sale_seller"
+          ]
         },
         {
           "key": "schedules_attached",
@@ -3298,6 +3229,9 @@
               "txtAttachedSchedule"
             ],
             "form_272": [
+              "txtAttachedSchedule"
+            ],
+            "form_400": [
               "txtAttachedSchedule"
             ]
           }
@@ -3327,6 +3261,9 @@
             ],
             "form_401": [
               "txtp_OfferDate_d"
+            ],
+            "form_400": [
+              "txtp_offerDate_d"
             ]
           },
           "hidden": true
@@ -3350,6 +3287,9 @@
             ],
             "form_401": [
               "txtp_OfferDate_mmmm"
+            ],
+            "form_400": [
+              "txtp_offerDate_mmmm"
             ]
           },
           "hidden": true
@@ -3373,12 +3313,123 @@
             ],
             "form_401": [
               "txtp_OfferDate_yy"
+            ],
+            "form_400": [
+              "txtp_offerDate_yy"
             ]
           },
           "hidden": true
+        },
+        {
+          "key": "irrevocable_by",
+          "label": "Offer irrevocable by",
+          "type": "text",
+          "targets": {
+            "form_101": [
+              "hidirrev_v_p"
+            ],
+            "form_400": [
+              "hidirrev_v_p"
+            ]
+          },
+          "note": "The form prints the side options beside the box — (Seller/Buyer) on 101 and 801, (Landlord/Tenant) on 400 — so the question stays neutral.",
+          "sets": [
+            "lease_tenant",
+            "sale_buyer"
+          ]
+        },
+        {
+          "key": "irrevocable_until_time",
+          "label": "Irrevocable until (time)",
+          "type": "text",
+          "targets": {
+            "form_101": [
+              "txtp_irrev_t"
+            ],
+            "form_400": [
+              "txtp_irrev_t"
+            ]
+          },
+          "sets": [
+            "lease_tenant",
+            "sale_buyer"
+          ]
+        },
+        {
+          "key": "irrevocable_date",
+          "label": "Irrevocable until (date)",
+          "type": "date",
+          "targets": {},
+          "sets": [
+            "lease_tenant",
+            "sale_buyer"
+          ]
+        },
+        {
+          "key": "irrevocable_date_day",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_101": [
+              "txtp_OfferExpireDate_d"
+            ],
+            "form_801": [
+              "txtp_OfferExpireDate_d"
+            ],
+            "form_400": [
+              "txtp_OfferExpireDate_d"
+            ]
+          },
+          "hidden": true,
+          "sets": [
+            "lease_tenant",
+            "sale_buyer"
+          ]
+        },
+        {
+          "key": "irrevocable_date_month",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_101": [
+              "txtp_OfferExpireDate_mmmm"
+            ],
+            "form_801": [
+              "txtp_OfferExpireDate_mmmm"
+            ],
+            "form_400": [
+              "txtp_OfferExpireDate_mmmm"
+            ]
+          },
+          "hidden": true,
+          "sets": [
+            "lease_tenant",
+            "sale_buyer"
+          ]
+        },
+        {
+          "key": "irrevocable_date_year",
+          "label": "",
+          "type": "text",
+          "targets": {
+            "form_101": [
+              "txtp_OfferExpireDate_yy"
+            ],
+            "form_801": [
+              "txtp_OfferExpireDate_yy"
+            ],
+            "form_400": [
+              "txtp_OfferExpireDate_yy"
+            ]
+          },
+          "hidden": true,
+          "sets": [
+            "lease_tenant",
+            "sale_buyer"
+          ]
         }
       ],
-      "note": "Forms 203, 303 and 401 each print 'Schedule ___ ... dated the ___ day of ___', and 271/272 print 'Schedule A, ___'. These questions used to live in the Offer Terms group, which is scoped to sale_buyer only, so group filtering hid them from the two sets that print those very boxes — Form 203's schedule generated with no date on it, and 271/272's schedule list was always blank."
+      "note": "Form 400 prints 'dated this ___ day of ___', an IRREVOCABILITY block and a schedule list exactly as Form 101 does, under different box names. None of it was mapped, so the Agreement to Lease generated with its own date blank on all three pages that print it."
     },
     {
       "group": "reco_acknowledgement",

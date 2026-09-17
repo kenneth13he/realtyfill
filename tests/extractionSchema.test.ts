@@ -16,7 +16,13 @@ import { FORM_SET_IDS, filterSchemaForSet } from "../lib/formTypes";
 import { getIntakeFormSchema } from "../lib/schemas";
 
 const LEASE_WORDS = /tenant|landlord|rent(?!al_application)/;
-const SALE_WORDS = /buyer|seller|purchase|completion|irrevocable/;
+// "irrevocable" is deliberately absent. It reads like sale vocabulary and is
+// not: Form 400, the Agreement to Lease, carries the same IRREVOCABILITY
+// block as Form 101, printing "(Landlord/Tenant)" where 101 prints
+// "(Seller/Buyer)". This list is a guard against a set being offered the
+// other transaction's questions, and a word that genuinely belongs to both
+// cannot do that job.
+const SALE_WORDS = /buyer|seller|purchase|completion/;
 
 describe("buildFieldSchema", () => {
   test("a purchase deal is never offered a tenant, landlord or rent field", () => {
