@@ -18,6 +18,21 @@ deploy).
 Last reviewed: September 16, 2026 (Supabase Pro: backups verified, leaked-password
 protection enabled and tested).
 
+**Closed on September 17:** Google's sign-in screen now reads "to continue to
+realtyfill.ca" instead of the raw Supabase hostname. It took the Custom Domain
+add-on: `auth.realtyfill.ca` is a CNAME to the project, with its ownership and
+certificate TXT records in Vercel DNS, and it is activated. The consent-screen
+App name alone could never have done it, because Google will not display a
+name for a redirect domain nobody can verify ownership of. Checked by driving
+the real sign-in in Chrome and reading Google's page.
+
+The app's own `NEXT_PUBLIC_SUPABASE_URL` is `https://auth.realtyfill.ca` in
+`.env.local` and was tested there (browser check, end-to-end, CSP enforcing).
+**Vercel still has the old `*.supabase.co` value.** That is fine: the old
+hostname keeps working, and the OAuth redirect is decided by Supabase, not by
+the app. Switching Vercel is optional, and it signs everyone out once, because
+`@supabase/ssr` names the session cookie after the hostname.
+
 **Closed on September 16:** database backups (the standing P0 — daily backups
 confirmed running via the management API, four of them, most recent that
 morning) and leaked-password protection (enabled, then verified by attempting
@@ -245,45 +260,6 @@ only 5 characters, so the question now asks for "7:00" rather than "7:00 p.m."
 a brokerage fax, open-house date/time, and showing instructions. Form 101
 prints a fax for each side. None of these have intake questions. They are
 genuinely optional; listing them so it is a decision rather than an oversight.
-
-### 21. Google's sign-in screen says "supabase.co", not RealtyFill — Chris
-The account chooser reads **"to continue to wxtyyakxasxsftjneqgl.supabase.co"**.
-Sign-in works; this is trust, and it is the wrong kind of wrong for a product
-holding client financial data — a random 20-character hostname on a login
-screen reads exactly like phishing.
-
-Google names the owner of the OAuth client, and our redirect is
-`https://wxtyyakxasxsftjneqgl.supabase.co/auth/v1/callback`. Setting an App
-name on the consent screen was tried on September 16 and the screen still
-showed the host an hour later, checked by loading Google's actual page rather
-than our own parameters.
-
-Three possible causes, in the order worth checking:
-
-1. **Propagation.** Google caches the consent screen for up to a day.
-2. **Wrong Google Cloud project.** Supabase uses client
-   `496367422992-cfe9nuk0...apps.googleusercontent.com`, so the consent screen
-   that matters belongs to project **496367422992**. Editing another project's
-   changes nothing and warns about nothing.
-3. **`supabase.co` cannot be an Authorized domain.** Google only shows an App
-   name for a redirect domain you have verified ownership of, and nobody can
-   verify `supabase.co`. If this is the cause, no consent-screen edit fixes
-   it — only a Supabase **custom auth domain** (`auth.realtyfill.ca`) will,
-   which needs Pro, and then the Google redirect URI has to be repointed.
-
-Re-check with the loop in this file's git history: drive /login in a real
-Chrome, click through, and read the "to continue to" line off Google's page.
-
-**Blocked on a purchase, not on Pro.** Supabase Custom Domains is a separate
-add-on on top of Pro (~$10/month) — the management API refuses with
-`entitlement_required / custom_domain` until it is bought, at
-`supabase.com/dashboard/org/hteqwpbzcfpmfrjcuudm/billing`. A vanity subdomain
-is free but still lands on `*.supabase.co`, so it fixes nothing here.
-
-**Related, already done:** `prompt=select_account` is now sent, so Google
-always shows the chooser instead of silently reusing the one signed-in
-session; and the header now shows which account you are in, so landing in the
-wrong one is visible rather than looking like lost data.
 
 ---
 
