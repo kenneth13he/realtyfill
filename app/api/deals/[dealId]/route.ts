@@ -1,8 +1,8 @@
 // app/api/deals/[dealId]/route.ts
 // Update or delete a single deal (Step 6 dashboard: rename it from its
-// default "Untitled deal", close/archive it, or remove it outright).
+// default "Untitled deal", close or reopen it, or remove it outright).
 //
-// DELETE exists because archiving isn't erasing. A deal holds a real tenant's
+// DELETE exists because closing isn't erasing. A deal holds a real tenant's
 // name, income, employer and rental history, and until this route existed the
 // only way to remove any of it was to delete the whole account — so a realtor
 // who typed a client's details into the wrong deal had no way to take them
@@ -14,7 +14,10 @@ import { createClient } from "@/lib/supabase/server";
 import { getOwnedDeal } from "@/lib/supabase/getOwnedDeal";
 import { logError, userFacingError } from "@/lib/logger";
 
-const VALID_STATUSES = ["active", "closed", "archived"];
+// "archived" was merged into "closed" (0005_merge_archived_into_closed.sql).
+// The database constraint refuses it too; this answers with a 400 that names
+// the valid values instead of surfacing a raw constraint violation as a 500.
+const VALID_STATUSES = ["active", "closed"];
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ dealId: string }> }) {
   // Defence in depth behind the SameSite=Lax session cookie — see

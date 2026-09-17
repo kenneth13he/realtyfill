@@ -166,7 +166,7 @@ against the deployed site, with `pypdf` inspection of the output PDF — not
 just "the request returned 200"):
 
 - ✅ Email/password sign-up + sign-in, session handling, sign-out
-- ✅ Multi-deal dashboard, create/close/archive deals
+- ✅ Multi-deal dashboard, create/close/reopen deals
 - ✅ Settings (profile + brokerage defaults seeded onto new deals)
 - ✅ Intake save/load, inline editing with autosave
 - ✅ PDF generation → Supabase Storage → signed-URL download, **with correct
@@ -650,7 +650,7 @@ Unchanged. Tokens are in place in `app/globals.css`; needs a
 ### 28. ✅ Deal deletion has a UI
 `DealsList` has a Delete action behind an inline confirm, calling the
 `DELETE /api/deals/[dealId]` route (which clears Storage before the row).
-Archive hides a deal; this erases it and its PDFs. A realtor needs the second
+Close files a deal away; this erases it and its PDFs. A realtor needs the second
 one to honour a client's deletion request.
 
 ---

@@ -1,6 +1,6 @@
 // app/dashboard/DealsList.tsx
 // Client-side deal list: create a new deal, filter by status, and
-// close/reopen/archive one. Status filtering here IS "history" per the
+// close/reopen one. Status filtering here IS "history" per the
 // scope agreed for this plan — a full field-level audit log is explicitly
 // out of scope for now.
 //
@@ -25,13 +25,24 @@ import { DEFAULT_FORM_SET, FORM_SETS, FORM_SET_IDS, FormSetId, toFormSetId } fro
 export interface Deal {
   id: string;
   label: string;
-  status: "active" | "closed" | "archived";
+  status: "active" | "closed";
   form_set: string;
   created_at: string;
   updated_at: string;
 }
 
-const STATUS_FILTERS = ["active", "closed", "archived"] as const;
+// Two states, not three. There used to be an Archived tab after Closed, but
+// the two behaved identically — same edit, generate and download, same answers
+// and PDFs kept — so Archive was a second name for Closed that cost a click.
+// Merged in 0005_merge_archived_into_closed.sql.
+const STATUS_FILTERS = ["active", "closed"] as const;
+
+// Which tab a deal belongs in. Anything not active counts as closed rather
+// than matching the string exactly, so a row whose status predates the
+// migration can never fall between the tabs and disappear from the dashboard.
+function tabOf(deal: Deal): (typeof STATUS_FILTERS)[number] {
+  return deal.status === "active" ? "active" : "closed";
+}
 
 // Fixed locale and time zone, not the viewer's.
 //
@@ -73,7 +84,7 @@ export default function DealsList({ initialDeals, loadError }: { initialDeals: D
   // Status changes and deletions both mutate the list without moving focus.
   // This used to be an sr-only aria-live paragraph, on the reasoning that the
   // change was "already obvious on screen" for everyone else. It isn't:
-  // archiving a deal while the Active filter is on makes the row vanish with
+  // closing a deal while the Active filter is on makes the row vanish with
   // no explanation at all. Toasts carry role="status", so they announce the
   // same thing to a screen reader AND say it visibly — one mechanism instead
   // of two, and sighted users stop being the ones left guessing.
@@ -114,7 +125,7 @@ export default function DealsList({ initialDeals, loadError }: { initialDeals: D
       // writes: "Deal moved to active" is what the database did; "reopened"
       // is what the user did.
       const label = deals.find((d) => d.id === dealId)?.label ?? "Deal";
-      const verb = status === "active" ? "reopened" : status === "closed" ? "closed" : "archived";
+      const verb = status === "active" ? "reopened" : "closed";
       toast.success(`${label} ${verb}.`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -123,7 +134,7 @@ export default function DealsList({ initialDeals, loadError }: { initialDeals: D
     }
   }
 
-  // Permanent, unlike Archive. The route deletes the deal's stored PDFs before
+  // Permanent, unlike Close. The route deletes the deal's stored PDFs before
   // the row, so nothing is left orphaned in Storage — see
   // app/api/deals/[dealId]/route.ts for why that order matters.
   async function handleDelete(dealId: string) {
@@ -146,7 +157,7 @@ export default function DealsList({ initialDeals, loadError }: { initialDeals: D
     }
   }
 
-  const visibleDeals = deals.filter((d) => d.status === filter);
+  const visibleDeals = deals.filter((d) => tabOf(d) === filter);
 
   return (
     <div className="flex flex-col gap-10">
@@ -248,14 +259,14 @@ export default function DealsList({ initialDeals, loadError }: { initialDeals: D
 
       {/* ---------------- LIST ---------------- */}
       <div>
-        {/* A real tablist. These were styled as tabs but announced as three
+        {/* A real tablist. These were styled as tabs but announced as
             unrelated buttons; `role="tab"` + aria-selected is what makes a
-            screen reader say "Active, tab 1 of 3, selected", and it's also
+            screen reader say "Active, tab 1 of 2, selected", and it's also
             what drives the .rf-chip selected styling — one source of truth
             for "which one is live" instead of a parallel className branch. */}
         <div role="tablist" aria-label="Filter deals by status" className="flex gap-1">
           {STATUS_FILTERS.map((status) => {
-            const count = deals.filter((d) => d.status === status).length;
+            const count = deals.filter((d) => tabOf(d) === status).length;
             return (
               <button
                 key={status}
@@ -350,31 +361,15 @@ export default function DealsList({ initialDeals, loadError }: { initialDeals: D
                         Close
                       </StatusButton>
                     )}
-                    {deal.status === "closed" && (
-                      <>
-                        <StatusButton
-                          busy={updatingId === deal.id}
-                          onClick={() => handleStatusChange(deal.id, "active")}
-                        >
-                          Reopen
-                        </StatusButton>
-                        <StatusButton
-                          busy={updatingId === deal.id}
-                          onClick={() => handleStatusChange(deal.id, "archived")}
-                        >
-                          Archive
-                        </StatusButton>
-                      </>
-                    )}
-                    {deal.status === "archived" && (
+                    {deal.status !== "active" && (
                       <StatusButton
                         busy={updatingId === deal.id}
                         onClick={() => handleStatusChange(deal.id, "active")}
                       >
-                        Reactivate
+                        Reopen
                       </StatusButton>
                     )}
-                    {/* Archive hides a deal; this erases it, along with every
+                    {/* Close only files a deal away; this erases it, along with every
                         PDF generated from it. A realtor needs the second one to
                         be able to remove a client's information on request. */}
                     <button

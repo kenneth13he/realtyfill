@@ -312,7 +312,19 @@ async function runSet(page: Page, setId: FormSetId) {
   } finally {
     // Always clean up, including after a thrown error — a failed run must not
     // leave deals behind in the account.
-    await page.request.delete(`${BASE}/api/deals/${dealId}`).catch(() => {});
+    //
+    // The Origin header is not optional. The DELETE route refuses any mutating
+    // request without one (lib/sameOrigin.ts), and Playwright's request
+    // context, unlike a real page, does not send it. This used to be a bare
+    // `.catch(() => {})`, which only catches network errors: every cleanup got
+    // a 403, nothing reported it, and 69 test deals holding 241 MB of PDFs
+    // piled up in the E2E account while each run printed "No problems".
+    try {
+      const cleanup = await page.request.delete(`${BASE}/api/deals/${dealId}`, { headers: { Origin: BASE } });
+      if (!cleanup.ok()) say(where, `cleanup failed, deal ${dealId} was left behind (HTTP ${cleanup.status()})`);
+    } catch (e) {
+      say(where, `cleanup failed, deal ${dealId} was left behind (${String(e)})`);
+    }
   }
 }
 
