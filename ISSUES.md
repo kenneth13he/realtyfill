@@ -15,7 +15,14 @@ Owners follow the standing split: **Kenneth** frontend (`components/`, `app/`
 pages), **Chris** infra and backend (`app/api/`, `lib/`, `supabase/`, config,
 deploy).
 
-Last reviewed: September 16, 2026 (offline fill audit + real-browser end-to-end — `npm run check`, `npm run test:e2e`).
+Last reviewed: September 16, 2026 (Supabase Pro: backups verified, leaked-password
+protection enabled and tested).
+
+**Closed on September 16:** database backups (the standing P0 — daily backups
+confirmed running via the management API, four of them, most recent that
+morning) and leaked-password protection (enabled, then verified by attempting
+to set "Password123!" on a real account and getting back
+`422 weak_password, reasons: ["pwned"]`).
 
 Legend: **P0** blocks launch · **P1** before real client data · **P2** before
 it costs money or embarrasses us · **P3** polish
@@ -24,19 +31,7 @@ it costs money or embarrasses us · **P3** polish
 
 ## P0 — blocks any external tester
 
-### 1. No database backups — Chris
-Confirmed via the management API: PITR is off and the project has **zero
-backups**. A bad migration or a mistaken delete is permanent and total.
-
-We store tenants' names, income, employers and rental history. There is no
-version of "production" that includes having no recovery path for that.
-
-**Fix:** Supabase Pro (daily backups + PITR), or a scheduled `pg_dump` to
-object storage if we're not ready to pay yet. Either beats nothing.
-
-See `REMAINING_WORK.md` item 17.
-
-### 2. Legal pages have unfilled placeholders — Kenneth (text) / needs a lawyer
+### 1. Legal pages have unfilled placeholders — Kenneth (text) / needs a lawyer
 `components/LegalPage.tsx:13-14` still reads, literally:
 
 ```
@@ -57,16 +52,7 @@ See `REMAINING_WORK.md` item 5.
 
 ## P1 — before real client data
 
-### 3. Leaked-password protection needs Supabase Pro — Chris
-The length minimum is fixed: the Supabase project now requires 10 characters,
-matching `lib/passwordPolicy.ts`. That was the part that mattered — the anon
-key is public, so a caller can invoke Supabase Auth directly and the dashboard
-setting is the real control.
-
-What's left needs Pro: enabling HaveIBeenPwned leaked-password checking
-returns `402 — available on Pro Plans and up`. MFA is also still off.
-
-### 4. ~~PDF_SERVICE_SECRET~~ — not a real gap, verified
+### 2. ~~PDF_SERVICE_SECRET~~ — not a real gap, verified
 `PDF_SERVICE_SECRET` appears nowhere: not in the code, not in Vercel. That's
 fine rather than missing. `/fill`, `/health` and `/pdf-service/fill` all 404
 through the public domain, which is exactly what `vercel.json`'s rewrites are
@@ -74,7 +60,16 @@ meant to guarantee — only the `frontend` service is exposed, and the Next app
 reaches the other one over the internal `PDF_SERVICE_URL` binding. There is no
 public surface for a secret to protect.
 
-### 5. GitHub hygiene — Chris
+### 3. MFA is on in Supabase and has no UI — decide
+`mfa_totp_enroll_enabled` and `mfa_totp_verify_enabled` are both **true** on
+the project, but the app has no enrol or challenge screen, so nothing can use
+it. Harmless — it is capability, not enforcement — but it means "we have MFA"
+is not true today.
+
+**Decide:** build the enrol/challenge flow, or turn the flags off so the
+project's configuration matches what the product actually does.
+
+### 4. GitHub hygiene — Chris
 - Secret-scanning push protection: enable.
 - Confirm the repo is Private.
 - The Anthropic API key was exposed in a session transcript and needs
@@ -84,7 +79,7 @@ public surface for a secret to protect.
 
 ## P2 — before it costs money
 
-### 6. No spend cap on the Anthropic account — Chris
+### 5. No spend cap on the Anthropic account — Chris
 Listing extraction runs on `claude-sonnet-5` with prefix caching and per-call
 cost logging, so the per-call cost is known and low. What's missing is the
 ceiling: the per-user cap is 60 extractions/hour, so twenty active realtors
@@ -278,6 +273,12 @@ Three possible causes, in the order worth checking:
 
 Re-check with the loop in this file's git history: drive /login in a real
 Chrome, click through, and read the "to continue to" line off Google's page.
+
+**Blocked on a purchase, not on Pro.** Supabase Custom Domains is a separate
+add-on on top of Pro (~$10/month) — the management API refuses with
+`entitlement_required / custom_domain` until it is bought, at
+`supabase.com/dashboard/org/hteqwpbzcfpmfrjcuudm/billing`. A vanity subdomain
+is free but still lands on `*.supabase.co`, so it fixes nothing here.
 
 **Related, already done:** `prompt=select_account` is now sent, so Google
 always shows the chooser instead of silently reusing the one signed-in
