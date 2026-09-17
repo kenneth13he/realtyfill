@@ -149,7 +149,11 @@ export default function ScrollStage() {
                     two minutes.
                   </span>
                 </div>
-                <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <p className="mt-7 max-w-md text-lg leading-relaxed text-white/70">
+                  Enter the tenant, the rent and the term once. We put them on all five forms and leave every
+                  signature line blank for you.
+                </p>
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
                   <Link
                     href="/login?mode=signup"
                     className="group inline-flex items-center justify-center gap-2 rounded-full bg-[var(--lime)] px-8 py-4 text-base font-semibold text-[var(--brand-deep)] transition-transform hover:-translate-y-0.5"
@@ -169,20 +173,21 @@ export default function ScrollStage() {
               </div>
 
               <div className="col-start-1 row-start-1 self-center" style={panelStyle(p, 0.36, 0.63)}>
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--lime)]">Enter it once</p>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--lime)]">One source of truth</p>
                 <h2 className="mt-5 text-[3rem] font-semibold leading-[1] tracking-tight text-white xl:text-6xl">
                   Tenant, landlord, rent, term.
                 </h2>
                 <p className="mt-6 max-w-md text-lg leading-relaxed text-white/70">
-                  Drop in the listing PDF and the details fill themselves in. Every field stays editable, and anything
-                  genuinely unclear gets flagged — never guessed silently.
+                  The same handful of facts goes on all five forms. Type them out five times and one of them ends up
+                  wrong: the unit number on the lease, the start date on the application. Enter it here once and all
+                  five say the same thing.
                 </p>
               </div>
 
               <div className="col-start-1 row-start-1 self-center" style={panelStyle(p, 0.69, 1.01)}>
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--lime)]">The whole set</p>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--lime)]">Two minutes later</p>
                 <h2 className="mt-5 text-[3rem] font-semibold leading-[1] tracking-tight text-white xl:text-6xl">
-                  Filled correctly.
+                  Every field where it belongs.
                 </h2>
                 <ul className="mt-8 space-y-2.5">
                   {FORMS.map(([code, name], i) => {
@@ -245,9 +250,13 @@ export default function ScrollStage() {
               two minutes.
             </span>
           </div>
+          {/* The small-screen block has no panels 2 and 3 to lean on, so this
+              one paragraph carries the whole argument: what it does, and the
+              reason a single source of truth beats five typed copies. */}
           <p className="mt-8 max-w-lg text-lg leading-relaxed text-white/70">
-            Stop retyping the same tenant, landlord, and rent details into five separate PDFs. Enter it once, review
-            it, download the whole set — filled correctly.
+            Enter the tenant, the rent and the term once. We put them on all five forms and leave every signature
+            line blank for you. Fill them in by hand instead and one of the five ends up wrong. Usually you find out
+            at signing.
           </p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Link
