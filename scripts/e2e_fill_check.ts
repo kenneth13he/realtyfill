@@ -179,7 +179,15 @@ async function runSet(page: Page, setId: FormSetId) {
   await page.goto(`${BASE}/dashboard`, { waitUntil: "domcontentloaded" });
   const radio = page.locator(`input[name="formSet"][value="${setId}"]`);
   if ((await radio.count()) === 0) { say(where, "no form-set radio on the dashboard"); return; }
-  await radio.check({ force: true });
+  // Tick it, then confirm it stuck. Playwright can click before the page has
+  // hydrated, in which case React never sees the change and the deal is
+  // created as the default set — which is how a "sale_seller" run once
+  // generated the six-form buyer bundle and failed on four downloads.
+  for (let attempt = 0; attempt < 5; attempt++) {
+    await radio.check({ force: true });
+    await page.waitForTimeout(300);
+    if (await radio.isChecked()) break;
+  }
   await page.fill('input[placeholder*="203 College"]', `E2E ${setId} seed${SEED} ${Date.now()}`).catch(() => {});
   await Promise.all([
     page.waitForURL(/\/intake/, { timeout: 60_000 }).catch(() => {}),
@@ -187,6 +195,15 @@ async function runSet(page: Page, setId: FormSetId) {
   ]);
   if (!page.url().includes("/intake")) { say(where, `create did not reach intake (${page.url()})`); return; }
   const dealId = new URL(page.url()).pathname.split("/")[2];
+
+  // The set is fixed at creation and cannot be changed, so a deal created as
+  // the wrong one invalidates everything below it. Checked here rather than
+  // inferred later from a pile of 404s on the downloads.
+  const created = await (await page.request.get(`${BASE}/api/deals`)).json().catch(() => null);
+  const actualSet = created?.deals?.find((x: { id: string }) => x.id === dealId)?.form_set;
+  if (actualSet && actualSet !== setId) {
+    say(where, `deal was created as ${actualSet}, not ${setId} — the form-set tile did not register`);
+  }
 
   try {
     // 2. Type into every question the set actually shows.

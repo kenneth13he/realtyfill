@@ -1310,6 +1310,12 @@
             ],
             "form_801": [
               "txtl_brkagent"
+            ],
+            "form_271": [
+              "txtl_brkname"
+            ],
+            "form_272": [
+              "txtl_brkname"
             ]
           }
         },
@@ -1344,6 +1350,126 @@
               "txtl_brkphone"
             ]
           }
+        },
+        {
+          "key": "listing_brokerage_address",
+          "label": "Listing brokerage — street address",
+          "type": "text",
+          "targets": {
+            "form_271": [
+              "txtl_brkaddr"
+            ],
+            "form_272": [
+              "txtl_brkaddr"
+            ],
+            "form_320": [
+              "txtl_brkaddr"
+            ],
+            "form_324": [
+              "txtl_brkaddr"
+            ]
+          }
+        },
+        {
+          "key": "listing_brokerage_city",
+          "label": "Listing brokerage — city / town",
+          "type": "text",
+          "targets": {
+            "form_271": [
+              "txtl_brkcity"
+            ],
+            "form_272": [
+              "txtl_brkcity"
+            ],
+            "form_320": [
+              "txtl_brkcity"
+            ],
+            "form_324": [
+              "txtl_brkcity"
+            ]
+          }
+        },
+        {
+          "key": "listing_brokerage_province",
+          "label": "Listing brokerage — province",
+          "type": "text",
+          "targets": {
+            "form_271": [
+              "txtl_brkstate"
+            ],
+            "form_272": [
+              "txtl_brkstate"
+            ],
+            "form_320": [
+              "txtl_brkstate"
+            ],
+            "form_324": [
+              "txtl_brkstate"
+            ]
+          },
+          "default": "ON",
+          "note": "The box holds two characters — the postal abbreviation, like the property's province."
+        },
+        {
+          "key": "listing_brokerage_postal_code",
+          "label": "Listing brokerage — postal code",
+          "type": "text",
+          "targets": {
+            "form_271": [
+              "txtl_brkzipcode"
+            ],
+            "form_272": [
+              "txtl_brkzipcode"
+            ],
+            "form_320": [
+              "txtl_brkzipcode"
+            ],
+            "form_324": [
+              "txtl_brkzipcode"
+            ]
+          }
+        },
+        {
+          "key": "listing_brokerage_fax",
+          "label": "Listing brokerage — fax",
+          "type": "text",
+          "targets": {
+            "form_320": [
+              "txtl_brkfax"
+            ],
+            "form_324": [
+              "txtl_brkfax"
+            ],
+            "form_101": [
+              "txtListFax"
+            ],
+            "form_400": [
+              "txtListFax"
+            ],
+            "form_291": [
+              "txtl_brkfax"
+            ],
+            "form_292": [
+              "txtl_brkfax"
+            ]
+          }
+        },
+        {
+          "key": "listing_brokerage_agent_email",
+          "label": "Listing brokerage agent — email",
+          "type": "text",
+          "targets": {
+            "form_101": [
+              "txtl_brkagentemail"
+            ],
+            "form_400": [
+              "txtl_brkagentemail"
+            ]
+          },
+          "sets": [
+            "lease_tenant",
+            "sale_buyer"
+          ]
         },
         {
           "key": "coop_brokerage_name",
@@ -1462,6 +1588,123 @@
             ],
             "form_371": [
               "txts_brkaddr"
+            ]
+          },
+          "sets": [
+            "lease_tenant",
+            "sale_buyer"
+          ]
+        },
+        {
+          "key": "coop_brokerage_city",
+          "label": "Co-op / tenant brokerage — city / town",
+          "type": "text",
+          "targets": {
+            "form_320": [
+              "txts_brkcity"
+            ],
+            "form_324": [
+              "txts_brkcity"
+            ],
+            "form_371": [
+              "txts_brkcity"
+            ],
+            "form_372": [
+              "txts_brkcity"
+            ]
+          },
+          "sets": [
+            "lease_tenant",
+            "sale_buyer"
+          ]
+        },
+        {
+          "key": "coop_brokerage_province",
+          "label": "Co-op / tenant brokerage — province",
+          "type": "text",
+          "targets": {
+            "form_320": [
+              "txts_brkstate"
+            ],
+            "form_324": [
+              "txts_brkstate"
+            ],
+            "form_371": [
+              "txts_brkstate"
+            ],
+            "form_372": [
+              "txts_brkstate"
+            ]
+          },
+          "default": "ON",
+          "note": "The box holds two characters — the postal abbreviation, like the property's province.",
+          "sets": [
+            "lease_tenant",
+            "sale_buyer"
+          ]
+        },
+        {
+          "key": "coop_brokerage_postal_code",
+          "label": "Co-op / tenant brokerage — postal code",
+          "type": "text",
+          "targets": {
+            "form_320": [
+              "txts_brkzipcode"
+            ],
+            "form_324": [
+              "txts_brkzipcode"
+            ],
+            "form_371": [
+              "txts_brkzipcode"
+            ],
+            "form_372": [
+              "txts_brkzipcode"
+            ]
+          },
+          "sets": [
+            "lease_tenant",
+            "sale_buyer"
+          ]
+        },
+        {
+          "key": "coop_brokerage_fax",
+          "label": "Co-op / tenant brokerage — fax",
+          "type": "text",
+          "targets": {
+            "form_320": [
+              "txts_brkfax"
+            ],
+            "form_324": [
+              "txts_brkfax"
+            ],
+            "form_371": [
+              "txts_brkfax"
+            ],
+            "form_372": [
+              "txts_brkfax"
+            ],
+            "form_101": [
+              "txtSellFax"
+            ],
+            "form_400": [
+              "txtSellFax"
+            ]
+          },
+          "sets": [
+            "lease_tenant",
+            "sale_buyer"
+          ]
+        },
+        {
+          "key": "coop_brokerage_agent_email",
+          "label": "Co-op / tenant brokerage agent — email",
+          "type": "text",
+          "targets": {
+            "form_101": [
+              "txts_brkagentemail"
+            ],
+            "form_400": [
+              "txts_brkagentemail"
             ]
           },
           "sets": [

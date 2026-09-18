@@ -67,13 +67,32 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // Seed brokerage defaults from the user's profile (Settings, Step 7) so a
-  // new deal doesn't start from a completely blank slate every time.
+  // Seed the realtor's own brokerage details from their profile (Settings) so
+  // a new deal doesn't start from a blank slate every time.
+  //
+  // Onto THEIR side of the deal, which is not always the listing side. These
+  // forms have two brokerage blocks, and which one you occupy depends on who
+  // you represent: the listing/seller/landlord side for the sale-seller and
+  // lease-landlord sets, the co-operating/buyer/tenant side for the other two.
+  // Seeding listing_* regardless — as this did — put a buyer's agent's own
+  // brokerage into the box for the brokerage on the other side of the table.
   const { data: profile } = await supabase.from("profiles").select("*").eq("user_id", user.id).maybeSingle();
   const seedAnswers: Record<string, string> = {};
-  if (profile?.brokerage_name) seedAnswers.listing_brokerage_name = profile.brokerage_name;
-  if (profile?.full_name) seedAnswers.listing_brokerage_agent_name = profile.full_name;
-  if (profile?.phone) seedAnswers.listing_brokerage_phone = profile.phone;
+  const mySide = formSet === "sale_seller" || formSet === "lease_landlord" ? "listing" : "coop";
+  const seed = (suffix: string, value: string | null | undefined) => {
+    if (value) seedAnswers[`${mySide}_brokerage_${suffix}`] = value;
+  };
+  seed("name", profile?.brokerage_name);
+  seed("agent_name", profile?.full_name);
+  seed("phone", profile?.phone);
+  seed("agent_email", profile?.agent_email);
+  seed("fax", profile?.brokerage_fax);
+  // brokerage_address is the pre-0006 single line; it seeded the street field
+  // in Settings, and is the fallback here for a profile saved before the split.
+  seed("address", profile?.brokerage_street ?? profile?.brokerage_address);
+  seed("city", profile?.brokerage_city);
+  seed("province", profile?.brokerage_province);
+  seed("postal_code", profile?.brokerage_postal_code);
   // The RECO acknowledgement names YOU and YOUR brokerage on every set, whichever
   // side of the deal you are on, so these two seed unconditionally.
   if (profile?.brokerage_name) seedAnswers.reco_brokerage_name = profile.brokerage_name;

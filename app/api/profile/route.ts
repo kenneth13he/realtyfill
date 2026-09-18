@@ -32,7 +32,17 @@ export async function POST(request: Request) {
   // lib/sameOrigin.ts for why a missing Origin is refused too.
   if (!isSameOrigin(request)) return crossOriginRefusal();
   const body = await request.json().catch(() => ({}));
-  const fields = ["full_name", "phone", "brokerage_name", "brokerage_address"] as const;
+  // brokerage_address is still accepted, and no longer written by the form.
+  // It held the whole address on one line; the forms print street, city,
+  // province and postal code as four separate boxes, so it has been split.
+  // Kept here so a save from a browser tab left open on the previous deploy
+  // doesn't fail (0006_profile_brokerage_details.sql).
+  const fields = [
+    "full_name", "phone", "agent_email",
+    "brokerage_name", "brokerage_address",
+    "brokerage_street", "brokerage_city", "brokerage_province", "brokerage_postal_code",
+    "brokerage_phone", "brokerage_fax",
+  ] as const;
   const update: Record<string, string> = {};
   for (const field of fields) {
     if (typeof body?.[field] === "string") update[field] = body[field];

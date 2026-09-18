@@ -92,13 +92,23 @@ export default function DealsList({ initialDeals, loadError }: { initialDeals: D
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
+    // Read the form set off the form itself rather than from React state.
+    //
+    // The tiles are real radios, so the browser records a click the instant
+    // it happens — including before this component has hydrated, when the
+    // handler that would set state does not exist yet. Trusting state meant a
+    // click in that window silently created the deal as the DEFAULT set, and
+    // a deal's set cannot be changed afterwards. The DOM is the thing the
+    // realtor actually clicked; state is only the mirror.
+    const picked = new FormData(e.currentTarget as HTMLFormElement).get("formSet");
+    const formSet = typeof picked === "string" ? toFormSetId(picked) : newFormSet;
     setCreating(true);
     setError(null);
     try {
       const res = await fetch("/api/deals", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ label: newLabel.trim() || undefined, formSet: newFormSet }),
+        body: JSON.stringify({ label: newLabel.trim() || undefined, formSet }),
       });
       const body = await res.json();
       if (!res.ok) throw new Error(body.error ?? "Failed to create deal");

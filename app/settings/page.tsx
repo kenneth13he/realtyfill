@@ -19,8 +19,19 @@ export default async function SettingsPage() {
   const initialProfile: Profile = {
     full_name: data?.full_name ?? "",
     phone: data?.phone ?? "",
+    // Defaults to the sign-in address as a starting point, not as a fact: it
+    // is what most agents would type anyway, and it stays editable because
+    // the address on a contract is often the brokerage one.
+    agent_email: data?.agent_email ?? user?.email ?? "",
     brokerage_name: data?.brokerage_name ?? "",
-    brokerage_address: data?.brokerage_address ?? "",
+    // brokerage_street falls back to the old single-line brokerage_address for
+    // anyone whose profile predates the split (0006).
+    brokerage_street: data?.brokerage_street ?? data?.brokerage_address ?? "",
+    brokerage_city: data?.brokerage_city ?? "",
+    brokerage_province: data?.brokerage_province ?? "ON",
+    brokerage_postal_code: data?.brokerage_postal_code ?? "",
+    brokerage_phone: data?.brokerage_phone ?? "",
+    brokerage_fax: data?.brokerage_fax ?? "",
   };
 
   // A Google-only account has no RealtyFill password to change. `identities`
