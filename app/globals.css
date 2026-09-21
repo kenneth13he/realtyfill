@@ -42,6 +42,18 @@
         read as generic SaaS; precision instruments have small, consistent
         corner radii, and using two values everywhere (panel and control)
         is itself the discipline. */
+
+  /* Contrast: audited September 19, 2026 against WCAG AA (4.5:1 for body
+     text), both themes, every text token on every surface it can land on —
+     bg, surface, sunken, the error panel, and the white-at-55% muted
+     re-scope inside the deep-ink strip.
+
+     All 21 pairs pass. The floor is --color-accent on --color-surface in
+     dark mode at 5.18:1; in light mode the floor is --color-text-muted on
+     --color-bg at 6.17:1. That margin is the thing to preserve: any token
+     edited below should be re-checked, since the accent in dark mode is the
+     pair with the least room. A previous dark --color-text-muted scored
+     4.33:1 and was already fixed — see the note in the dark block. */
   --color-bg: #eceef7;
   --grid-line: rgba(20, 18, 74, 0.05);
   --color-surface: #ffffff;

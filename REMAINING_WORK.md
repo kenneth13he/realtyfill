@@ -374,11 +374,16 @@ mobile — with the CSP enforcing. Generation completing on production is the
 notable one: that is the `pdf-service` sidecar confirmed working end to end
 in a real browser, not just by HTTP.
 
-**Still a real gap: nobody has opened it on an actual iPhone.** iOS Safari
-refuses to render PDFs in an iframe in ways no emulator reproduces, and the
-preview is exactly where that bites. The mobile fallback (`hidden sm:block`
-plus an "Open in new tab" link) is asserted to be the visible one at 375px,
-but asserted in Chromium, which is not the browser that has the problem.
+**Closed September 20, 2026: opened on a real iPhone by Kenneth.** This was
+the last gap here — iOS Safari refuses to render PDFs in an iframe in ways no
+emulator reproduces, and the preview is exactly where that bites, so the
+mobile fallback (`hidden sm:block` plus an "Open in new tab" link) had only
+ever been asserted in Chromium. Confirmed by hand on the device.
+
+The automated run still can't cover this, so the same caveat applies to any
+future change to the preview step: `--mobile` proves a 375px Chromium
+viewport and nothing about Safari. Re-check on a device when that component
+changes.
 
 ---
 
@@ -627,10 +632,11 @@ Every generated form now has an always-visible "Open in new tab" link. The
 points at the new tab. This removes the three-nested-scroll-contexts problem
 (page → accordion → iframe) on phones.
 
-### 25. 🟡 Mobile — layouts fixed, still unverified in a real browser
+### 25. ✅ Mobile — layouts fixed, verified on a real phone
 Fixed: dashboard rows stack (`flex-col sm:flex-row`) instead of squeezing
 action buttons beside a truncating label, action clusters wrap, the PDF
-iframe is desktop-only. Still **not opened on a real phone** — see item 11.
+iframe is desktop-only. Opened on a real iPhone September 20, 2026 — see
+item 11.
 
 ### 26. 🟡 Accessibility — focus + live regions done, contrast not audited
 Done: `focus-visible` rings on the dashboard's links, filters, status and

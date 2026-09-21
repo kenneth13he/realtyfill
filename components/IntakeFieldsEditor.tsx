@@ -6,19 +6,56 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { IntakeField, IntakeFormSchema } from "@/lib/formTypes";
+import {
+  initiallyCollapsedGroupIds,
+  fieldIsVisible,
+  groupOfField,
+  intakeSections,
+  isMissingValue,
+} from "@/components/intakeSections";
 
-export function fieldIsVisible(condition: string | undefined, answers: Record<string, string>): boolean {
-  if (!condition) return true;
-  const match = condition.match(/^(\w+)\s*==\s*'([^']*)'$/);
-  if (!match) return true;
-  const [, key, expected] = match;
-  return answers[key] === expected;
-}
+// Re-exported because this module was where they lived before the collapse
+// work moved them somewhere testable.
+export { fieldIsVisible, isMissingValue };
+
+/**
+ * A request from a parent to put one field in front of the user.
+ *
+ * `nonce` is what makes a *repeat* request work: clicking the same flagged
+ * field twice sets the same `key`, so without a changing value the effect
+ * that acts on this would not re-run and the second click would do nothing.
+ */
+export type RevealRequest = { key: string; nonce: number };
 
 export const intakeInputClasses =
   "rf-field";
+
+/**
+ * Points down when the thing it controls is closed (click to open), up when
+ * it's open. Shared by the section nav and each group header so the two
+ * disclosures read as the same control rather than two similar ones.
+ */
+function Chevron({ open }: { open: boolean }) {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={
+        "h-4 w-4 shrink-0 text-[var(--color-accent)] transition-transform duration-150 motion-reduce:transition-none" +
+        (open ? " rotate-180" : "")
+      }
+    >
+      <path d="m4 6 4 4 4-4" />
+    </svg>
+  );
+}
 
 function Field({
   field,
@@ -102,40 +139,28 @@ function Field({
   );
 }
 
-/**
- * Is this field one a person still has to fill in?
- *
- * Same rule the red asterisk uses in `Field` above — kept in one place so the
- * per-field marker and the section counts can never disagree about what
- * "missing" means.
- */
-function isMissingValue(field: IntakeField, answers: Record<string, string>): boolean {
-  if (field.label.toLowerCase().includes("(optional)")) return false;
-  if (field.type === "checkbox") return false;
-  if (field.derived_from) return false;
-  return !answers[field.key];
-}
-
 export default function IntakeFieldsEditor({
   schema,
   answers,
   flaggedFields,
   onChange,
+  reveal,
 }: {
   schema: IntakeFormSchema;
   answers: Record<string, string>;
   flaggedFields?: Record<string, string>;
   onChange: (key: string, value: string) => void;
+  /**
+   * Ask the editor to scroll one field into view and focus it, expanding its
+   * group first if that group is collapsed. Owned here rather than by the
+   * caller because the collapse state is here: a caller doing its own
+   * `getElementById` would find a `display:none` input and focus nothing.
+   */
+  reveal?: RevealRequest | null;
 }) {
   // Computed once per render and reused by both the nav and the sections, so
   // the jump links and the headings always show the same numbers.
-  const sections = schema.groups
-    .map((group) => {
-      const visibleFields = group.fields.filter((field) => !field.hidden && fieldIsVisible(field.condition, answers));
-      const missing = visibleFields.filter((field) => isMissingValue(field, answers)).length;
-      return { group, visibleFields, missing };
-    })
-    .filter((section) => section.visibleFields.length > 0);
+  const sections = intakeSections(schema, answers);
 
   const totalMissing = sections.reduce((sum, section) => sum + section.missing, 0);
 
@@ -145,6 +170,66 @@ export default function IntakeFieldsEditor({
   // realtor collapses them if they'd rather have the room. Collapsed still
   // shows the count, which is the part you want while typing.
   const [linksOpen, setLinksOpen] = useState(true);
+
+  // Groups the user has folded away. Seeded once, on mount, with every group
+  // that was already complete when the form opened — so returning to a deal
+  // you've half-filled puts the finished sections out of the way and leaves
+  // you looking at the work.
+  //
+  // Deliberately *not* re-run as you type. Collapsing a group the moment its
+  // last field is filled would fold the section out from under the cursor
+  // mid-keystroke and jump everything below it up the page. Auto-collapse is
+  // a good idea on arrival and a hostile one while typing, so it happens only
+  // on arrival. After that the control is the user's.
+  const [collapsed, setCollapsed] = useState<Set<string>>(() => initiallyCollapsedGroupIds(schema, answers));
+
+  function expand(groupId: string) {
+    setCollapsed((prev) => {
+      if (!prev.has(groupId)) return prev;
+      const next = new Set(prev);
+      next.delete(groupId);
+      return next;
+    });
+  }
+
+  function toggleGroup(groupId: string) {
+    setCollapsed((prev) => {
+      const next = new Set(prev);
+      if (next.has(groupId)) next.delete(groupId);
+      else next.add(groupId);
+      return next;
+    });
+  }
+
+  // Expand the group that holds the requested field, then focus it.
+  //
+  // The two rAFs are the same trick the review page already used, for the
+  // same reason: the expand above is a state update, so the input is still
+  // hidden — and `focus()` on a `display:none` element is a no-op — until
+  // React has committed the render that reveals it.
+  const revealKey = reveal?.key;
+  const revealNonce = reveal?.nonce;
+  useEffect(() => {
+    if (!revealKey) return;
+    const groupId = groupOfField(schema, revealKey);
+    if (groupId) expand(groupId);
+    let inner = 0;
+    const outer = requestAnimationFrame(() => {
+      inner = requestAnimationFrame(() => {
+        const el = document.getElementById(revealKey);
+        if (!el) return;
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        (el as HTMLElement).focus({ preventScroll: true });
+      });
+    });
+    return () => {
+      cancelAnimationFrame(outer);
+      cancelAnimationFrame(inner);
+    };
+    // `schema` is stable for the life of the page; re-running on every nonce
+    // is the point, so the same field can be requested twice.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [revealKey, revealNonce]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -181,24 +266,9 @@ export default function IntakeFieldsEditor({
               ? "All fields filled"
               : `${totalMissing} ${totalMissing === 1 ? "field" : "fields"} still empty`}
           </span>
-          {/* Points down when collapsed (click to open), up when open. The
-              chevron is the whole affordance, so it gets the accent rather
-              than the muted grey of the label beside it. */}
-          <svg
-            aria-hidden
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={
-              "h-4 w-4 shrink-0 text-[var(--color-accent)] transition-transform duration-150 motion-reduce:transition-none" +
-              (linksOpen ? " rotate-180" : "")
-            }
-          >
-            <path d="m4 6 4 4 4-4" />
-          </svg>
+          {/* The chevron is the whole affordance, so it gets the accent
+              rather than the muted grey of the label beside it. */}
+          <Chevron open={linksOpen} />
         </button>
         {/* Toggled with a display class rather than the `hidden` attribute:
             `[hidden]` and `.flex` have the same specificity, so a utility
@@ -207,8 +277,15 @@ export default function IntakeFieldsEditor({
         <ul id="intake-section-links" className={linksOpen ? "flex flex-wrap gap-1.5" : "hidden"}>
           {sections.map(({ group, missing }) => (
             <li key={group.group}>
+              {/* Stays an <a> with a real href — it's a jump link, and that's
+                  what gives it keyboard and middle-click behaviour for free.
+                  The onClick only expands the target first, so a link to a
+                  collapsed section lands on its fields instead of on a
+                  closed header. Default anchor scrolling still does the
+                  moving. */}
               <a
                 href={`#section-${group.group}`}
+                onClick={() => expand(group.group)}
                 className="flex items-center gap-1.5 rounded-full border border-[var(--color-border)] px-2.5 py-1 text-xs font-medium text-[var(--color-text-muted)] outline-none transition-colors hover:border-[var(--color-accent)]/60 hover:text-[var(--color-accent)] focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2"
               >
                 {group.label}
@@ -224,6 +301,7 @@ export default function IntakeFieldsEditor({
       </nav>
 
       {sections.map(({ group, visibleFields, missing }) => {
+        const isOpen = !collapsed.has(group.group);
         return (
           <div
             key={group.group}
@@ -232,16 +310,39 @@ export default function IntakeFieldsEditor({
                lands with the heading hidden behind the bar. */
             className="scroll-mt-28 rf-panel p-5"
           >
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-base font-semibold text-[var(--color-text)]">{group.label}</h2>
-              <span className="text-xs font-medium tabular-nums text-[var(--color-text-muted)]">
-                {missing === 0
-                  ? "Complete"
-                  : `${missing} of ${visibleFields.length} empty`}
-              </span>
-            </div>
-            {group.note && <p className="mt-1 text-sm text-[var(--color-text-muted)]">{group.note}</p>}
-            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {/* The whole header row is the toggle, not a separate icon
+                button: at this size a 16px chevron is a poor target, and the
+                label and the count are the obvious things to reach for.
+                type="button" is load-bearing for the same reason as the nav's
+                — inside the intake <form>, a typeless button submits. */}
+            <h2 className="text-base font-semibold text-[var(--color-text)]">
+              <button
+                type="button"
+                onClick={() => toggleGroup(group.group)}
+                aria-expanded={isOpen}
+                aria-controls={`fields-${group.group}`}
+                className="flex w-full flex-wrap items-center justify-between gap-2 rounded text-left outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2"
+              >
+                <span>{group.label}</span>
+                <span className="flex items-center gap-2">
+                  <span className="text-xs font-medium tabular-nums text-[var(--color-text-muted)]">
+                    {missing === 0 ? "Complete" : `${missing} of ${visibleFields.length} empty`}
+                  </span>
+                  <Chevron open={isOpen} />
+                </span>
+              </button>
+            </h2>
+            {group.note && isOpen && <p className="mt-1 text-sm text-[var(--color-text-muted)]">{group.note}</p>}
+            {/* Toggled with a display class rather than the `hidden`
+                attribute — `[hidden]` and `.grid` have the same specificity,
+                so the grid would quietly win and collapsing would do nothing.
+                Same trap as the nav's list above. Kept mounted either way so
+                aria-controls resolves and so a collapsed field keeps its
+                value. */}
+            <div
+              id={`fields-${group.group}`}
+              className={isOpen ? "mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2" : "hidden"}
+            >
               {visibleFields.map((field) => (
                 <Field
                   key={field.key}

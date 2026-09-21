@@ -15,8 +15,16 @@ Owners follow the standing split: **Kenneth** frontend (`components/`, `app/`
 pages), **Chris** infra and backend (`app/api/`, `lib/`, `supabase/`, config,
 deploy).
 
-Last reviewed: September 16, 2026 (Supabase Pro: backups verified, leaked-password
-protection enabled and tested).
+**Form and product decisions are Chris's too** (set September 20, 2026). The
+items below that read "decide X or accept Y" — which forms are worth
+finishing, whether to own the PropTx property pages, whether to add questions
+for flat-fee commissions or second owners — were previously unowned, which is
+why none of them moved. They are his call: he runs the form mapping and knows
+what the documents actually need.
+
+Last reviewed: September 20, 2026 (frontend list closed out — intake sections
+collapse, contrast audited; `npm run check` clean, 135 tests). The repo being
+public was found in the same pass and is now the standing P0.
 
 **Closed on September 17:** Google's sign-in screen now reads "to continue to
 realtyfill.ca" instead of the raw Supabase hostname. It took the Custom Domain
@@ -46,6 +54,28 @@ it costs money or embarrasses us · **P3** polish
 
 ## P0 — blocks any external tester
 
+### 21. The repository is PUBLIC — Chris, today
+Checked September 20, 2026, after the Pro upgrade landed:
+`gh repo view` still reports `{"isPrivate": false, "visibility": "PUBLIC"}`.
+Item 4 has carried "confirm the repo is Private" as a checkbox for weeks. It
+is not private, and several things downstream of that assumption are wrong:
+
+- **18 PDFs are tracked**, including `forms/blank_templates/*_blank.pdf` —
+  the blank OREA/government templates. Redistributing those is a licensing
+  question nobody has answered, and the standing rule has always been not to
+  bundle them in a public repo.
+- **The exposed Anthropic key** (item 4) was a private-repo problem when it
+  was filed. In a public repo it is a different severity, and rotating it
+  stops being "should" and becomes "before anything else".
+- Every migration and RLS policy in `supabase/` is readable, which tells an
+  attacker exactly what the access rules are — including the ones the new
+  backups and password protection rely on.
+
+**Fix, in this order:** rotate the Anthropic key → flip the repo to Private →
+*then* decide whether the blank templates belong in git at all. Flipping to
+private does not un-publish what has already been cloned or indexed, so the
+rotation genuinely comes first.
+
 ### 1. Legal pages have unfilled placeholders — Kenneth (text) / needs a lawyer
 `components/LegalPage.tsx:13-14` still reads, literally:
 
@@ -60,6 +90,12 @@ category of personal information makes us a data controller under PIPEDA.
 
 **Fix:** fill both constants; get both pages reviewed before any real client
 data goes in.
+
+These are the only two placeholder strings left anywhere in `app/`,
+`components/`, `lib/` or `pdf-service/` — checked September 20, 2026. They
+cannot be filled from the repo: the operating entity's legal name and a
+contact address are real-world facts, and inventing them would put a false
+legal identity on a live Privacy Policy. Kenneth supplies the values.
 
 See `REMAINING_WORK.md` item 5.
 
@@ -85,10 +121,17 @@ is not true today.
 project's configuration matches what the product actually does.
 
 ### 4. GitHub hygiene — Chris
-- Secret-scanning push protection: enable.
-- Confirm the repo is Private.
-- The Anthropic API key was exposed in a session transcript and needs
-  rotating if that hasn't happened yet.
+Repo visibility and the exposed key moved to **item 21**, which is P0: the
+repo turned out to actually be public, which changes what both of them mean.
+What stays here:
+
+- Secret-scanning push protection: enable. Worth doing *before* item 21's
+  flip to private, so the next leaked key is caught at push time rather than
+  found afterwards.
+- Seven Dependabot PRs (#1–#7) are open and unreviewed, including major
+  bumps: `typescript` 5.7.3 → 7.0.2, `node` 24-slim → 26-slim, `@types/node`
+  22 → 26. These are not the superseded `fastapi` pair, which is now closed;
+  they want a real look, the TypeScript major especially.
 
 ---
 
@@ -120,21 +163,6 @@ a broken generate pipeline is a user saying so.
 
 See `REMAINING_WORK.md` item 16.
 
-### 8. Two stale Dependabot PRs still open — Kenneth or Chris
-PRs #8 and #9 both bump `fastapi` only. The advisories that were making CI
-red were against `python-multipart`, now pinned at `0.0.32`, so both PRs are
-superseded and neither would have fixed anything on its own.
-
-The duplicate `/pdf-service` pip entry that produced the pair is already gone
-from `dependabot.yml` — for pip, the `/` scan walks down and finds both
-requirements files, which is why each entry opened its own PR against the
-same file.
-
-**Fix:** close #8 and #9 on GitHub. Needs someone with repo write access to
-click it; it can't be done from here.
-
-See `REMAINING_WORK.md` item 15g.
-
 ### 9. Two deployment paths, one in use — Chris
 Vercel is live. The Render/Docker path still exists, and its `node:24-slim`
 image has never been build-tested. Either it's a real fallback and gets
@@ -146,7 +174,7 @@ See `REMAINING_WORK.md` item 13.
 
 ## P3 — product decisions and polish
 
-### 10. Form 400 utility checkboxes — blocked on a real form
+### 10. Form 400 utility checkboxes — Chris, blocked on a real form
 The `/1` suffix semantics on the utility checkboxes can't be confirmed from
 the blank PDF alone. **This must not be guessed** — wrong checkbox semantics
 on an Agreement to Lease is a wrong legal document, not a cosmetic bug.
@@ -155,29 +183,31 @@ on an Agreement to Lease is a wrong legal document, not a cosmetic bug.
 
 See `REMAINING_WORK.md` item 9.
 
-### 11. Form 410 is 11/121 fields — product decision
+### 11. Form 410 is 11/121 fields — Chris (product decision)
 It needs a tenant-facing flow to be worth anything; a realtor can't supply
 most of those fields. Either build that flow or drop the form from the set.
 
-### 12. Collapsible intake sections — Kenneth
-The last item left from the frontend polish list. Toasts, the illustrated
-empty state, the keyboard pass, the contrast audit and dark mode are all
-done; the app was also re-themed onto a token + primitive layer in
-`app/globals.css`, so it can be retuned from one file.
+### 22. No real notion of which fields are required — Chris
+`isMissingValue` in `components/intakeSections.ts` decides "missing" by
+looking for `"(optional)"` in a field's label. That was adequate while it only
+drew a red asterisk beside an input, and it is the reason a review-page
+summary warning was built and then pulled: it counted ~37 fields on a
+realistic deal, mostly things a realtor legitimately wouldn't have, so it read
+as noise (`REMAINING_WORK.md` item 10).
 
-Intake is a long single scroll, and the schema already groups its fields —
-those groups should collapse, and ideally auto-collapse once complete.
+It has a second job now. Intake sections collapse, and which ones start folded
+is seeded from this same rule — so a group wrongly counted as finished doesn't
+just mislabel a heading, it hides fields behind a closed header. The vacuous
+case is already handled: a group of nothing but checkboxes never
+auto-collapses, because an unticked checkbox counts as an answer and Form
+324's five representation checkboxes would otherwise have hidden
+who-represents-whom on a brand-new deal. The underlying proxy is still a label
+substring.
 
-**Why it wasn't done with the rest:** it isn't only styling.
-`ReviewForm.revealField()` focuses a field by id and scrolls it into view;
-if that field's group is collapsed, the lookup finds nothing and the "jump
-to the field the AI flagged" flow silently does nothing. Collapsing has to
-expand the containing group first. Worth doing properly rather than bolting
-a `<details>` around each group.
+**Fix:** a per-form `required` notion in `intake_form_schema.json`. Overlaps
+the field-coverage audit and is worth doing with it, not before it.
 
-See `REMAINING_WORK.md` items 22, 21, 23, 26, 27.
-
-### 13. PropTx 291/292 are mapped on page 1 only — product decision
+### 13. PropTx 291/292 are mapped on page 1 only — Chris (product decision)
 Page 1 (LOCATION + AMOUNTS/DATES, the identifying block) is now 34/54 and
 35/52. Everything still blank there is a checkbox whose meaning isn't on a
 listing — lot shape, lot size code, winterized, waterfront, and on 292 the
@@ -199,7 +229,7 @@ because the denominator is ~900 fields.
 reads it and these are genuinely in a REALM printout), or accept that the
 realtor finishes those pages in WEBForms.
 
-### 14. Second landlord / seller name — nowhere to put it
+### 14. Second landlord / seller name — nowhere to put it — Chris
 292 prints two LANDLORD NAME boxes (`txtseller1`, `txtseller2`) and the
 intake has only `landlord_full_name`. A co-owned unit fills one and leaves
 the other blank. Same shape on 291, 203, 271, 272 and 401 for a second
@@ -215,14 +245,14 @@ Lawyer details are known at the agreement stage and a realtor would expect
 them filled. **Decide:** add a lawyers section to the intake, or accept that
 the block is completed by hand.
 
-### 16. Listing/co-op brokerage street address — partly unmapped
+### 16. Listing/co-op brokerage street address — partly unmapped — Chris
 `coop_brokerage_address` now reaches 320 and 371 as well as 324/372. There is
 no equivalent question for the *listing* brokerage, so `txtl_brkaddr` on 271,
 272 and 320 stays blank — even though Settings already stores a
 `brokerage_address` per user. Both forms also print city / province / postal
 as separate boxes and the intake holds the address as one line.
 
-### 17. Three boxes cannot hold a realistic Ontario value — form limits
+### 17. Three boxes cannot hold a realistic Ontario value — form limits (informational)
 Not our bugs; the forms are simply this narrow, and Chrome truncates silently
 rather than warning. Worth knowing before a realtor reports it:
 
@@ -237,7 +267,7 @@ rather than warning. Worth knowing before a realtor reports it:
 `scripts/overflow_check.py` reports text wider than its box even when it fits
 the character limit. Both are worth a look after any mapping change.
 
-### 18. Unmapped "or ..." alternatives beside the commission percentages
+### 18. Unmapped "or ..." alternatives beside the commission percentages — Chris
 Forms 271, 272 and 371 each print "a commission of ____% of the sale price of
 the Property **or** ____". We fill the percentage; the alternative box
 (`txtcommis_writ` and `txtSPComm` on 271, `txtMoreComm` and `txtPurchase` on
@@ -246,7 +276,7 @@ the Property **or** ____". We fill the percentage; the alternative box
 **Decide:** add a second commission question, or accept that flat-fee
 arrangements are written in by hand.
 
-### 19. Form 244's a.m./p.m. control — deliberately unmapped
+### 19. Form 244's a.m./p.m. control — Chris, deliberately unmapped
 `chkOpt_SofferTime` sits beside the "no conveyance of offers prior to ____"
 time box, and its two options draw no visible glyph on the blank form, so
 which is a.m. and which is p.m. could not be confirmed. Same rule as Form
@@ -255,7 +285,7 @@ only 5 characters, so the question now asks for "7:00" rather than "7:00 p.m."
 
 **Unblocks when:** we see a real completed Form 244.
 
-### 20. Second salesperson, fax and open-house fields — no questions
+### 20. Second salesperson, fax and open-house fields — no questions — Chris
 291/292 page 10 prints salespersons 2–4 with their own brokerage and phone,
 a brokerage fax, open-house date/time, and showing instructions. Form 101
 prints a fax for each side. None of these have intake questions. They are
